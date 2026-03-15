@@ -1,0 +1,39 @@
+# Core Framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# Database
+sqlalchemy[asyncio]>=2.0.0
+aiosqlite>=0.20.0
+
+# Data Validation & Models
+pydantic>=2.10.0
+pydantic-ai>=0.0.14
+
+# HTTP & Networking
+httpx>=0.27.2
+
+# Templates
+jinja2>=3.1.0
+
+# Environment & Config
+python-dotenv>=1.0.0
+
+# Google AI & TTS
+google-generativeai>=0.8.0
+google-genai>=0.3.0
+
+# Utilities
+typing-extensions>=4.12.0
+
+# Vector Database & RAG
+chromadb>=0.5.0,<1.5.0
+# Note: google-generativeai already installed for LLM, also used for embeddings
+
+# NLP (optional - for character detection)
+# Note: Run `python -m spacy download en_core_web_sm` after install
+spacy>=3.7.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.24.0

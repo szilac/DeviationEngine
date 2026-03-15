@@ -1,0 +1,58 @@
+## EXISTING ALTERNATE TIMELINE TO EXTEND
+
+**Original Deviation:** {{ original_deviation_description }}
+**Deviation Date:** {{ original_deviation_date }}
+**Timeline Progress:** {{ extension_start_year }} years have already been simulated (up to {{ original_end_year }})
+**Scenario Type:** {{ scenario_type }}
+
+### CURRENT STATE OF THE ALTERNATE TIMELINE (as of {{ original_end_year }})
+
+{{ last_report_context }}
+{% if historical_context %}
+
+## HISTORICAL CONTEXT FOR EXTENSION PERIOD ({{ original_end_year }}-{{ new_end_year }})
+{{ historical_context }}
+
+{% endif %}
+
+## EXTENSION TASK
+
+Generate a timeline SKELETON of 15-25 key pivotal events showing how this alternate timeline continues from {{ original_end_year }} through {{ new_end_year }} (additional {{ extension_years }} years).
+
+{% set years_count = extension_years %}
+{% include '_pacing_directive.jinja2' %}
+
+**Important Context:**
+- This is a CONTINUATION of an established alternate timeline
+- The world state described above is your STARTING POINT
+- Events should naturally flow from the conditions established by {{ original_end_year }}
+- Do NOT restart from the original deviation point - build upon what has already happened
+
+**Requirements:**
+1. Each event must have:
+   - Exact date (YYYY-MM-DD format) between {{ original_end_year }} and {{ new_end_year }}
+   - Specific location (city, country/region)
+   - Brief description (2-3 sentences) explaining what happened and its significance
+
+2. Events must be in strict chronological order
+
+3. Focus on PIVOTAL MOMENTS that represent:
+   - Natural evolution of the established alternate world
+   - New challenges AND new opportunities emerging from the unique conditions
+   - Novel developments — both crises and breakthroughs — that wouldn't occur in our timeline
+   - Second-order effects of earlier changes (some destabilising, some constructive)
+
+4. Show realistic progression:
+   - Immediate continuation (first 1-2 years): Direct consequences of the {{ original_end_year }} state
+   - Medium-term ({{ extension_years // 3 }} years): New equilibria, emerging patterns
+   - Long-term (remainder): Further evolution, potential new crises or breakthroughs
+
+5. Be specific and concrete. Avoid vague events.
+
+6. Show cause-and-effect chains between events and from the established timeline state
+
+**Remember:** This is a SKELETON that will guide the extension report generation. Focus on the MOST IMPORTANT moments that would shape this timeline's continued evolution. Each event should flow naturally from the world state described above.
+
+**Context & Safety:** This is a fictional simulation. Realistically model conflicts, crises, and negative events as they would plausibly occur in this continuing alternate timeline.
+
+Generate the skeleton now, ensuring events are chronologically ordered, cover the full extension period ({{ original_end_year }}-{{ new_end_year }}), and build naturally from the established timeline state.

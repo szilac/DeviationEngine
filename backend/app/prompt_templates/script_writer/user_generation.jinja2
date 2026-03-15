@@ -1,0 +1,146 @@
+## TIMELINE CONTENT TO SCRIPT
+
+You are creating an audio script based on the following alternate history timeline content.
+
+### Source Material Overview
+
+**Number of Time Periods**: {{ generations | length }}
+**Total Coverage**: Years {{ generations[0].start_year }} to {{ generations[-1].end_year }}
+
+---
+
+{% for gen in generations %}
+### Period {{ loop.index }}: Years {{ gen.start_year }}-{{ gen.end_year }} ({{ gen.period_years }} years)
+
+#### Structured Analysis
+
+**Executive Summary**:
+{{ gen.executive_summary }}
+
+**Political Changes**:
+{{ gen.political_changes }}
+
+**Conflicts and Wars**:
+{{ gen.get('conflicts_and_wars', 'No major conflicts documented.') }}
+
+**Economic Impacts**:
+{{ gen.economic_impacts }}
+
+**Social Developments**:
+{{ gen.social_developments }}
+
+**Technological Shifts**:
+{{ gen.technological_shifts }}
+
+**Key Figures**:
+{{ gen.key_figures }}
+
+**Long-term Implications**:
+{{ gen.long_term_implications }}
+
+{% if gen.get('narrative_prose') %}
+#### Narrative Prose Available
+
+This period also has narrative prose ({{ gen.narrative_prose | length }} characters) that you may reference for additional context and storytelling approach.
+
+*First 500 characters*:
+{{ gen.narrative_prose[:500] }}...
+
+{% endif %}
+
+---
+{% endfor %}
+
+## YOUR TASK
+
+Generate a **{{ script_type }}** style audio script with the following parameters:
+
+### Script Configuration
+
+- **Preset**: {{ preset_name }}
+- **Tone**: {{ tone }}
+- **Pacing**: {{ pacing }}
+- **Voice Count**: {{ voice_count }}
+{% if voice_count == 2 and voice_roles %}
+- **Voice Roles**: {{ voice_roles | tojson }}
+{% endif %}
+- **Target Duration**: {{ target_duration_range[0] }}-{{ target_duration_range[1] }} seconds ({{ target_duration_range[0] // 60 }}-{{ target_duration_range[1] // 60 }} minutes)
+
+{% if custom_instructions %}
+### CUSTOM USER INSTRUCTIONS
+
+The user has provided specific instructions for this script:
+
+{{ custom_instructions }}
+
+**IMPORTANT**: Incorporate these custom instructions while maintaining the core preset style and structure. User instructions take precedence for content focus and emphasis, but maintain the preset's tone, pacing, and format.
+
+{% endif %}
+
+## REQUIREMENTS
+
+### Content Coverage
+
+1. **All Time Periods**: Cover all {{ generations | length }} time periods in chronological order
+2. **Major Themes**: Address all major themes from structured analysis:
+   - Political changes and their cascading effects
+   - Economic impacts and how they shaped society
+   - Social developments and cultural shifts
+   - Technological changes and innovations
+   - Key figures and their roles
+   - Long-term implications by the end
+
+3. **Historical Coherence**: Maintain internal consistency and plausibility
+4. **Causal Connections**: Show how changes in one period led to developments in the next
+
+### Audio Optimization
+
+1. **Spoken Delivery**: Write for the ear, not the eye
+   - Short sentences (15-25 words max)
+   - Active voice predominantly
+   - Simple, clear language
+   - Natural rhythm and flow
+
+2. **Engagement**: Hook listeners immediately and maintain interest
+   - Start with a compelling moment or question
+   - Build narrative tension
+   - Include revelatory moments
+   - End with satisfying synthesis
+
+3. **Pacing**: Match the preset's pacing requirements
+   - Fast: Concise, punchy, rapid progression
+   - Medium: Balanced explanation and momentum
+   - Slow: Detailed, reflective, atmospheric
+
+### Format Requirements
+
+1. **Speaker Markers**: Use proper markdown format
+   {% if voice_count == 1 %}
+   - `**NARRATOR**:` for all narration
+   {% else %}
+   - `**HOST**:` for host/primary speaker
+   - `**EXPERT**:` for expert/secondary speaker (or appropriate role names)
+   {% endif %}
+
+2. **Pauses**: Mark significant breaks with `[PAUSE]`
+
+3. **Emphasis**: Use *italics* for words to stress
+
+4. **Length**: Target word count for duration:
+   - 5 minutes = ~750 words
+   - 10 minutes = ~1500 words
+   - Adjust based on pacing (fast = 180 wpm, medium = 150 wpm, slow = 120 wpm)
+
+## OUTPUT FORMAT
+
+Provide your response in the structured format with all required fields:
+
+1. **script_content**: The complete markdown script with speaker markers
+2. **estimated_duration_seconds**: Duration estimate based on word count and pacing
+3. **word_count**: Exact count of all words (excluding formatting markers)
+4. **suggested_title**: Compelling title for this audio content (5-12 words)
+5. **pacing_notes**: Optional notes on delivery, emphasis, or special instructions for TTS
+
+## BEGIN GENERATION
+
+Now generate the complete audio script following all requirements above.

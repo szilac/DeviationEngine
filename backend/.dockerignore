@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# Testing
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+htmlcov/
+
+# Logs
+*.log
+logs/
+
+# Local development
+.env
+*.local
+
+# Database (will be mounted as volume)
+data/timelines.db
+data/timelines.db-wal
+data/timelines.db-shm
+
+# Audio files (will be mounted as volume)
+data/audio/*.wav
+data/audio/*.mp3
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+docs/

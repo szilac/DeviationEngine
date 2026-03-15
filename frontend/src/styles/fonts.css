@@ -1,0 +1,19 @@
+/* IM Fell English — Display / H1–H2 */
+@import "@fontsource/im-fell-english/400.css";
+@import "@fontsource/im-fell-english/400-italic.css";
+
+/* Crimson Pro — Body / manuscript text */
+@import "@fontsource/crimson-pro/400.css";
+@import "@fontsource/crimson-pro/400-italic.css";
+@import "@fontsource/crimson-pro/600.css";
+@import "@fontsource/crimson-pro/600-italic.css";
+
+/* Cormorant Garamond — Captions / marginalia */
+@import "@fontsource/cormorant-garamond/400.css";
+@import "@fontsource/cormorant-garamond/400-italic.css";
+@import "@fontsource/cormorant-garamond/500.css";
+
+/* Source Code Pro — Data / notation */
+@import "@fontsource/source-code-pro/400.css";
+@import "@fontsource/source-code-pro/500.css";
+@import "@fontsource/source-code-pro/600.css";

@@ -1,0 +1,43 @@
+A ripple map already exists for this timeline. A new generation has been added, extending the timeline further. Your task is to extract NEW causal nodes and edges from the new generation's report, and connect them to the existing map.
+
+## Deviation Information
+
+- **Date:** {{ deviation_date }}
+- **Description:** {{ deviation_description }}
+- **Scenario Type:** {{ scenario_type }}
+- **New Generation ID:** {{ new_generation_id }}
+
+## Existing Ripple Map (reference only — do NOT modify)
+
+### Existing Nodes ({{ existing_nodes | length }})
+
+| ID | Label | Domain | Years offset |
+|---|---|---|---|
+{% for node in existing_nodes -%}
+| {{ node.id }} | {{ node.label }} | {{ node.domain }} | {{ node.time_offset_years }} |
+{% endfor %}
+
+### Existing Edges ({{ existing_edges | length }})
+
+{% for edge in existing_edges -%}
+- `{{ edge.source_node_id }}` --[{{ edge.relationship }}]--> `{{ edge.target_node_id }}`
+{% endfor %}
+
+## New Generation Report
+
+{{ new_generation_content }}
+
+---
+
+## Your Task
+
+Extract ONLY new nodes and edges from the new generation. Rules:
+
+1. **Do NOT repeat or modify existing nodes** — they are fixed
+2. **Generate 5-10 NEW nodes** representing the most significant consequences from the new generation's time period
+3. **Set `source_generation_id` to `"{{ new_generation_id }}"` for ALL new nodes**
+4. **Create cross-generation edges** — connect new nodes to existing nodes using the IDs from the table above as `source_node_id` or `target_node_id`
+5. **Create intra-generation edges** — connect new nodes among themselves
+6. **Time continuity** — new nodes should have higher `time_offset_years` than most existing nodes, reflecting the extended timeline
+
+Return ONLY the new nodes and edges (not the complete merged graph). The service layer will merge them.

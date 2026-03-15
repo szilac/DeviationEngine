@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Backend API Server
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: deviation-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - DEFAULT_LLM_PROVIDER=${DEFAULT_LLM_PROVIDER:-google}
+      - DEFAULT_LLM_MODEL=${DEFAULT_LLM_MODEL:-gemini-2.5-flash}
+      - DEEPL_API_KEY=${DEEPL_API_KEY:-}
+      - DEEPL_API_TIER=${DEEPL_API_TIER:-free}
+      - DEEPL_ENABLED=${DEEPL_ENABLED:-false}
+      - DEBUG=${DEBUG:-false}
+    volumes:
+      # Persist database and audio files
+      - deviation_data:/app/data
+    networks:
+      - deviation_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Frontend Web Server
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: deviation-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - deviation_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+networks:
+  deviation_network:
+    driver: bridge
+
+volumes:
+  deviation_data:
+    driver: local

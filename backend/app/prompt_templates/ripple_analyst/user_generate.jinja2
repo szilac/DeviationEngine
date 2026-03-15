@@ -1,0 +1,27 @@
+Analyze the following alternate history timeline report and extract a causal graph showing how the deviation ripples through history.
+
+## Deviation Information
+
+- **Date:** {{ deviation_date }}
+- **Description:** {{ deviation_description }}
+- **Scenario Type:** {{ scenario_type }}
+- **Generation ID:** {{ generation_id }}
+
+## Timeline Report
+
+{{ generation_content }}
+
+---
+
+## Your Task
+
+Extract a causal graph from this report. Remember:
+
+1. Create **one root node** with `is_deviation_point: true` representing the deviation itself (`time_offset_years: 0`)
+2. Create **8-15 consequence nodes** covering the most significant changes described across all domains
+3. Create **edges** showing how consequences flow from one to another
+4. Set `source_generation_id` to `"{{ generation_id }}"` for ALL nodes
+5. Ensure strong **cross-domain connections** (e.g., military conflict → economic disruption → social unrest)
+6. Use the report's time period to estimate `time_offset_years` for each node
+
+Return the complete causal graph as structured JSON matching the schema.

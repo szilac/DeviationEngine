@@ -1,0 +1,32 @@
+{% if scenario_type in ["reality_fracture", "geological_shift", "external_intervention"] %}
+{% if years_count <= 5 %}
+
+**⚠ PACING CONSTRAINT — SHORT TIMEFRAME ({{ years_count }} years):**
+This is a very short period for a {{ scenario_type | replace("_", " ") }} scenario. In {{ years_count }} years, the world is still in the EARLY phases of response:
+- Institutions are confused, in denial, or scrambling — but some individuals and small groups are already showing remarkable initiative, curiosity, or adaptability
+- Organised state-level programmes are rudimentary at best — mostly improvised task forces and emergency committees, some of which will prove surprisingly effective
+- Society is experiencing a mix of fear, rumour, wonder, and fragmented local reactions — NOT coherent mass movements in either direction
+- Exploitation or weaponisation of the new reality is NOT plausible yet — but early scientific observation, artistic response, and grassroots adaptation ARE
+- End this generation with MORE open questions than answers. The situation is still unfolding, and its trajectory is genuinely uncertain — not predetermined toward either utopia or catastrophe.
+Do NOT compress 20 years of adaptation into {{ years_count }} years.
+
+{% elif years_count <= 10 %}
+
+**PACING NOTE — MODERATE TIMEFRAME ({{ years_count }} years):**
+In {{ years_count }} years, early-phase responses are maturing but the world is still far from equilibrium:
+- State programmes exist — some are plagued by failures, rivalries, and underfunding; others are producing real (if modest) results
+- Society is adapting unevenly — some regions, classes, or communities are ahead; others are in denial or crisis. The contrast between them is itself a source of tension and interest
+- Early crude applications may exist, but reliable mastery is NOT yet achieved
+- New ideologies and social movements are forming but have NOT yet won institutional power — they are competing, splitting, and evolving
+Do not rush to mature outcomes. Show the messy middle — where things are genuinely uncertain and different actors have legitimate reasons for optimism or pessimism.
+
+{% endif %}
+{% elif scenario_type in ["local_deviation", "global_deviation"] %}
+{% if years_count <= 5 %}
+
+**PACING NOTE — SHORT TIMEFRAME ({{ years_count }} years):**
+In {{ years_count }} years, the world is close to the original timeline with key divergences emerging. Political realignments are underway but not consolidated. Economic impacts are being felt but haven't fully restructured markets. Some actors are adapting faster than others — show this unevenness. Anchor your analysis to real-world pacing of institutional and social change.
+
+{% endif %}
+{% endif %}
+

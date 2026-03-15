@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Quantum Manuscript Palette ── */
+  --color-vellum:      #1C1508;
+  --color-parchment:   #271E0A;
+  --color-surface:     #2E2210;
+  --color-border:      #4A3D1A;
+  --color-overlay:     #352C12;
+
+  --color-ink:         #E8D8A0;
+  --color-dim:         #8A7A50;
+  --color-faint:       #5A4E30;
+
+  --color-gold:        #D4A017;
+  --color-gold-2:      #F0C040;
+  --color-gold-dim:    #7A5C10;
+
+  --color-rubric:      #C0392B;
+  --color-rubric-dim:  #8B2218;
+
+  --color-quantum:     #4FC3F7;
+  --color-wave:        #81D4FA;
+
+  --color-success:     #6A8040;
+  --color-warning:     #B8820A;
+
+  /* ── Typography ── */
+  --font-display:  '"IM Fell English"', serif;
+  --font-body:     '"Crimson Pro"', serif;
+  --font-caption:  '"Cormorant Garamond"', serif;
+  --font-mono:     '"Source Code Pro"', monospace;
+
+  /* ── Motion tokens ── */
+  --ease-out-expo:    cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-manuscript:  cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast:    150ms;
+  --duration-base:    300ms;
+  --duration-slow:    600ms;
+
+  /* ── Shadow / glow tokens ── */
+  --shadow-gold:        0 0 20px rgba(212, 160, 23, 0.25);
+  --shadow-gold-strong: 0 0 40px rgba(212, 160, 23, 0.4);
+  --shadow-rubric:      0 0 16px rgba(192, 57, 43, 0.3);
+  --shadow-quantum:     0 0 16px rgba(79, 195, 247, 0.25);
+  --shadow-panel:       0 4px 24px rgba(0, 0, 0, 0.4);
+
+  /* ── Border tokens ── */
+  --border-manuscript:  1px solid #4A3D1A;
+  --border-gold:        1px solid #7A5C10;
+  --border-gold-bright: 1px solid #D4A017;
+}
+
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #1C1508;
+  color: #E8D8A0;
+  font-family: "Crimson Pro", serif;
+}
+
+/* ── HUD corner brackets — apply to any panel ── */
+.corner-brackets { position: relative; }
+.corner-brackets::before,
+.corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: #7A5C10;
+  border-style: solid;
+}
+.corner-brackets::before { top: 4px; left: 4px; border-width: 1px 0 0 1px; }
+.corner-brackets::after  { bottom: 4px; right: 4px; border-width: 0 1px 1px 0; }
+
+/* ── Rubric section header ── */
+.rubric-label {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 10px;
+  color: #C0392B;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ── Gold double-rule divider (manuscript style) ── */
+.double-rule {
+  border-top: 1px solid #7A5C10;
+  padding-top: 3px;
+  border-bottom: none;
+}
+.double-rule::after {
+  content: '';
+  display: block;
+  border-top: 1px solid #7A5C10;
+}
+
+/* Screen reader only utility for accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Reduced motion — disable or dampen all animations ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

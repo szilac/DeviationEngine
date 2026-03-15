@@ -1,0 +1,56 @@
+## HISTORICAL CONTEXT (Original Timeline)
+
+{{ historical_context }}
+
+## DEVIATION POINT
+
+**Date:** {{ deviation_date }}
+**Event/Change:** {{ deviation_description }}
+**Scenario Type:** {{ scenario_type }}
+**Simulation Duration:** {{ simulation_years }} years (until {{ end_year }})
+
+{% set years_count = simulation_years %}
+{% include '_pacing_directive.jinja2' %}
+
+## TASK
+
+**CRITICAL FIRST STEP - Timeline Name**: You MUST begin by creating a short, memorable name for this timeline (3-5 words maximum). This name should capture the essence of the deviation and its most significant impact. Examples: "The Unsinkable Timeline", "Red October Victory", "Archduke's Survival".
+
+**IMPORTANT**: Your response MUST include the `timeline_name` field as the very first field in your output. Example format:
+```json
+{
+  "timeline_name": "Your Timeline Name Here",
+  "executive_summary": "...",
+  "political_changes": "...",
+  ...
+}
+```
+
+Generate a comprehensive alternate history timeline showing how this deviation would plausibly alter the course of history during the specified 'Simulation Duration'.
+
+Your analysis must be grounded in the provided historical context, specifically showing how the deviation interacts with, exacerbates, or renders irrelevant the 'Systemic Fragilities' and 'Global Flashpoints' identified in the document.
+
+Your analysis must be built upon the following specific directives:
+1.  **Define the Core Mechanics of the New System**: Before detailing the historical impact, explicitly state the fundamental rules, costs, and limitations of the new phenomena (IF any). This system must be consistently applied throughout the timeline.
+2.  **Immediate Impact**: How does the deviation shock the existing system? Model the initial period of institutional confusion, misinterpretation, and improvised response. Show both the failures (actors who get it wrong) and the early adapters (actors who read the situation with unusual clarity or luck).
+3.  **Cascading Consequences**: Trace the ripple effects across all domains. Some adaptations will be flawed and produce unintended negative outcomes; others will be surprisingly effective or produce unintended *positive* outcomes. Include both. Ensure your analysis provides concrete, falsifiable outcomes rather than speculative possibilities.4.  **Systemic Transformation**: Do not limit the analysis to incremental changes. Explore how the deviation could fundamentally break and reshape core systems—military doctrines, economic paradigms, or social contracts—leading to novel and unexpected outcomes.
+4.  **Systemic Transformation**: Do not limit the analysis to incremental changes. Explore how the deviation could fundamentally reshape core systems — military doctrines, economic paradigms, or social contracts — leading to novel and unexpected outcomes. Some of these new systems may be worse than what they replaced; others may be genuinely better; most will be a complicated mix.
+5.  **Temporal Progression**: Within each analytical section, illustrate the *evolution* of the situation over the simulation's duration. Do not merely present the final outcome. Instead, describe the initial shock, the messy and often contradictory process of adaptation, and the key turning points or events within the timeline that led to the new reality you describe.
+6.  **Inter-Domain Feedback Loops**: Analyze the causal chains that cross domains. For instance, how might a political policy (Political) create an economic incentive (Economic), which in turn fosters a new social movement (Social) that circles back to challenge the original political structure? Your analysis must connect the dots between the firewalled sections, especially in the conclusion.
+7.  **New Equilibrium**: Describe the state of the world by the end of the simulation period, focusing on the new power structures, sources of conflict, and the complex tensions created by the interplay of your analyzed changes.
+8.  **Ground-Level Detail**: Anchor your high-level analysis with specific, concrete examples. Illustrate abstract trends with plausible incidents affecting specific locations, individuals, or organizations to make the consequences tangible.
+
+**Crucial Instructions**:
+-   **Avoid Clichés**: Vigorously resist simplistic or stereotypical interpretations of the deviation. Explore its most novel, destabilizing, and logically consistent consequences rather than relying on pre-existing tropes.
+-   **Model Human Realism**: Ensure the analysis realistically models human self-interest, institutional inertia, fear, and resource competition as the primary drivers of the outcome.
+-   **Maintain Tone**: The tone must be that of a detached academic historian analyzing events from the future. Invent plausible, non-anachronistic terminology for new phenomena as needed.
+
+**Context & Safety Reminder**: This is a fictional simulation. As per your core guidelines, you must realistically model and describe conflicts, crises, and other negative historical events to ensure a plausible outcome.
+
+{% if include_narrative %}
+IMPORTANT: Include a compelling narrative prose section (800-1200 words) that brings the alternate history to life.
+{% else %}
+IMPORTANT: Do NOT generate narrative prose. Set narrative_prose to null. Only generate the structured analytical sections.
+{% endif %}
+
+Generate all required sections with the specified depth and detail.

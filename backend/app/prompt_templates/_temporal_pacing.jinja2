@@ -1,0 +1,60 @@
+## Temporal Realism — Pacing the Arc to the Timeframe
+
+The simulation duration varies between generations. A 3-year span and a 30-year span demand fundamentally different levels of societal progress. You MUST calibrate the depth and speed of change to the actual number of years being simulated.
+
+### Universal Pacing Principle
+
+**Do not complete the full arc of adaptation in every generation.** History does not move at screenplay speed. Institutional change is slow. Scientific breakthroughs require decades of groundwork. Societal attitudes shift across generations, not years. If the timeframe is short, show the *beginning* of a process — confusion, early experiments, first attempts both failed and promising — not its culmination.
+
+A generation that ends mid-crisis, mid-adaptation, or mid-discovery is not incomplete — it is realistic. The next generation (extension) will continue the arc.
+
+{% if scenario_type in ["reality_fracture", "geological_shift", "external_intervention"] %}
+### Phase-Duration Anchors for {{ scenario_type | replace("_", " ") | title }} Scenarios
+
+The phases described in your scenario-specific instructions are NOT a checklist to complete in every generation. They represent a **multi-decade arc** that unfolds across multiple generations. Use the following as rough anchors:
+
+{% if scenario_type == "reality_fracture" %}
+| Phase | Min. Duration | Crisis Dimension | Adaptive Dimension |
+|-------|--------------|------------------|-------------------|
+| Phase 1: Emergence | 1–5 years | Localised anomalies, denial, hysteria, uncoordinated investigation | Individual curiosity, grassroots observation, early scientific hypotheses, artistic response |
+| Phase 2: State Response | 3–10 years | Competing agencies, dangerous experiments, bureaucratic turf wars | First productive research programmes, international data-sharing attempts, new academic fields |
+| Phase 3: Socio-Economic Shift | 5–15 years | Industry disruption, new social divisions, black markets | New industries, economic niches, cultural movements, communities that thrive under new conditions |
+| Phase 4: Application | 10–25+ years | Crude weaponisation attempts, arms race dynamics | Medical/agricultural/energy applications, constructive uses that improve lives |
+| Phase 5: Contested Stabilisation | 15–30+ years | Intelligence races, reactive escalation, unresolved tensions | Arms-control attempts, philosophical movements, a generation raised in the new normal |
+
+**For a ≤5-year generation:** Deep in Phase 1, possibly early Phase 2. Phases 3-5 are NOT yet plausible.
+**For a 6–15-year generation:** Phases 1-2 fully, Phase 3 emerging. Phase 4 at most shows crude first attempts.
+**For a 16–30-year generation:** Phases 1-3 complete, Phase 4 developing, Phase 5 beginning.
+
+{% elif scenario_type == "geological_shift" %}
+| Phase | Min. Duration | Crisis Dimension | Adaptive Dimension |
+|-------|--------------|------------------|-------------------|
+| Immediate Impact | 0–3 years | Disaster response, mass displacement, institutional triage | Heroic local responses, improvised engineering, mutual aid networks |
+| Resource Revaluation | 2–10 years | Old powers cling to defunct strategies, maladaptation | Newly resource-rich regions rise, new trade routes, agricultural innovation |
+| New Fields of Inquiry | 5–15 years | Pseudoscience, ideologically captured research | Genuine scientific breakthroughs, new engineering disciplines, practical adaptation |
+| Ideological Transformation | 10–25+ years | Old institutions resist change, political upheaval | New philosophies of resilience, environmental stewardship, institutional reform |
+
+**For a ≤5-year generation:** Immediate impact and early resource revaluation ONLY. New ideologies and mature science are NOT yet plausible.
+**For a 6–15-year generation:** Resource revaluation in full swing, early inquiry programmes, first ideological movements forming.
+
+{% elif scenario_type == "external_intervention" %}
+| Phase | Min. Duration | Crisis Dimension | Adaptive Dimension |
+|-------|--------------|------------------|-------------------|
+| Discovery & Containment | 0–3 years | Information lockdown, elite panic, containment failures | Awe, scientific curiosity, individuals who seek understanding over control |
+| Factional Schism | 2–8 years | Elite fracture, shadow conflicts begin | Some factions genuinely seek cooperation or understanding; their efforts matter even if they fail |
+| Shadow Conflict | 5–15 years | Espionage, sabotage, institutional damage | Back-channel communication, scientists who maintain integrity, diplomatic attempts |
+| Societal Ripple | 10–20+ years | Leaked knowledge causes social upheaval, epistemic chaos | Meaning-making movements (some constructive), public grappling with humanity's place in the universe |
+| New Equilibrium | 15–30+ years | Fragile new order, unresolved tensions | Genuine new capabilities, adapted institutions, a generation that treats the anomaly as normal |
+
+**For a ≤5-year generation:** Discovery and early factional tension ONLY. Full shadow conflicts and societal transformation are NOT yet plausible.
+**For a 6–15-year generation:** Schism deepens, shadow conflict begins, early societal ripples.
+{% endif %}
+
+**CRITICAL:** If the simulation duration does not justify reaching a later phase, DO NOT reach it. End the generation with unresolved tensions, ongoing developments, and open questions — the situation's trajectory should feel genuinely uncertain, not predetermined toward either triumph or disaster. This is a feature, not a flaw — it creates realistic continuity for extensions.
+
+{% else %}
+{# local_deviation and global_deviation: lighter pacing guidance #}
+### Pacing Note for {{ scenario_type | replace("_", " ") | title }} Scenarios
+
+Even in historically-grounded scenarios, respect the tempo of real institutional change. In a ≤5-year span: political realignments are underway but not consolidated, economic shifts are emerging but markets haven't fully adjusted, social movements are forming but haven't achieved legislative victories, and technological programmes are funded but haven't produced deployable results. Some actors will be adapting faster than others — show this unevenness rather than compressing a decade of change into three years.
+{% endif %}

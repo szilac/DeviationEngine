@@ -1,0 +1,89 @@
+## ALTERNATE TIMELINE TO ILLUSTRATE
+
+**Deviation Point:** {{ deviation_date }}
+**What Changed:** {{ deviation_description }}
+**Time Period:** {{ deviation_year }} to {{ end_year }} ({{ simulation_years }} years)
+
+## STRUCTURED REPORT
+
+### Executive Summary
+{{ executive_summary }}
+
+### Political Changes
+{{ political_changes }}
+
+### Conflicts and Wars
+{{ conflicts_and_wars }}
+
+### Economic Impacts
+{{ economic_impacts }}
+
+### Social Developments
+{{ social_developments }}
+
+### Technological Shifts
+{{ technological_shifts }}
+
+### Key Figures
+{{ key_figures }}
+{% if narrative_prose %}
+
+## NARRATIVE PROSE
+
+{{ narrative_prose[:3000] }}{% if narrative_prose|length > 3000 %}...{% endif %}
+
+{"="*80}
+{% endif %}
+{% if focus_areas %}
+
+## FOCUS AREAS
+
+The user has requested special emphasis on these domains:
+{% for area in focus_areas %}
+- {{ area.capitalize() }}
+{% endfor %}
+
+While you should still show variety, try to include more images related to these areas.
+{% endif %}
+
+## TASK
+
+Generate {{ num_images }} detailed image prompts that visually capture key moments from this alternate timeline.
+
+**Requirements:**
+1. **Chronological Coverage**: Spread images across the timeline period ({{ deviation_year }}-{{ end_year}})
+{% if include_deviation_point %}
+   - Include the deviation point or its immediate aftermath
+{% endif %}
+   - Show early, mid, and late period moments
+   - Progress chronologically
+
+2. **Content Diversity**: Include variety in:
+   - **Subjects**: Political events, battles, social movements, technological innovations, daily life
+   - **Scales**: Wide establishing shots, medium scenes, close-up details
+   - **Tones**: Dramatic, somber, triumphant, chaotic
+   - **Locations**: Multiple cities, regions, settings
+
+3. **Visual Specificity**: Each prompt must include:
+   - Precise descriptions of subjects, clothing, architecture, technology
+   - Specific lighting, weather, time of day
+   - Period-appropriate visual style (photography type, art style)
+   - Camera angle and framing details
+   - Atmospheric details
+
+4. **Relative Year Convention**:
+   - CRITICAL: event_year must be RELATIVE to deviation
+   - 0 = deviation year ({{ deviation_year }})
+   - 5 = 5 years after deviation ({{ deviation_year + 5 }})
+   - 10 = 10 years after deviation ({{ deviation_year + 10 }})
+   - DO NOT use absolute calendar years!
+
+5. **Era-Appropriate Styles**:
+   - Early 1900s: Sepia, grainy, formal documentary photography
+   - 1920s-30s: Black & white, propaganda posters, newsreels
+   - 1940s-50s: War photography, emerging color, photojournalism
+   - Modern: Contemporary documentary, color photography
+
+6. **Overall Visual Theme**: Create a cohesive visual identity for this alternate timeline that ties all images together.
+
+Generate {{ num_images }} image prompts now, ensuring each is detailed, period-appropriate, and captures a meaningful moment from the timeline.

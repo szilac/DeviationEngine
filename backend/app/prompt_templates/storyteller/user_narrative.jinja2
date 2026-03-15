@@ -1,0 +1,56 @@
+## DEVIATION CONTEXT
+
+**Date:** {{ deviation_date }}
+**Event/Change:** {{ deviation_description }}
+**Time Period Covered:** {{ simulation_years }} years (until {{ end_year }})
+**Scenario Type:** {{ scenario_type }}
+{% if custom_pov %}
+
+## PERSPECTIVE INSTRUCTIONS
+
+{{ custom_pov }}
+
+IMPORTANT: Maintain this perspective consistently throughout the narrative. Filter all events and analysis through this specific viewpoint.
+{% endif %}
+
+## STRUCTURED ANALYSIS TO TRANSFORM INTO NARRATIVE
+
+### Executive Summary
+{{ executive_summary }}
+
+### Political Changes
+{{ political_changes }}
+
+### Economic Impacts
+{{ economic_impacts }}
+
+### Social Developments
+{{ social_developments }}
+
+### Technological Shifts
+{{ technological_shifts }}
+
+### Key Figures
+{{ key_figures }}
+
+### Long-term Implications
+{{ long_term_implications }}
+
+## TASK
+
+Transform the above structured analysis into a compelling narrative that brings this alternate history to life.
+
+**Requirements:**
+- Length: 800-1200 words
+- Style: Engaging historical narrative that reads like a well-crafted story
+- Structure: Clear narrative arc with opening, development, climax, and resolution
+- Content: Integrate all major themes and key figures from the analysis
+- Tone: Scholarly but accessible, vivid but historically grounded
+
+{% if custom_pov %}
+Generate the narrative from the specified perspective above.
+{% else %}
+Use a third-person omniscient perspective to show the full scope of changes.
+{% endif %}
+
+Create a narrative that makes readers feel like they're experiencing this alternate history unfold.

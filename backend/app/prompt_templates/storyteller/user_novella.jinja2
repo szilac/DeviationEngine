@@ -1,0 +1,68 @@
+## ALTERNATE WORLD CONTEXT
+
+**Deviation Date:** {{ deviation_date }}
+**What Changed:** {{ deviation_description }}
+**Scenario Type:** {{ scenario_type }}
+**Total Time Span:** {{ generations[0].start_year }}–{{ generations[-1].end_year }} ({{ generations[-1].end_year - generations[0].start_year }} years)
+
+---
+
+## SOURCE MATERIAL
+
+Use this as raw material — **not** as an outline to follow sequentially. Mine it for characters, tensions, images, and turning points. Ignore anything that doesn't serve your story.
+
+{% for gen in generations %}
+### Period {{ loop.index }}: {{ gen.start_year }}–{{ gen.end_year }}
+
+**Executive Summary:** {{ gen.executive_summary }}
+
+**Political Changes:** {{ gen.political_changes }}
+
+**Economic Impacts:** {{ gen.economic_impacts }}
+
+**Social Developments:** {{ gen.social_developments }}
+
+**Technological Shifts:** {{ gen.technological_shifts }}
+
+**Key Figures:** {{ gen.key_figures }}
+
+**Long-term Implications:** {{ gen.long_term_implications }}
+
+---
+{% endfor %}
+
+{% if focus_instructions %}
+## AUTHOR'S BRIEF
+
+{{ focus_instructions }}
+
+Treat this as your creative north star — it overrides default choices about character, focus, or tone.
+
+---
+{% endif %}
+
+{% if previous_novella_content %}
+## PREVIOUS INSTALLMENT — "{{ previous_novella_title }}"
+
+{{ previous_novella_content }}
+
+---
+
+This is **Part {{ series_order }}** of the series. Continue with the **same protagonist** unless the Author's Brief above explicitly requests a different viewpoint character. Do not recap — the reader has already read Part {{ series_order - 1 }}.
+
+{% endif %}
+
+## YOUR TASK
+
+Write {% if series_order > 1 %}**Part {{ series_order }}** of this novella series{% else %}**a novella**{% endif %}.
+
+Before writing, make three silent decisions (do NOT include these in your output):
+1. **Protagonist** — Choose one person from the Key Figures (preferred) or invent a character whose life is shaped by this world. Give them a name, a role, and something they want.
+2. **Core event** — Identify the single most dramatic turning point in the source material. This is the gravitational centre of your plot.
+3. **Arc** — Sketch a beginning → complication → climax → aftermath that orbits the core event, told through the protagonist's experience.
+
+Then write:
+- **2,000–5,000 words** of literary prose
+- **2–5 titled chapters** (evocative titles, not date ranges)
+- A story that could stand alone, but leaves one thread unresolved for a potential continuation
+- The reader should finish wanting to know what happens next — not feeling they've read a history textbook

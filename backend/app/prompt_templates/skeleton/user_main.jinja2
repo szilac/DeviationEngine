@@ -1,0 +1,25 @@
+## HISTORICAL CONTEXT (Original Timeline)
+
+{{ historical_context }}
+
+## DEVIATION POINT
+
+**Date:** {{ deviation_date }}
+**Event/Change:** {{ deviation_description }}
+**Scenario Type:** {{ scenario_type }}
+**Simulation Duration:** {{ simulation_years }} years (until {{ end_year }})
+
+{% set years_count = simulation_years %}
+{% include '_pacing_directive.jinja2' %}
+
+## TASK
+
+Generate a timeline SKELETON of 15-30 key pivotal events for the specified simulation duration. Adhere strictly to all Core Principles and Constraints outlined in the system prompt. The timeline must rigorously detail the chain of cause and effect, with a particular focus on the specific human decisions and institutional processes that drive each pivotal event.
+
+## Output Formatting :
+1.  **CRITICAL! Event Format:** Each event must have:
+   - Exact date (YYYY-MM-DD format)
+   - Specific location (city, country/region)
+   - Brief description (2-4 sentences) explaining what happened and its significance in the systemic causal chain.
+
+2.  **CRITICAL:** Do NOT generate extra explanation or any other material, only the events.

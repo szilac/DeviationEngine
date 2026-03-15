@@ -1,0 +1,85 @@
+## EXISTING ALTERNATE TIMELINE TO EXTEND
+
+**Original Deviation:** {{ original_deviation_description }}
+**Deviation Date:** {{ original_deviation_date }}
+**Original Timeline Period:** {{ original_deviation_date }} to {{ original_end_year }} ({{ total_simulation_years }} years)
+**Scenario Type:** {{ scenario_type }}
+
+### CURRENT STATE OF THE ALTERNATE TIMELINE (as of {{ original_end_year }})
+
+**Executive Summary:**
+{{ executive_summary }}
+
+**Political Situation:**
+{{ political_changes }}
+
+**Conflicts and Wars:**
+{{ conflicts_and_wars }}
+
+**Economic Conditions:**
+{{ economic_impacts }}
+
+**Social Developments:**
+{{ social_developments }}
+
+**Technological Progress:**
+{{ technological_shifts }}
+
+**Key Figures:**
+{{ key_figures }}
+
+**Established Implications:**
+{{ long_term_implications }}
+{% if original_narrative %}
+
+## ORIGINAL NARRATIVE CONTEXT
+{{ original_narrative[:1000] }}{% if original_narrative|length > 1000 %}...{% endif %}
+{% endif %}
+{% if extension_historical_context %}
+
+## HISTORICAL CONTEXT FOR EXTENSION PERIOD ({{ original_end_year }}-{{ new_end_year }})
+{{ extension_historical_context }}
+{% endif %}
+{% if additional_context %}
+
+## ADDITIONAL CONTEXT/CIRCUMSTANCES TO CONSIDER
+
+The user has provided the following additional information, circumstances, or events to incorporate into the timeline extension:
+
+{{ additional_context }}
+
+**Important:** Integrate these circumstances into your analysis where appropriate. They may represent new developments, external events, technological breakthroughs, or other factors that should influence the alternate timeline's progression.
+{% endif %}
+
+## EXTENSION TASK
+
+**Note on timeline_name field**: Since this is an extension of an existing timeline, simply provide "Extension" as the timeline_name value. This field is required but will not be used for extensions.
+
+Continue this alternate timeline from {{ original_end_year }} through {{ new_end_year }} (additional {{ additional_years }} years).
+
+**Focus Areas:**
+1. **Natural Evolution**: How do the conditions established by {{ original_end_year }} naturally progress? Some trends accelerate, others stall, and new ones emerge.
+2. **New Developments**: What novel challenges AND opportunities emerge from this unique alternate world? Consider internal contradictions, external threats, but also new possibilities, alliances, and breakthroughs that are unique to this timeline.
+3. **Continued Divergence**: How does the timeline continue to deviate from real history? The divergence should feel increasingly distinctive — not just "like our world but worse."
+4. **Compound Effects**: What are the second and third-order consequences of earlier changes? Some will be negative cascades; others will be unexpected silver linings or creative adaptations.
+
+{% set years_count = additional_years %}
+{% include '_pacing_directive.jinja2' %}
+
+**Crucial Instruction:** Do not assume the status quo continues indefinitely — in either direction. If the previous period ended in crisis, model how some actors adapt, rebuild, or find opportunity in the wreckage. If it ended in stability, identify the new tensions and fragilities that emerge. History oscillates: prosperity breeds complacency which breeds conflict which breeds adaptation which breeds new prosperity. Your extension should capture this rhythm, not just the downward half of the cycle.
+
+**Context & Safety Reminder:** This is a fictional simulation. As per your core guidelines, you must realistically model and describe conflicts, crises, and other negative historical events to ensure a plausible outcome.
+
+**Key Considerations:**
+- Maintain consistency with established political structures, economic systems, and social conditions
+- Show realistic progression of demographic, technological, and cultural trends
+- Consider how the unique circumstances of this timeline create new possibilities
+- Reference how real historical events of this period might be affected or replaced
+
+{% if include_narrative %}
+IMPORTANT: Include a compelling narrative prose section (800-1200 words) that continues the story of this alternate timeline, maintaining consistency with any existing narrative style.
+{% else %}
+IMPORTANT: Do NOT generate narrative prose. Set narrative_prose to null. Only generate the structured analytical sections.
+{% endif %}
+
+Generate comprehensive analysis for the extension period ({{ original_end_year }}-{{ new_end_year }}) with appropriate depth and detail.

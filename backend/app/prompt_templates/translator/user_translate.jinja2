@@ -1,0 +1,102 @@
+Translate the following {{ content_type | replace('_', ' ') }} from **{{ source_language_name }}** to **{{ target_language_name }}**.
+
+{% if metadata.section_name %}
+## Context
+
+This is the "{{ metadata.section_name }}" section of a historical analysis report.
+{% endif %}
+
+{% if metadata.tone %}
+**Required Tone**: {{ metadata.tone }}
+{% endif %}
+
+{% if content_type == 'podcast_script' %}
+## Special Instructions for Podcast Translation
+
+This is a conversational podcast script between two speakers. Your translation must:
+
+- Adapt conversational fillers to {{ target_language_name }} speech patterns
+- Preserve the natural back-and-forth dialogue rhythm
+- Keep both speakers' personalities distinct and authentic
+- Maintain the casual, friendly tone throughout
+- Use idiomatic expressions common in {{ target_language_name }} casual conversation
+- Adapt cultural references appropriately for {{ target_language_name }} audiences
+- Keep speaker markers like `**ANNA:**` and `**ADRIAN:**` unchanged
+
+Make it sound like two native {{ target_language_name }} speakers having a natural conversation about history.
+
+{% elif content_type == 'documentary_script' %}
+## Special Instructions for Documentary Translation
+
+This is a documentary narration script. Your translation must:
+
+- Maintain an authoritative, clear narration style
+- Use formal yet accessible language appropriate for {{ target_language_name }} documentaries
+- Preserve all dramatic pacing and `[PAUSE]` markers
+- Keep the educational, informative tone
+- Use historical terminology standard in {{ target_language_name }} documentaries
+- Maintain speaker markers like `**NARRATOR:**` unchanged
+
+{% elif content_type == 'news_script' %}
+## Special Instructions for News Bulletin Translation
+
+This is a news bulletin script. Your translation must:
+
+- Use professional broadcast style appropriate for {{ target_language_name }} news
+- Keep language clear, concise, and direct
+- Maintain urgent tone where appropriate
+- Use formal register suitable for news anchors
+- Preserve speaker markers like `**ANCHOR:**` unchanged
+
+{% elif content_type == 'storytelling_script' %}
+## Special Instructions for Storytelling Translation
+
+This is a narrative storytelling script. Your translation must:
+
+- Translate with literary quality to capture emotional resonance
+- Use rich, evocative language natural to {{ target_language_name }} storytelling
+- Preserve the narrative voice and atmosphere
+- Maintain dramatic beats and pacing
+- Preserve speaker markers like `**STORYTELLER:**` unchanged
+
+{% elif content_type == 'generation_report' %}
+## Special Instructions for Historical Report Translation
+
+This is a structured historical analysis report with academic content. Your translation must:
+
+- Use formal, academic language appropriate for {{ target_language_name }} historical discourse
+- Maintain technical accuracy for all political, economic, and social terminology
+- Preserve all dates, proper nouns, and statistical information exactly
+- Adapt historical context where necessary for {{ target_language_name }} audiences
+- Keep the analytical, objective tone throughout
+- Preserve all section headers (e.g., `### Executive Summary`) unchanged
+- Maintain all markdown formatting and structure exactly
+
+{% elif content_type == 'narrative_prose' %}
+## Special Instructions for Narrative Prose Translation
+
+This is literary narrative prose with storytelling elements. Your translation must:
+
+- Translate with literary quality—capture the artistry, not just the words
+- Preserve the narrative voice and emotional resonance throughout
+- Use rich, evocative language natural to {{ target_language_name }} literature
+- Adapt metaphors, similes, and imagery to resonate with {{ target_language_name }} culture
+- Maintain the story's atmosphere, mood, and pacing
+- Keep all formatting and paragraph structure intact
+
+{% endif %}
+
+---
+
+## Source Text
+
+{{ text }}
+
+---
+
+## Your Task
+
+Translate the above text into natural, idiomatic {{ target_language_name }}.
+
+Output ONLY the translated text with all formatting preserved.
+Do NOT add any explanations, notes, or commentary.

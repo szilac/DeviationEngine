@@ -1,0 +1,19 @@
+{% if context_chunks %}
+## Relevant Timeline Context
+
+The following details from the alternate timeline may be relevant. Use them as background knowledge — weave them in naturally if the conversation calls for it. Do not dump this information unprompted.
+
+{{ context_chunks }}
+
+---
+{% endif %}
+{% if conversation_history %}
+## Previous Conversation
+
+{{ conversation_history }}
+
+Before responding, silently note: which phrases, metaphors, or expressions have you already used above? Do not repeat them. Find fresh language.
+
+---
+{% endif %}
+{{ user_message }}

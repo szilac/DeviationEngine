@@ -1,0 +1,73 @@
+## DEVIATION POINT
+
+**Date:** {{ deviation_date }}
+**Event/Change:** {{ deviation_description }}
+**Scenario Type:** {{ scenario_type }}
+**Simulation Period:** {{ start_year }} to {{ end_year }} years from deviation (until {{ absolute_end_year }})
+
+{% if historical_context %}
+## GROUND TRUTH HISTORICAL CONTEXT
+
+The following information represents actual historical events, conditions, and developments from the real world during the relevant time period. Use this as a factual foundation to understand what would have been different in the alternate timeline:
+
+{{ historical_context }}
+
+**Note:** The above is ground truth. Your task is to analyze how the alternate timeline diverges from this reality based on the skeleton events below.
+
+{% endif %}
+
+{% set years_count = end_year - start_year %}
+{% include '_pacing_directive.jinja2' %}
+
+## SKELETON TIMELINE (User-Curated Key Events)
+
+The following events represent the definitive timeline of what occurred in this alternate history. These events have been identified as the key pivotal moments. Your task is to analyze these events comprehensively.
+
+{{ formatted_events }}
+
+## TASK
+
+**CRITICAL FIRST STEP - Timeline Name**: You MUST begin by creating a short, memorable name for this timeline (3-5 words maximum). This name should capture the essence of the deviation and its most significant impact based on the skeleton events. Examples: "The Unsinkable Timeline", "Red October Victory", "Archduke's Survival".
+
+**IMPORTANT**: Your response MUST include the `timeline_name` field as the very first field in your output. Example format:
+```json
+{
+  "timeline_name": "Your Timeline Name Here",
+  "executive_summary": "...",
+  "political_changes": "...",
+  ...
+}
+```
+
+Generate a comprehensive analytical report that expands upon this skeleton of events. Treat these events as historical facts in this alternate timeline.
+
+**Analysis Requirements:**
+
+1. **Event-Centered Analysis**: Reference specific skeleton events by date when discussing impacts. Show how these events drive the analysis.
+
+2. **Causal Connections**: Demonstrate how events build upon each other. Show cause-and-effect chains clearly.
+
+3. **Multi-Domain Ripple Effects**: For each major event, analyze its impact across:
+   - Political structures and international relations
+   - Military conflicts and wars
+   - Economic systems and trade patterns
+   - Social movements and cultural changes
+   - Technological development and innovation
+
+4. **Depth Over Breadth**: Don't invent new major events. Instead, deeply analyze the implications of the provided skeleton events.
+
+5. **Temporal Progression**: Show how the timeline evolves from the early events ({{ first_event_date }}) through the later ones ({{ last_event_date }}).
+
+6. **Synthesis**: Weave these events into a coherent narrative showing how this alternate world evolved.
+
+**Crucial Instruction**: Base your entire analysis on the skeleton events provided. These are the anchors of your report. Expand on their implications, but treat them as the definitive timeline.
+
+**Context & Safety Reminder**: This is a fictional simulation. Realistically analyze the conflicts, crises, and events in the skeleton using academic historical analysis.
+
+{% if include_narrative %}
+IMPORTANT: Include a compelling narrative prose section (800-1200 words) that brings these skeleton events to life in a cohesive story.
+{% else %}
+IMPORTANT: Do NOT generate narrative prose. Set narrative_prose to null. Only generate the structured analytical sections.
+{% endif %}
+
+Generate all required sections with appropriate depth and detail, ensuring each section explicitly references and builds upon the skeleton events.
