@@ -89,6 +89,8 @@ class LLMProvider(str, Enum):
     GOOGLE = "google"
     OPENROUTER = "openrouter"
     OLLAMA = "ollama"
+    ANTHROPIC = "anthropic"
+    OPENAI = "openai"
 
 
 class AgentType(str, Enum):
@@ -728,8 +730,10 @@ class LLMConfigRequest(BaseModel):
     api_key_google: Optional[str] = Field(None, description="Google Gemini API key (optional)")
     api_key_openrouter: Optional[str] = Field(None, description="OpenRouter API key (optional)")
     ollama_base_url: Optional[str] = Field(None, description="Ollama server base URL (optional)")
+    api_key_anthropic: Optional[str] = Field(None, description="Anthropic API key (optional)")
+    api_key_openai: Optional[str] = Field(None, description="OpenAI API key (optional)")
 
-    @field_validator("api_key_google", "api_key_openrouter", "ollama_base_url")
+    @field_validator("api_key_google", "api_key_openrouter", "ollama_base_url", "api_key_anthropic", "api_key_openai")
     @classmethod
     def validate_api_keys(cls, v: Optional[str]) -> Optional[str]:
         """Trim whitespace and convert empty strings to None."""
@@ -748,6 +752,8 @@ class LLMConfigResponse(BaseModel):
     api_key_google_set: bool = Field(..., description="Whether Google API key is configured")
     api_key_openrouter_set: bool = Field(..., description="Whether OpenRouter API key is configured")
     ollama_base_url: Optional[str] = Field(None, description="Ollama server base URL")
+    api_key_anthropic_set: bool = Field(..., description="Whether Anthropic API key is configured")
+    api_key_openai_set: bool = Field(..., description="Whether OpenAI API key is configured")
     updated_at: datetime = Field(..., description="Last update timestamp (UTC)")
 
 
@@ -757,6 +763,8 @@ class AvailableModelsResponse(BaseModel):
     google: List[str] = Field(..., description="Available Google Gemini models")
     openrouter: List[str] = Field(..., description="Available OpenRouter models")
     ollama: List[str] = Field(..., description="Available Ollama models")
+    anthropic: List[str] = Field(..., description="Available Anthropic Claude models")
+    openai: List[str] = Field(..., description="Available OpenAI models")
 
 
 class AgentLLMConfigRequest(BaseModel):
@@ -770,6 +778,8 @@ class AgentLLMConfigRequest(BaseModel):
     api_key_google: Optional[str] = Field(None, description="Google API key override (optional)")
     api_key_openrouter: Optional[str] = Field(None, description="OpenRouter API key override (optional)")
     ollama_base_url: Optional[str] = Field(None, description="Ollama server URL override (optional)")
+    api_key_anthropic: Optional[str] = Field(None, description="Anthropic API key override (optional)")
+    api_key_openai: Optional[str] = Field(None, description="OpenAI API key override (optional)")
 
     # Optional model settings overrides
     max_tokens: Optional[int] = Field(None, ge=1024, le=32768, description="Max tokens override")
@@ -777,7 +787,7 @@ class AgentLLMConfigRequest(BaseModel):
 
     enabled: bool = Field(True, description="Whether this override is active")
 
-    @field_validator("api_key_google", "api_key_openrouter", "ollama_base_url")
+    @field_validator("api_key_google", "api_key_openrouter", "ollama_base_url", "api_key_anthropic", "api_key_openai")
     @classmethod
     def validate_api_keys(cls, v: Optional[str]) -> Optional[str]:
         """Trim whitespace and convert empty strings to None."""
@@ -800,6 +810,8 @@ class AgentLLMConfigResponse(BaseModel):
     api_key_google_set: bool = Field(..., description="Whether Google API key is set")
     api_key_openrouter_set: bool = Field(..., description="Whether OpenRouter API key is set")
     ollama_base_url: Optional[str] = Field(None, description="Ollama server URL")
+    api_key_anthropic_set: bool = Field(..., description="Whether Anthropic API key is configured for this agent")
+    api_key_openai_set: bool = Field(..., description="Whether OpenAI API key is configured for this agent")
 
     max_tokens: Optional[int] = Field(None, description="Max tokens override")
     temperature: Optional[float] = Field(None, description="Temperature override")
