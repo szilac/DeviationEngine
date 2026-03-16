@@ -28,6 +28,8 @@ interface AgentConfigFormState {
   modelName: string;
   apiKeyGoogle: string;
   apiKeyOpenRouter: string;
+  apiKeyAnthropic: string;
+  apiKeyOpenAI: string;
   ollamaBaseUrl: string;
   maxTokens: string;
   temperature: string;
@@ -62,6 +64,8 @@ export default function AgentLLMConfigManager({
     modelName: '',
     apiKeyGoogle: '',
     apiKeyOpenRouter: '',
+    apiKeyAnthropic: '',
+    apiKeyOpenAI: '',
     ollamaBaseUrl: '',
     maxTokens: '',
     temperature: '',
@@ -69,6 +73,8 @@ export default function AgentLLMConfigManager({
   });
   const [showGoogleKey, setShowGoogleKey] = useState(false);
   const [showOpenRouterKey, setShowOpenRouterKey] = useState(false);
+  const [showAnthropicKey, setShowAnthropicKey] = useState(false);
+  const [showOpenAIKey, setShowOpenAIKey] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<AgentType | null>(null);
 
   const agents: AgentType[] = [
@@ -93,6 +99,8 @@ export default function AgentLLMConfigManager({
           modelName: config.model_name,
           apiKeyGoogle: '',
           apiKeyOpenRouter: '',
+          apiKeyAnthropic: '',
+          apiKeyOpenAI: '',
           ollamaBaseUrl: config.ollama_base_url || '',
           maxTokens: config.max_tokens?.toString() || '',
           temperature: config.temperature?.toString() || '',
@@ -104,6 +112,8 @@ export default function AgentLLMConfigManager({
           modelName: allConfigs.global_config.model_name,
           apiKeyGoogle: '',
           apiKeyOpenRouter: '',
+          apiKeyAnthropic: '',
+          apiKeyOpenAI: '',
           ollamaBaseUrl: allConfigs.global_config.ollama_base_url || '',
           maxTokens: '',
           temperature: '',
@@ -131,6 +141,8 @@ export default function AgentLLMConfigManager({
       model_name: formState.modelName,
       api_key_google: formState.apiKeyGoogle || undefined,
       api_key_openrouter: formState.apiKeyOpenRouter || undefined,
+      api_key_anthropic: formState.apiKeyAnthropic || undefined,
+      api_key_openai: formState.apiKeyOpenAI || undefined,
       ollama_base_url: formState.ollamaBaseUrl || undefined,
       max_tokens: formState.maxTokens ? parseInt(formState.maxTokens) : undefined,
       temperature: formState.temperature ? parseFloat(formState.temperature) : undefined,
@@ -140,10 +152,12 @@ export default function AgentLLMConfigManager({
     await onSaveAgentConfig(agentType, config);
 
     setSaveSuccess(agentType);
-    setFormState((prev) => ({ ...prev, apiKeyGoogle: '', apiKeyOpenRouter: '' }));
+    setFormState((prev) => ({ ...prev, apiKeyGoogle: '', apiKeyOpenRouter: '', apiKeyAnthropic: '', apiKeyOpenAI: '' }));
     setEditingAgent(null);
     setShowGoogleKey(false);
     setShowOpenRouterKey(false);
+    setShowAnthropicKey(false);
+    setShowOpenAIKey(false);
     setTimeout(() => setSaveSuccess(null), 3000);
   };
 
@@ -158,6 +172,8 @@ export default function AgentLLMConfigManager({
     setEditingAgent(null);
     setShowGoogleKey(false);
     setShowOpenRouterKey(false);
+    setShowAnthropicKey(false);
+    setShowOpenAIKey(false);
   };
 
   const currentModels = availableModels?.[formState.provider] || [];
@@ -232,6 +248,8 @@ export default function AgentLLMConfigManager({
                           {effectiveConfig?.provider === 'google' && 'Google Gemini'}
                           {effectiveConfig?.provider === 'openrouter' && 'OpenRouter'}
                           {effectiveConfig?.provider === 'ollama' && 'Ollama (Local)'}
+                          {effectiveConfig?.provider === 'anthropic' && 'Anthropic Claude'}
+                          {effectiveConfig?.provider === 'openai' && 'OpenAI (ChatGPT)'}
                         </dd>
                       </div>
                       <div className="flex justify-between items-baseline">
@@ -298,6 +316,8 @@ export default function AgentLLMConfigManager({
                         >
                           <option value="google" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>Google Gemini</option>
                           <option value="openrouter" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenRouter</option>
+                          <option value="anthropic" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>Anthropic Claude</option>
+                          <option value="openai" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenAI (ChatGPT)</option>
                         </select>
                         <span className="absolute right-0 top-1/2 -translate-y-1/2 text-dim pointer-events-none">
                           <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
@@ -396,6 +416,48 @@ export default function AgentLLMConfigManager({
                               className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
                             >
                               {showOpenRouterKey ? 'HIDE' : 'SHOW'}
+                            </button>
+                          </div>
+                        </div>
+                        {/* Anthropic API Key Override */}
+                        <div>
+                          <label className={fieldLabel}>Anthropic API Key Override</label>
+                          <div className="flex items-end gap-4">
+                            <input
+                              type={showAnthropicKey ? 'text' : 'password'}
+                              value={formState.apiKeyAnthropic}
+                              onChange={(e) => setFormState((prev) => ({ ...prev, apiKeyAnthropic: e.target.value }))}
+                              placeholder="leave empty to use global"
+                              className={`flex-1 ${bottomInput}`}
+                              disabled={isLoading}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowAnthropicKey(!showAnthropicKey)}
+                              className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+                            >
+                              {showAnthropicKey ? 'HIDE' : 'SHOW'}
+                            </button>
+                          </div>
+                        </div>
+                        {/* OpenAI API Key Override */}
+                        <div>
+                          <label className={fieldLabel}>OpenAI API Key Override</label>
+                          <div className="flex items-end gap-4">
+                            <input
+                              type={showOpenAIKey ? 'text' : 'password'}
+                              value={formState.apiKeyOpenAI}
+                              onChange={(e) => setFormState((prev) => ({ ...prev, apiKeyOpenAI: e.target.value }))}
+                              placeholder="leave empty to use global"
+                              className={`flex-1 ${bottomInput}`}
+                              disabled={isLoading}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowOpenAIKey(!showOpenAIKey)}
+                              className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+                            >
+                              {showOpenAIKey ? 'HIDE' : 'SHOW'}
                             </button>
                           </div>
                         </div>
