@@ -198,7 +198,7 @@ async def create_pydantic_ai_model(db: AsyncSession) -> Model:
         db: Database session
 
     Returns:
-        Model: Configured Pydantic-AI model (GeminiModel or OpenAIModel)
+        Model: Configured Pydantic-AI model (GeminiModel, OpenAIChatModel, or AnthropicModel)
 
     Raises:
         ConfigurationError: If configuration is invalid or API keys are missing

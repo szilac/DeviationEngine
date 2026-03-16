@@ -116,6 +116,8 @@ async def _seed_llm_config():
     - DEFAULT_LLM_MODEL (default: "gemini-2.5-flash")
     - GEMINI_API_KEY (optional, can be None)
     - OPENROUTER_API_KEY (optional, can be None)
+    - ANTHROPIC_API_KEY (optional, can be None)
+    - OPENAI_API_KEY (optional, can be None)
     """
     # Import here to avoid circular imports
     from app.db_models import LLMConfigDB
