@@ -14,6 +14,9 @@ from sqlalchemy import select, update
 from pydantic_ai.models import Model
 from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.models.anthropic import AnthropicModel
+from pydantic_ai.providers.anthropic import AnthropicProvider
+from pydantic_ai.providers.openai import OpenAIProvider
 
 from app.db_models import LLMConfigDB, AgentLLMConfigDB
 from app.models import (
@@ -36,7 +39,6 @@ AVAILABLE_MODELS: Dict[str, List[str]] = {
         "openai/gpt-4o-mini",
         "openai/gpt-5-nano",
         "openai/gpt-4o",
-        "openai/gpt-5-nano",
         "deepseek/deepseek-chat-v3.1",
         "deepseek/deepseek-v3.2",
         "z-ai/glm-4.5",
@@ -53,6 +55,21 @@ AVAILABLE_MODELS: Dict[str, List[str]] = {
     "ollama": [
         "llama3.2:3b",
         "llama3.2:1b",
+    ],
+    "anthropic": [
+        "claude-opus-4-5",
+        "claude-sonnet-4-5",
+        "claude-haiku-4-5",
+        "claude-opus-4",
+        "claude-sonnet-4",
+    ],
+    "openai": [
+        "gpt-4o",
+        "gpt-4o-mini",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "o3",
+        "o4-mini",
     ],
 }
 
@@ -134,6 +151,8 @@ async def update_llm_config(
                 api_key_google=config_request.api_key_google,
                 api_key_openrouter=config_request.api_key_openrouter,
                 ollama_base_url=config_request.ollama_base_url,
+                api_key_anthropic=config_request.api_key_anthropic,
+                api_key_openai=config_request.api_key_openai,
                 updated_at=datetime.now(timezone.utc)
             )
         )
@@ -155,6 +174,8 @@ async def update_llm_config(
             api_key_google_set=updated_config.api_key_google is not None,
             api_key_openrouter_set=updated_config.api_key_openrouter is not None,
             ollama_base_url=updated_config.ollama_base_url,
+            api_key_anthropic_set=updated_config.api_key_anthropic is not None,
+            api_key_openai_set=updated_config.api_key_openai is not None,
             updated_at=updated_config.updated_at
         )
 
@@ -236,6 +257,38 @@ async def create_pydantic_ai_model(db: AsyncSession) -> Model:
                 api_key="ollama"  # Ollama doesn't require a real API key
             )
 
+        elif config.provider == "anthropic":
+            api_key = config.api_key_anthropic or os.getenv("ANTHROPIC_API_KEY")
+
+            if not api_key:
+                raise ConfigurationError(
+                    "Anthropic API key not configured. Set ANTHROPIC_API_KEY environment variable "
+                    "or configure in settings.",
+                    details={"provider": "anthropic"}
+                )
+
+            logger.info(f"Creating Anthropic model: {config.model_name}")
+            return AnthropicModel(
+                model_name=config.model_name,
+                provider=AnthropicProvider(api_key=api_key),
+            )
+
+        elif config.provider == "openai":
+            api_key = config.api_key_openai or os.getenv("OPENAI_API_KEY")
+
+            if not api_key:
+                raise ConfigurationError(
+                    "OpenAI API key not configured. Set OPENAI_API_KEY environment variable "
+                    "or configure in settings.",
+                    details={"provider": "openai"}
+                )
+
+            logger.info(f"Creating OpenAI model: {config.model_name}")
+            return OpenAIChatModel(
+                model_name=config.model_name,
+                provider=OpenAIProvider(api_key=api_key),
+            )
+
         else:
             raise ConfigurationError(
                 f"Unknown LLM provider: {config.provider}",
@@ -266,7 +319,9 @@ def get_available_models() -> AvailableModelsResponse:
     return AvailableModelsResponse(
         google=AVAILABLE_MODELS["google"],
         openrouter=AVAILABLE_MODELS["openrouter"],
-        ollama=AVAILABLE_MODELS["ollama"]
+        ollama=AVAILABLE_MODELS["ollama"],
+        anthropic=AVAILABLE_MODELS["anthropic"],
+        openai=AVAILABLE_MODELS["openai"],
     )
 
 
@@ -288,6 +343,8 @@ async def get_llm_config_response(db: AsyncSession) -> LLMConfigResponse:
         api_key_google_set=config.api_key_google is not None or os.getenv("GEMINI_API_KEY") is not None,
         api_key_openrouter_set=config.api_key_openrouter is not None or os.getenv("OPENROUTER_API_KEY") is not None,
         ollama_base_url=config.ollama_base_url or os.getenv("OLLAMA_BASE_URL"),
+        api_key_anthropic_set=config.api_key_anthropic is not None or os.getenv("ANTHROPIC_API_KEY") is not None,
+        api_key_openai_set=config.api_key_openai is not None or os.getenv("OPENAI_API_KEY") is not None,
         updated_at=config.updated_at
     )
 
@@ -386,6 +443,8 @@ async def set_agent_llm_config(
             existing_config.api_key_google = config_request.api_key_google
             existing_config.api_key_openrouter = config_request.api_key_openrouter
             existing_config.ollama_base_url = config_request.ollama_base_url
+            existing_config.api_key_anthropic = config_request.api_key_anthropic
+            existing_config.api_key_openai = config_request.api_key_openai
             existing_config.max_tokens = config_request.max_tokens
             # Convert float temperature to string for storage
             existing_config.temperature = str(config_request.temperature) if config_request.temperature is not None else None
@@ -405,6 +464,8 @@ async def set_agent_llm_config(
                 api_key_google=config_request.api_key_google,
                 api_key_openrouter=config_request.api_key_openrouter,
                 ollama_base_url=config_request.ollama_base_url,
+                api_key_anthropic=config_request.api_key_anthropic,
+                api_key_openai=config_request.api_key_openai,
                 max_tokens=config_request.max_tokens,
                 temperature=str(config_request.temperature) if config_request.temperature is not None else None,
                 enabled=1 if config_request.enabled else 0
@@ -437,6 +498,8 @@ async def set_agent_llm_config(
             api_key_google_set=updated_config.api_key_google is not None,
             api_key_openrouter_set=updated_config.api_key_openrouter is not None,
             ollama_base_url=updated_config.ollama_base_url,
+            api_key_anthropic_set=updated_config.api_key_anthropic is not None,
+            api_key_openai_set=updated_config.api_key_openai is not None,
             max_tokens=updated_config.max_tokens,
             temperature=temperature_float,
             enabled=bool(updated_config.enabled),
@@ -528,6 +591,8 @@ async def get_all_llm_configs(db: AsyncSession) -> "AllLLMConfigsResponse":
                 api_key_google_set=config.api_key_google is not None,
                 api_key_openrouter_set=config.api_key_openrouter is not None,
                 ollama_base_url=config.ollama_base_url,
+                api_key_anthropic_set=config.api_key_anthropic is not None,
+                api_key_openai_set=config.api_key_openai is not None,
                 max_tokens=config.max_tokens,
                 temperature=temperature_float,
                 enabled=bool(config.enabled),
@@ -648,6 +713,44 @@ async def create_pydantic_ai_model_for_agent(
                 model_name=config_to_use.model_name,
                 base_url=base_url,
                 api_key="ollama"
+            )
+
+        elif config_to_use.provider == "anthropic":
+            api_key = (
+                config_to_use.api_key_anthropic or
+                global_config.api_key_anthropic or
+                os.getenv("ANTHROPIC_API_KEY")
+            )
+
+            if not api_key:
+                raise ConfigurationError(
+                    f"Anthropic API key not configured for agent '{agent_type.value}'",
+                    details={"provider": "anthropic", "agent_type": agent_type.value}
+                )
+
+            logger.info(f"Creating Anthropic model for {agent_type.value}: {config_to_use.model_name}")
+            return AnthropicModel(
+                model_name=config_to_use.model_name,
+                provider=AnthropicProvider(api_key=api_key),
+            )
+
+        elif config_to_use.provider == "openai":
+            api_key = (
+                config_to_use.api_key_openai or
+                global_config.api_key_openai or
+                os.getenv("OPENAI_API_KEY")
+            )
+
+            if not api_key:
+                raise ConfigurationError(
+                    f"OpenAI API key not configured for agent '{agent_type.value}'",
+                    details={"provider": "openai", "agent_type": agent_type.value}
+                )
+
+            logger.info(f"Creating OpenAI model for {agent_type.value}: {config_to_use.model_name}")
+            return OpenAIChatModel(
+                model_name=config_to_use.model_name,
+                provider=OpenAIProvider(api_key=api_key),
             )
 
         else:
