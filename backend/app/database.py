@@ -140,6 +140,8 @@ async def _seed_llm_config():
                     model_name=default_model,
                     api_key_google=api_key_google,
                     api_key_openrouter=api_key_openrouter,
+                    api_key_anthropic=os.getenv("ANTHROPIC_API_KEY"),
+                    api_key_openai=os.getenv("OPENAI_API_KEY"),
                     created_at=datetime.now(timezone.utc),
                     updated_at=datetime.now(timezone.utc)
                 )

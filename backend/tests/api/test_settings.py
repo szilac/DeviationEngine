@@ -36,7 +36,10 @@ def test_get_llm_config_response_structure(test_client: TestClient):
         data = response.json()
         assert "provider" in data
         assert "model_name" in data
-        assert "api_keys_configured" in data
+        assert "api_key_google_set" in data
+        assert "api_key_openrouter_set" in data
+        assert "api_key_anthropic_set" in data
+        assert "api_key_openai_set" in data
 
 
 def test_get_llm_config_valid_provider(test_client: TestClient):
@@ -46,7 +49,7 @@ def test_get_llm_config_valid_provider(test_client: TestClient):
     # Only check provider if request succeeded
     if response.status_code == 200:
         data = response.json()
-        assert data["provider"] in ["google", "openrouter", "ollama"]
+        assert data["provider"] in ["google", "openrouter", "ollama", "anthropic", "openai"]
 
 
 # ============================================================================
@@ -72,7 +75,7 @@ def test_update_llm_config_response_structure(test_client: TestClient):
     request_data = {
         "provider": "google",
         "model_name": "gemini-2.5-flash",
-        "gemini_api_key": "test-key",
+        "api_key_google": "test-key",
     }
 
     response = test_client.put("/api/llm-config", json=request_data)
@@ -82,7 +85,9 @@ def test_update_llm_config_response_structure(test_client: TestClient):
         data = response.json()
         assert "provider" in data
         assert "model_name" in data
-        assert "api_keys_configured" in data
+        assert "api_key_google_set" in data
+        assert "api_key_anthropic_set" in data
+        assert "api_key_openai_set" in data
 
 
 def test_update_llm_config_invalid_provider_400(test_client: TestClient):
@@ -117,6 +122,8 @@ def test_get_llm_models_response_structure(test_client: TestClient):
     assert "google" in data
     assert "openrouter" in data
     assert "ollama" in data
+    assert "anthropic" in data
+    assert "openai" in data
 
 
 def test_get_llm_models_returns_lists(test_client: TestClient):
@@ -128,6 +135,8 @@ def test_get_llm_models_returns_lists(test_client: TestClient):
     assert isinstance(data["google"], list)
     assert isinstance(data["openrouter"], list)
     assert isinstance(data["ollama"], list)
+    assert isinstance(data["anthropic"], list)
+    assert isinstance(data["openai"], list)
 
 
 def test_get_llm_models_google_has_models(test_client: TestClient):
