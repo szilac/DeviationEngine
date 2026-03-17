@@ -180,7 +180,7 @@ def create_timeline_generation_workflow(
     workflow.add_step(
         name="generate_structured_report",
         func=_generate_structured_report,
-        timeout=180.0,  # 3 minutes max
+        timeout=360.0,  # 6 minutes max (Anthropic needs more time for large structured outputs)
         retry_count=1,  # Retry once on failure
     )
 
@@ -192,7 +192,7 @@ def create_timeline_generation_workflow(
             NarrativeMode.ADVANCED_OMNISCIENT,
             NarrativeMode.ADVANCED_CUSTOM_POV
         ],
-        timeout=180.0,  # 3 minutes max
+        timeout=360.0,  # 6 minutes max (Anthropic needs more time for large structured outputs)
         retry_count=1,
     )
 
@@ -293,7 +293,7 @@ def create_timeline_extension_workflow(
     workflow.add_step(
         name="extend_timeline_structured",
         func=_extend_timeline_structured,
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 
@@ -306,7 +306,7 @@ def create_timeline_extension_workflow(
             NarrativeMode.ADVANCED_OMNISCIENT,
             NarrativeMode.ADVANCED_CUSTOM_POV
         ],
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 
@@ -737,7 +737,7 @@ def create_skeleton_generation_workflow(
     workflow.add_step(
         name="generate_skeleton_events",
         func=_generate_skeleton_events,
-        timeout=180.0,  # 3 minutes max
+        timeout=360.0,  # 6 minutes max (Anthropic needs more time for large structured outputs)
         retry_count=1,
     )
 
@@ -772,7 +772,7 @@ def create_report_from_skeleton_workflow(
     workflow.add_step(
         name="generate_report_from_skeleton",
         func=_generate_report_from_skeleton_events,
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 
@@ -784,7 +784,7 @@ def create_report_from_skeleton_workflow(
             NarrativeMode.ADVANCED_OMNISCIENT,
             NarrativeMode.ADVANCED_CUSTOM_POV
         ],
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 
@@ -1229,7 +1229,7 @@ async def execute_extension_skeleton_generation(
     workflow.add_step(
         name="generate_extension_skeleton_events",
         func=_generate_extension_skeleton_events,
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 
@@ -1346,7 +1346,7 @@ async def execute_extension_from_skeleton(
     workflow.add_step(
         name="generate_extension_report_from_skeleton",
         func=_generate_extension_report_from_skeleton,
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 
@@ -1358,7 +1358,7 @@ async def execute_extension_from_skeleton(
             NarrativeMode.ADVANCED_OMNISCIENT,
             NarrativeMode.ADVANCED_CUSTOM_POV
         ],
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 
@@ -1540,7 +1540,7 @@ async def execute_image_prompt_generation(
     workflow.add_step(
         name="generate_image_prompts",
         func=_generate_image_prompts,
-        timeout=180.0,
+        timeout=360.0,
         retry_count=1,
     )
 

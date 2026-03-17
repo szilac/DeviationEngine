@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNotebookLMEnabled } from '../hooks/useNotebookLMEnabled';
+import { useCLIProxyEnabled } from '../hooks/useCLIProxyEnabled';
 import LLMConfigForm from '../components/LLMConfigForm';
 import AgentLLMConfigManager from '../components/AgentLLMConfigManager';
 import TranslationConfigManager from '../components/TranslationConfigManager';
@@ -59,6 +60,7 @@ export default function SettingsPage() {
 
   const [openSection, setOpenSection] = useState<SectionId | null>(null);
   const [nlmEnabled, setNlmEnabled] = useNotebookLMEnabled();
+  const [clipProxyEnabled, setClipProxyEnabled] = useCLIProxyEnabled();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -239,6 +241,8 @@ export default function SettingsPage() {
                             <p className="font-caption text-sm text-dim">
                               Enable optional integrations that require third-party CLI tools installed on your machine.
                             </p>
+
+                            {/* NotebookLM */}
                             <div className="flex items-center justify-between border border-border rounded px-4 py-3 bg-surface">
                               <div>
                                 <div className="font-body text-sm text-ink font-medium">NotebookLM Podcast Generation</div>
@@ -262,6 +266,74 @@ export default function SettingsPage() {
                                   }`}
                                 />
                               </button>
+                            </div>
+
+                            {/* CLIProxy */}
+                            <div className="border border-border rounded bg-surface">
+                              <div className="flex items-center justify-between px-4 py-3">
+                                <div>
+                                  <div className="font-body text-sm text-ink font-medium">CLIProxy — Subscription API Bridge</div>
+                                  <div className="font-caption text-xs text-dim mt-0.5">
+                                    Use your existing <strong className="text-ink">Claude Pro/Max</strong> or <strong className="text-ink">OpenAI</strong> subscription
+                                    as an API — no extra token costs.
+                                    When enabled, "CLIProxy (Subscription)" appears as a provider option in § I.
+                                  </div>
+                                </div>
+                                <button
+                                  role="switch"
+                                  aria-checked={clipProxyEnabled}
+                                  aria-label="CLIProxy Subscription Bridge"
+                                  onClick={() => setClipProxyEnabled(!clipProxyEnabled)}
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-vellum ${
+                                    clipProxyEnabled ? 'bg-gold' : 'bg-border'
+                                  }`}
+                                >
+                                  <span
+                                    className={`inline-block h-4 w-4 transform rounded-full bg-surface shadow transition-transform ${
+                                      clipProxyEnabled ? 'translate-x-6' : 'translate-x-1'
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+
+                              {/* Installation instructions — shown when enabled */}
+                              {clipProxyEnabled && (
+                                <div className="border-t border-border px-4 py-4 space-y-3">
+                                  <p className="font-caption text-xs text-dim">
+                                    CLIProxyAPI wraps the Claude Code or OpenAI CLI and exposes a local OpenAI-compatible endpoint at{' '}
+                                    <code className="font-mono text-gold">http://localhost:8317/v1</code>.
+                                    No API key is required — it authenticates through your subscription.
+                                  </p>
+                                  <div className="space-y-1.5">
+                                    <p className="font-mono text-xs text-dim tracking-widest uppercase">Installation</p>
+                                    <ol className="space-y-1 font-caption text-xs text-dim list-decimal list-inside">
+                                      <li>
+                                        Install:{' '}
+                                        <code className="font-mono text-gold">
+                                          bash &lt;(curl -fsSL https://github.com/router-for-me/CLIProxyAPI/releases/latest/download/install.sh)
+                                        </code>
+                                      </li>
+                                      <li>
+                                        Authenticate:{' '}
+                                        <code className="font-mono text-gold">cliproxyapi --browser-auth</code>
+                                        {' '}(one-time, opens a browser)
+                                      </li>
+                                      <li>
+                                        Start the proxy:{' '}
+                                        <code className="font-mono text-gold">cliproxyapi</code>
+                                        {' '}(keep it running while using Deviation Engine)
+                                      </li>
+                                      <li>
+                                        Go to § I. Language Model, select <strong className="text-ink">CLIProxy (Subscription)</strong>,
+                                        pick a model, and save.
+                                      </li>
+                                    </ol>
+                                  </div>
+                                  <p className="font-caption text-xs text-faint">
+                                    Source & docs: github.com/router-for-me/CLIProxyAPI
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -291,6 +363,9 @@ export default function SettingsPage() {
                   {currentConfig.provider === 'google' && 'Google Gemini'}
                   {currentConfig.provider === 'openrouter' && 'OpenRouter'}
                   {currentConfig.provider === 'ollama' && 'Ollama (Local)'}
+                  {currentConfig.provider === 'anthropic' && 'Anthropic Claude'}
+                  {currentConfig.provider === 'openai' && 'OpenAI (ChatGPT)'}
+                  {currentConfig.provider === 'cliproxy' && 'CLIProxy (Subscription)'}
                 </dd>
               </div>
               <div className="flex justify-between items-baseline">

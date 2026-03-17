@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import type { LLMProvider, LLMConfig, LLMConfigRequest, AvailableModels } from '../types';
+import { useCLIProxyEnabled } from '../hooks/useCLIProxyEnabled';
 
 interface LLMConfigFormProps {
   currentConfig: LLMConfig | null;
@@ -33,7 +34,12 @@ export default function LLMConfigForm({
   const [ollamaBaseUrl, setOllamaBaseUrl] = useState('');
   const [showGoogleKey, setShowGoogleKey] = useState(false);
   const [showOpenRouterKey, setShowOpenRouterKey] = useState(false);
+  const [apiKeyAnthropic, setApiKeyAnthropic] = useState('');
+  const [apiKeyOpenAI, setApiKeyOpenAI] = useState('');
+  const [showAnthropicKey, setShowAnthropicKey] = useState(false);
+  const [showOpenAIKey, setShowOpenAIKey] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [clipProxyEnabled] = useCLIProxyEnabled();
 
   useEffect(() => {
     if (currentConfig) {
@@ -61,6 +67,8 @@ export default function LLMConfigForm({
       model_name: modelName,
       api_key_google: apiKeyGoogle || undefined,
       api_key_openrouter: apiKeyOpenRouter || undefined,
+      api_key_anthropic: apiKeyAnthropic || undefined,
+      api_key_openai: apiKeyOpenAI || undefined,
       ollama_base_url: ollamaBaseUrl || undefined,
     };
 
@@ -69,6 +77,8 @@ export default function LLMConfigForm({
     setSaveSuccess(true);
     setApiKeyGoogle('');
     setApiKeyOpenRouter('');
+    setApiKeyAnthropic('');
+    setApiKeyOpenAI('');
     setTimeout(() => setSaveSuccess(false), 3000);
   };
 
@@ -78,6 +88,8 @@ export default function LLMConfigForm({
       setModelName(currentConfig.model_name);
       setApiKeyGoogle('');
       setApiKeyOpenRouter('');
+      setApiKeyAnthropic('');
+      setApiKeyOpenAI('');
       setOllamaBaseUrl(currentConfig.ollama_base_url || '');
       setSaveSuccess(false);
     }
@@ -89,6 +101,9 @@ export default function LLMConfigForm({
     google: 'Direct Google Gemini API access',
     openrouter: 'OpenRouter provides access to multiple LLM providers',
     ollama: 'Run models locally with Ollama',
+    anthropic: 'Direct Anthropic Claude API access',
+    openai: 'Direct OpenAI API access',
+    cliproxy: 'Use your existing Claude Pro/Max or OpenAI subscription via CLIProxyAPI — no extra API token costs. Run CLIProxyAPI locally and point it at your subscription.',
   };
 
   return (
@@ -107,6 +122,11 @@ export default function LLMConfigForm({
           >
             <option value="google" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>Google Gemini</option>
             <option value="openrouter" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenRouter</option>
+            <option value="anthropic" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>Anthropic Claude</option>
+            <option value="openai" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenAI (ChatGPT)</option>
+            {clipProxyEnabled && (
+              <option value="cliproxy" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>CLIProxy (Subscription)</option>
+            )}
           </select>
           <span className="absolute right-0 top-1/2 -translate-y-1/2 text-dim pointer-events-none">
             <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
@@ -202,6 +222,91 @@ export default function LLMConfigForm({
         </div>
         <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
       </div>
+
+      {/* Anthropic API Key */}
+      <div>
+        <label htmlFor="apiKeyAnthropic" className={fieldLabel}>
+          Anthropic API Key
+        </label>
+        <div className="flex items-end gap-4">
+          <input
+            type={showAnthropicKey ? 'text' : 'password'}
+            id="apiKeyAnthropic"
+            value={apiKeyAnthropic}
+            onChange={(e) => setApiKeyAnthropic(e.target.value)}
+            placeholder={currentConfig?.api_key_anthropic_set ? '••••••••••••••••' : 'enter API key…'}
+            autoComplete="off"
+            spellCheck={false}
+            className={`flex-1 ${bottomInput}`}
+            disabled={isLoading}
+          />
+          <button
+            type="button"
+            onClick={() => setShowAnthropicKey(!showAnthropicKey)}
+            aria-label={showAnthropicKey ? 'Hide Anthropic API key' : 'Show Anthropic API key'}
+            className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+            disabled={isLoading}
+          >
+            {showAnthropicKey ? 'HIDE' : 'SHOW'}
+          </button>
+        </div>
+        <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
+      </div>
+
+      {/* OpenAI API Key */}
+      <div>
+        <label htmlFor="apiKeyOpenAI" className={fieldLabel}>
+          OpenAI API Key
+        </label>
+        <div className="flex items-end gap-4">
+          <input
+            type={showOpenAIKey ? 'text' : 'password'}
+            id="apiKeyOpenAI"
+            value={apiKeyOpenAI}
+            onChange={(e) => setApiKeyOpenAI(e.target.value)}
+            placeholder={currentConfig?.api_key_openai_set ? '••••••••••••••••' : 'enter API key…'}
+            autoComplete="off"
+            spellCheck={false}
+            className={`flex-1 ${bottomInput}`}
+            disabled={isLoading}
+          />
+          <button
+            type="button"
+            onClick={() => setShowOpenAIKey(!showOpenAIKey)}
+            aria-label={showOpenAIKey ? 'Hide OpenAI API key' : 'Show OpenAI API key'}
+            className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+            disabled={isLoading}
+          >
+            {showOpenAIKey ? 'HIDE' : 'SHOW'}
+          </button>
+        </div>
+        <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
+      </div>
+
+      {/* Ollama / CLIProxy Base URL */}
+      {(provider === 'ollama' || provider === 'cliproxy') && (
+        <div>
+          <label htmlFor="baseUrl" className={fieldLabel}>
+            {provider === 'cliproxy' ? 'CLIProxy Base URL' : 'Ollama Base URL'}
+          </label>
+          <input
+            type="text"
+            id="baseUrl"
+            value={ollamaBaseUrl}
+            onChange={(e) => setOllamaBaseUrl(e.target.value)}
+            placeholder={provider === 'cliproxy' ? 'http://localhost:8317/v1' : 'http://localhost:11434/v1'}
+            autoComplete="off"
+            spellCheck={false}
+            className={bottomInput}
+            disabled={isLoading}
+          />
+          <p className="mt-1.5 font-caption text-xs text-faint">
+            {provider === 'cliproxy'
+              ? 'Leave empty to use default (localhost:8317). Set CLIPROXY_BASE_URL env var to override.'
+              : 'Leave empty to use default (localhost:11434). Set OLLAMA_BASE_URL env var to override.'}
+          </p>
+        </div>
+      )}
 
       {/* Warning */}
       <div className="border-l-2 border-warning pl-4 py-1">

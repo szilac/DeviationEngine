@@ -9,7 +9,7 @@ from the original historian_agent.py and is dedicated to the skeleton-based work
 import logging
 from typing import List
 from datetime import date
-from pydantic_ai import Agent
+from pydantic_ai import Agent, ToolOutput
 from pydantic_ai.models import Model
 
 from app.models import TimelineOutput
@@ -357,7 +357,7 @@ async def generate_report_from_skeleton(
 
         # Run agent with structured output
         logger.info("Calling LLM API to generate report from skeleton...")
-        result = await agent.run(prompt, output_type=TimelineOutput)
+        result = await agent.run(prompt, output_type=ToolOutput(TimelineOutput))
 
         # Extract output
         output_data = result.output

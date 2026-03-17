@@ -60,9 +60,10 @@ Before creating content:
 1. Open http://localhost:5173.
 2. Verify the home/landing page loads without errors.
 3. Open the Settings page:
-   - Confirm your LLM provider is configured (Gemini or OpenRouter).
+   - Confirm your LLM provider is configured (Gemini, OpenRouter, Anthropic, or OpenAI).
    - (Optional) Configure DeepL for translations.
    - (Optional) Toggle "Enable NotebookLM Audio" if you have `nlm` installed and authenticated.
+   - (Optional) Go to **§ V. Integrations** → enable **CLIProxy** if you want to use a Claude or OpenAI subscription instead of API keys (see inline instructions).
 4. Return to the console/home to start creating your first scenario.
 
 If any step fails, consult setup docs or backend logs.
@@ -461,6 +462,10 @@ If something doesn't work as expected:
   - Confirm the feature is enabled in Settings → Integrations.
   - Run `nlm login --check` in your terminal to verify authentication.
   - Note: generation takes 5–20 minutes; check Past Generations after waiting.
+- CLIProxy generation fails:
+  - Confirm `cliproxyapi` is running in a terminal on your machine.
+  - If the session expired, re-authenticate: `cliproxyapi --browser-auth`.
+  - Verify CLIProxy is enabled in **Settings → § V. Integrations**.
 - Historical Figure Chat not responding correctly:
   - Ensure the timeline has at least one generation with content.
   - Try regenerating the figure's profile.

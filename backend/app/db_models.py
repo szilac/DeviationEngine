@@ -685,6 +685,8 @@ class LLMConfigDB(Base):
     # API keys and URLs
     api_key_google = Column(Text, nullable=True)
     api_key_openrouter = Column(Text, nullable=True)
+    api_key_anthropic = Column(Text, nullable=True)
+    api_key_openai = Column(Text, nullable=True)
     ollama_base_url = Column(Text, nullable=True)
 
     # Metadata
@@ -702,7 +704,7 @@ class LLMConfigDB(Base):
     __table_args__ = (
         CheckConstraint("id = 1", name="singleton_constraint"),
         CheckConstraint(
-            "provider IN ('google', 'openrouter', 'ollama')",
+            "provider IN ('google', 'openrouter', 'ollama', 'anthropic', 'openai', 'cliproxy')",
             name="valid_provider",
         ),
     )
@@ -747,6 +749,8 @@ class AgentLLMConfigDB(Base):
     # Optional overrides
     api_key_google = Column(Text, nullable=True)
     api_key_openrouter = Column(Text, nullable=True)
+    api_key_anthropic = Column(Text, nullable=True)
+    api_key_openai = Column(Text, nullable=True)
     ollama_base_url = Column(Text, nullable=True)
 
     # Model settings overrides
@@ -774,7 +778,7 @@ class AgentLLMConfigDB(Base):
             name="valid_agent_type",
         ),
         CheckConstraint(
-            "provider IN ('google', 'openrouter', 'ollama')",
+            "provider IN ('google', 'openrouter', 'ollama', 'anthropic', 'openai')",
             name="valid_agent_provider",
         ),
         CheckConstraint("enabled IN (0, 1)", name="valid_enabled"),

@@ -122,20 +122,54 @@ def setup_env() -> None:
 
     gemini_key = prompt_optional("Gemini API key (recommended)")
     openrouter_key = prompt_optional("OpenRouter API key")
+    anthropic_key = prompt_optional("Anthropic API key (for direct Claude access)")
+    openai_key = prompt_optional("OpenAI API key (for direct ChatGPT access)")
 
-    if not gemini_key and not openrouter_key:
+    if not gemini_key and not openrouter_key and not anthropic_key and not openai_key:
         warn("No LLM key provided — the app will start but cannot generate timelines.")
-        warn("Edit backend/.env later and add GEMINI_API_KEY or OPENROUTER_API_KEY.")
+        warn("Edit backend/.env later and add at least one LLM API key.")
 
     print("\n  Optional services (all skippable):")
     pollinations_key = prompt_optional("Pollinations API key (for image generation)")
     deepl_key = prompt_optional("DeepL API key (for fast translation)")
+
+    # CLIProxy subscription bridge
+    print(
+        "\n  CLIProxy — use a Claude Pro/Max or OpenAI subscription instead of paying API costs:\n"
+        "  Do you want to use CLIProxyAPI? It routes requests through your existing subscription.\n"
+    )
+    use_cliproxy = prompt_optional("Enable CLIProxy? [y/N]").lower() in ("y", "yes")
+    if use_cliproxy:
+        print(
+            "\n  ─────────────────────────────────────────────────────────\n"
+            "  CLIProxy Setup Instructions\n"
+            "  ─────────────────────────────────────────────────────────\n"
+            "\n"
+            "  1. Install CLIProxyAPI (Linux/macOS):\n"
+            "     bash <(curl -fsSL https://github.com/router-for-me/CLIProxyAPI\n"
+            "                       /releases/latest/download/install.sh)\n"
+            "\n"
+            "  2. Authenticate once (opens a browser):\n"
+            "     cliproxyapi --browser-auth\n"
+            "\n"
+            "  3. Start the proxy (keep it running alongside Deviation Engine):\n"
+            "     cliproxyapi\n"
+            "\n"
+            "  4. In the app: go to Settings → V. Integrations → enable CLIProxy.\n"
+            "     Then go to § I. Language Model and select 'CLIProxy (Subscription)'.\n"
+            "\n"
+            "  The proxy listens on http://localhost:8317/v1 by default.\n"
+            "  You can override this with the CLIPROXY_BASE_URL environment variable.\n"
+            "  ─────────────────────────────────────────────────────────\n"
+        )
 
     env_content = ENV_EXAMPLE.read_text(encoding="utf-8")
 
     substitutions = {
         "GEMINI_API_KEY=your_gemini_api_key_here": f"GEMINI_API_KEY={gemini_key}",
         "OPENROUTER_API_KEY=your_openrouter_api_key_here": f"OPENROUTER_API_KEY={openrouter_key}",
+        "ANTHROPIC_API_KEY=your_anthropic_api_key_here": f"ANTHROPIC_API_KEY={anthropic_key}",
+        "OPENAI_API_KEY=your_openai_api_key_here": f"OPENAI_API_KEY={openai_key}",
         "POLLINATIONS_API_KEY=your_pollinations_api_key_here": f"POLLINATIONS_API_KEY={pollinations_key}",
         "DEEPL_API_KEY=your_deepl_api_key_here:fx": f"DEEPL_API_KEY={deepl_key}",
     }
@@ -145,10 +179,20 @@ def setup_env() -> None:
     if deepl_key:
         env_content = env_content.replace("DEEPL_ENABLED=false", "DEEPL_ENABLED=true")
 
-    if not gemini_key and openrouter_key:
-        env_content = env_content.replace(
-            "DEFAULT_LLM_PROVIDER=google", "DEFAULT_LLM_PROVIDER=openrouter"
-        )
+    # Set default provider based on which key was provided first
+    if not gemini_key:
+        if anthropic_key:
+            env_content = env_content.replace(
+                "DEFAULT_LLM_PROVIDER=google", "DEFAULT_LLM_PROVIDER=anthropic"
+            )
+        elif openai_key:
+            env_content = env_content.replace(
+                "DEFAULT_LLM_PROVIDER=google", "DEFAULT_LLM_PROVIDER=openai"
+            )
+        elif openrouter_key:
+            env_content = env_content.replace(
+                "DEFAULT_LLM_PROVIDER=google", "DEFAULT_LLM_PROVIDER=openrouter"
+            )
 
     ENV_FILE.write_text(env_content, encoding="utf-8")
     ok("backend/.env created")

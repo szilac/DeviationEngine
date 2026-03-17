@@ -648,7 +648,7 @@ export const TimelineUtils = {
 /**
  * LLM provider options.
  */
-export type LLMProvider = 'google' | 'openrouter' | 'ollama';
+export type LLMProvider = 'google' | 'openrouter' | 'ollama' | 'anthropic' | 'openai' | 'cliproxy';
 
 /**
  * LLM configuration interface.
@@ -667,6 +667,12 @@ export interface LLMConfig {
 
   /** Whether OpenRouter API key is configured (env or DB) */
   api_key_openrouter_set: boolean;
+
+  /** Whether Anthropic API key is configured (env or DB) */
+  api_key_anthropic_set: boolean;
+
+  /** Whether OpenAI API key is configured (env or DB) */
+  api_key_openai_set: boolean;
 
   /** Ollama server base URL (if configured) */
   ollama_base_url?: string;
@@ -693,6 +699,12 @@ export interface LLMConfigRequest {
   /** Optional OpenRouter API key */
   api_key_openrouter?: string;
 
+  /** Optional Anthropic API key */
+  api_key_anthropic?: string;
+
+  /** Optional OpenAI API key */
+  api_key_openai?: string;
+
   /** Optional Ollama server base URL */
   ollama_base_url?: string;
 }
@@ -711,6 +723,15 @@ export interface AvailableModels {
 
   /** Available Ollama models */
   ollama: string[];
+
+  /** Available Anthropic Claude models */
+  anthropic: string[];
+
+  /** Available OpenAI models */
+  openai: string[];
+
+  /** Available CLIProxyAPI models */
+  cliproxy: string[];
 }
 
 /**
@@ -762,6 +783,12 @@ export interface AgentLLMConfig {
   /** Whether OpenRouter API key is configured for this agent */
   api_key_openrouter_set: boolean;
 
+  /** Whether Anthropic API key is configured for this agent */
+  api_key_anthropic_set: boolean;
+
+  /** Whether OpenAI API key is configured for this agent */
+  api_key_openai_set: boolean;
+
   /** Ollama server base URL for this agent (if configured) */
   ollama_base_url?: string | null;
 
@@ -799,6 +826,12 @@ export interface AgentLLMConfigRequest {
 
   /** Optional OpenRouter API key override */
   api_key_openrouter?: string;
+
+  /** Optional Anthropic API key override */
+  api_key_anthropic?: string;
+
+  /** Optional OpenAI API key override */
+  api_key_openai?: string;
 
   /** Optional Ollama server base URL override */
   ollama_base_url?: string;
