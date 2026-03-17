@@ -648,7 +648,7 @@ export const TimelineUtils = {
 /**
  * LLM provider options.
  */
-export type LLMProvider = 'google' | 'openrouter' | 'ollama' | 'anthropic' | 'openai';
+export type LLMProvider = 'google' | 'openrouter' | 'ollama' | 'anthropic' | 'openai' | 'cliproxy';
 
 /**
  * LLM configuration interface.
@@ -729,6 +729,9 @@ export interface AvailableModels {
 
   /** Available OpenAI models */
   openai: string[];
+
+  /** Available CLIProxyAPI models */
+  cliproxy: string[];
 }
 
 /**

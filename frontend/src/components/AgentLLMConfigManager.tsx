@@ -13,6 +13,7 @@ import type {
   LLMProvider,
 } from '../types';
 import { AgentConfigUtils, AgentType as AgentTypeEnum } from '../types';
+import { useCLIProxyEnabled } from '../hooks/useCLIProxyEnabled';
 
 interface AgentLLMConfigManagerProps {
   allConfigs: AllLLMConfigs | null;
@@ -76,6 +77,7 @@ export default function AgentLLMConfigManager({
   const [showAnthropicKey, setShowAnthropicKey] = useState(false);
   const [showOpenAIKey, setShowOpenAIKey] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<AgentType | null>(null);
+  const [clipProxyEnabled] = useCLIProxyEnabled();
 
   const agents: AgentType[] = [
     AgentTypeEnum.HISTORIAN,
@@ -250,6 +252,7 @@ export default function AgentLLMConfigManager({
                           {effectiveConfig?.provider === 'ollama' && 'Ollama (Local)'}
                           {effectiveConfig?.provider === 'anthropic' && 'Anthropic Claude'}
                           {effectiveConfig?.provider === 'openai' && 'OpenAI (ChatGPT)'}
+                          {effectiveConfig?.provider === 'cliproxy' && 'CLIProxy (Subscription)'}
                         </dd>
                       </div>
                       <div className="flex justify-between items-baseline">
@@ -318,6 +321,9 @@ export default function AgentLLMConfigManager({
                           <option value="openrouter" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenRouter</option>
                           <option value="anthropic" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>Anthropic Claude</option>
                           <option value="openai" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenAI (ChatGPT)</option>
+                          {clipProxyEnabled && (
+                            <option value="cliproxy" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>CLIProxy (Subscription)</option>
+                          )}
                         </select>
                         <span className="absolute right-0 top-1/2 -translate-y-1/2 text-dim pointer-events-none">
                           <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
@@ -461,6 +467,23 @@ export default function AgentLLMConfigManager({
                             </button>
                           </div>
                         </div>
+                        {/* Ollama / CLIProxy Base URL Override */}
+                        {(formState.provider === 'ollama' || formState.provider === 'cliproxy') && (
+                          <div>
+                            <label className={fieldLabel}>
+                              {formState.provider === 'cliproxy' ? 'CLIProxy Base URL Override' : 'Ollama Base URL Override'}
+                            </label>
+                            <input
+                              type="text"
+                              value={formState.ollamaBaseUrl}
+                              onChange={(e) => setFormState((prev) => ({ ...prev, ollamaBaseUrl: e.target.value }))}
+                              placeholder={formState.provider === 'cliproxy' ? 'http://localhost:8317/v1' : 'http://localhost:11434/v1'}
+                              className={bottomInput}
+                              disabled={isLoading}
+                            />
+                            <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use global config</p>
+                          </div>
+                        )}
                       </div>
                     </details>
 

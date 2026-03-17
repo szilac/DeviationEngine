@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import type { LLMProvider, LLMConfig, LLMConfigRequest, AvailableModels } from '../types';
+import { useCLIProxyEnabled } from '../hooks/useCLIProxyEnabled';
 
 interface LLMConfigFormProps {
   currentConfig: LLMConfig | null;
@@ -38,6 +39,7 @@ export default function LLMConfigForm({
   const [showAnthropicKey, setShowAnthropicKey] = useState(false);
   const [showOpenAIKey, setShowOpenAIKey] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [clipProxyEnabled] = useCLIProxyEnabled();
 
   useEffect(() => {
     if (currentConfig) {
@@ -101,6 +103,7 @@ export default function LLMConfigForm({
     ollama: 'Run models locally with Ollama',
     anthropic: 'Direct Anthropic Claude API access',
     openai: 'Direct OpenAI API access',
+    cliproxy: 'Use your existing Claude Pro/Max or OpenAI subscription via CLIProxyAPI — no extra API token costs. Run CLIProxyAPI locally and point it at your subscription.',
   };
 
   return (
@@ -121,6 +124,9 @@ export default function LLMConfigForm({
             <option value="openrouter" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenRouter</option>
             <option value="anthropic" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>Anthropic Claude</option>
             <option value="openai" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>OpenAI (ChatGPT)</option>
+            {clipProxyEnabled && (
+              <option value="cliproxy" style={{ backgroundColor: '#271E0A', color: '#E8D8A0' }}>CLIProxy (Subscription)</option>
+            )}
           </select>
           <span className="absolute right-0 top-1/2 -translate-y-1/2 text-dim pointer-events-none">
             <svg width="12" height="7" viewBox="0 0 12 7" fill="none">
@@ -276,6 +282,31 @@ export default function LLMConfigForm({
         </div>
         <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
       </div>
+
+      {/* Ollama / CLIProxy Base URL */}
+      {(provider === 'ollama' || provider === 'cliproxy') && (
+        <div>
+          <label htmlFor="baseUrl" className={fieldLabel}>
+            {provider === 'cliproxy' ? 'CLIProxy Base URL' : 'Ollama Base URL'}
+          </label>
+          <input
+            type="text"
+            id="baseUrl"
+            value={ollamaBaseUrl}
+            onChange={(e) => setOllamaBaseUrl(e.target.value)}
+            placeholder={provider === 'cliproxy' ? 'http://localhost:8317/v1' : 'http://localhost:11434/v1'}
+            autoComplete="off"
+            spellCheck={false}
+            className={bottomInput}
+            disabled={isLoading}
+          />
+          <p className="mt-1.5 font-caption text-xs text-faint">
+            {provider === 'cliproxy'
+              ? 'Leave empty to use default (localhost:8317). Set CLIPROXY_BASE_URL env var to override.'
+              : 'Leave empty to use default (localhost:11434). Set OLLAMA_BASE_URL env var to override.'}
+          </p>
+        </div>
+      )}
 
       {/* Warning */}
       <div className="border-l-2 border-warning pl-4 py-1">

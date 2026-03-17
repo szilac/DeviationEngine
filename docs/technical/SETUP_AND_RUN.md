@@ -23,6 +23,10 @@ You need at least one LLM provider key to use the application:
 |----------|----------------|------|
 | **Google Gemini** (recommended) | [aistudio.google.com](https://aistudio.google.com/) | Free tier available |
 | **OpenRouter** | [openrouter.ai](https://openrouter.ai/) | Pay-per-use |
+| **Anthropic Claude** | [console.anthropic.com](https://console.anthropic.com/) | Pay-per-use |
+| **OpenAI** | [platform.openai.com](https://platform.openai.com/) | Pay-per-use |
+
+**No API key?** If you already pay for a Claude Pro/Max or OpenAI subscription, see [Section 4.3 CLIProxy Setup](#43-cliproxy-setup-optional) to use it instead.
 
 Optional keys:
 
@@ -215,6 +219,46 @@ nlm login --check
 
 ---
 
+## 4.3 CLIProxy Setup (Optional)
+
+CLIProxyAPI is a local proxy that exposes your **Claude Pro/Max** or **OpenAI** subscription as an OpenAI-compatible API. Use this if you already pay for a subscription and want to avoid separate API token costs.
+
+### Install
+
+```bash
+# Linux / macOS
+bash <(curl -fsSL https://github.com/router-for-me/CLIProxyAPI/releases/latest/download/install.sh)
+```
+
+### Authenticate (one-time)
+
+```bash
+cliproxyapi --browser-auth
+```
+
+Follow the browser prompt. Your session is stored locally.
+
+### Run the proxy
+
+```bash
+cliproxyapi
+```
+
+The proxy listens on `http://localhost:8317/v1`. Keep it running alongside Deviation Engine.
+
+### Configure in the App
+
+1. Open **Settings** → **§ V. Integrations**
+2. Toggle **CLIProxy — Subscription API Bridge**
+3. Go to **§ I. Language Model** → select **CLIProxy (Subscription)**
+4. Pick a model (`claude-sonnet-4-20250514`, `claude-opus-4-20250514`, or `gpt-4o` etc.) and save
+
+To use a non-default URL, set `CLIPROXY_BASE_URL` in `backend/.env`.
+
+> **Note**: Designed for Claude Max. Claude Pro users will work but may hit rate limits under heavy load.
+
+---
+
 ## 5. Full Configuration Reference
 
 All configuration lives in `backend/.env`. Copy from `.env.example` as a starting point.
@@ -222,13 +266,18 @@ All configuration lives in `backend/.env`. Copy from `.env.example` as a startin
 ### LLM Provider
 
 ```bash
-# Required: at least one of these
+# Set at least one key for your chosen provider
 GEMINI_API_KEY=your_gemini_api_key_here
 OPENROUTER_API_KEY=your_openrouter_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
 
 # Provider selection
-DEFAULT_LLM_PROVIDER=google          # google | openrouter
+DEFAULT_LLM_PROVIDER=google          # google | openrouter | anthropic | openai | cliproxy
 DEFAULT_LLM_MODEL=gemini-2.5-flash   # see model lists below
+
+# CLIProxy — optional, overrides the default localhost:8317 URL
+CLIPROXY_BASE_URL=http://localhost:8317/v1
 ```
 
 **Google Gemini models:**
@@ -244,6 +293,25 @@ DEFAULT_LLM_MODEL=gemini-2.5-flash   # see model lists below
 - `openai/gpt-4o-mini` — fast and cheap
 - `openai/gpt-4o` — high quality
 - `anthropic/claude-3.5-sonnet` — strong reasoning
+
+**Anthropic direct models:**
+
+- `claude-sonnet-4-6` — balanced speed and quality
+- `claude-opus-4-6` — highest quality
+- `claude-haiku-4-5` — fastest, lowest cost
+
+**OpenAI direct models:**
+
+- `gpt-4o-mini` — fast and cheap
+- `gpt-4o` — high quality
+- `gpt-4.1` — latest generation
+
+**CLIProxy models** (no API key — uses your subscription):
+
+- `claude-sonnet-4-20250514`, `claude-opus-4-20250514`, `claude-haiku-4-5-20251001`
+- `gpt-4o`, `gpt-4o-mini`, `gpt-4.1`
+
+See [Section 4.3](#43-cliproxy-setup-optional) for CLIProxy setup.
 
 ---
 
@@ -423,6 +491,13 @@ python -m spacy download en_core_web_sm
 - Confirm the feature is enabled in **Settings → Audio**.
 - Remember: generation takes 5–20 minutes (processed by Google externally).
 
+### CLIProxy provider returns errors
+
+- Confirm `cliproxyapi` is running in a separate terminal.
+- Check that you authenticated: `cliproxyapi --browser-auth` (re-run if session expired).
+- Confirm the feature is enabled in **Settings → § V. Integrations → CLIProxy**.
+- Verify the proxy URL matches — default is `http://localhost:8317/v1`. Set `CLIPROXY_BASE_URL` in `.env` if you changed the port.
+
 ### Port conflicts
 
 If something is already running on port 8000 or 5173, stop it or change ports:
@@ -450,6 +525,9 @@ python -m spacy download en_core_web_sm
 
 # One-time: NotebookLM auth
 pip install notebooklm-cli && nlm login
+
+# One-time: CLIProxy auth (if using subscription instead of API key)
+cliproxyapi --browser-auth
 
 # Reset all data
 cd backend && python scripts/purge_data.py --yes

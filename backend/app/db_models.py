@@ -704,7 +704,7 @@ class LLMConfigDB(Base):
     __table_args__ = (
         CheckConstraint("id = 1", name="singleton_constraint"),
         CheckConstraint(
-            "provider IN ('google', 'openrouter', 'ollama', 'anthropic', 'openai')",
+            "provider IN ('google', 'openrouter', 'ollama', 'anthropic', 'openai', 'cliproxy')",
             name="valid_provider",
         ),
     )

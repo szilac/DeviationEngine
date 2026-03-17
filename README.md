@@ -42,9 +42,10 @@ On subsequent runs, just double-click the launcher again — no setup needed.
 
 - **Node.js** 18+ and npm
 - **Python** 3.9+
-- **API Key**: [Google Gemini API](https://aistudio.google.com/) (free tier available) OR [OpenRouter](https://openrouter.ai/)
+- **API Key**: [Google Gemini API](https://aistudio.google.com/) (free tier available) OR [OpenRouter](https://openrouter.ai/) OR Anthropic/OpenAI direct keys
 - **Optional**: [DeepL API Key](https://www.deepl.com/pro-api) for fast translations (500k chars/month free)
 - **Optional**: [notebooklm-cli](https://github.com/jnsahaj/notebooklm-cli) for NotebookLM AI audio
+- **Optional**: [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) to use a Claude Pro/Max or OpenAI subscription instead of paying per-token API costs
 
 ### Installation
 
@@ -258,6 +259,47 @@ You can optionally guide the discussion, for example:
 
 ---
 
+## CLIProxy Setup
+
+CLIProxyAPI is a local proxy server that wraps the Claude Code or OpenAI CLI and exposes an OpenAI-compatible API at `http://localhost:8317/v1`. If you already pay for a **Claude Pro/Max** or **OpenAI** subscription, you can use it with Deviation Engine at no extra token cost.
+
+### Installation
+
+```bash
+# Linux / macOS
+bash <(curl -fsSL https://github.com/router-for-me/CLIProxyAPI/releases/latest/download/install.sh)
+```
+
+### Authenticate (once)
+
+```bash
+cliproxyapi --browser-auth
+```
+
+This opens a browser to authenticate with your subscription. Your session is stored locally.
+
+### Run the proxy
+
+```bash
+cliproxyapi
+```
+
+Keep this running alongside Deviation Engine. The proxy listens on `http://localhost:8317/v1` by default.
+
+### Enable in Deviation Engine
+
+1. Go to **Settings** → **§ V. Integrations**
+2. Toggle **CLIProxy — Subscription API Bridge**
+3. Read the inline setup steps and confirm the proxy is running
+4. Go to **§ I. Language Model** → select **CLIProxy (Subscription)**
+5. Choose a model (e.g. `claude-sonnet-4-20250514`) and save
+
+You can override the default URL with the `CLIPROXY_BASE_URL` environment variable in `backend/.env`.
+
+> **Note**: CLIProxy is designed for Claude Max subscriptions. Claude Pro users will work but may hit rate limits during heavy generation sessions.
+
+---
+
 ## Usage Guide
 
 ### Creating Your First Timeline
@@ -363,6 +405,28 @@ DEFAULT_LLM_MODEL=openai/gpt-4o-mini
 ```
 
 [Get OpenRouter key](https://openrouter.ai/)
+
+#### Anthropic Claude (Direct)
+
+```bash
+ANTHROPIC_API_KEY=your_anthropic_api_key
+DEFAULT_LLM_PROVIDER=anthropic
+DEFAULT_LLM_MODEL=claude-sonnet-4-6
+```
+
+#### OpenAI (Direct)
+
+```bash
+OPENAI_API_KEY=your_openai_api_key
+DEFAULT_LLM_PROVIDER=openai
+DEFAULT_LLM_MODEL=gpt-4o
+```
+
+#### CLIProxy — Use Your Subscription (No API Key Needed)
+
+If you already pay for a **Claude Pro/Max** or **OpenAI** subscription, CLIProxyAPI lets you route Deviation Engine through that subscription instead of paying separate API token costs.
+
+See the [CLIProxy Setup](#cliproxy-setup) section below.
 
 You can also switch providers via **Settings** in the web UI.
 
@@ -576,7 +640,7 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ## Acknowledgments
 
-Built with [FastAPI](https://fastapi.tiangolo.com/), [React 19](https://reactjs.org/), [Pydantic-AI](https://ai.pydantic.dev/), and [D3.js](https://d3js.org/). Powered by [Google Gemini](https://deepmind.google/technologies/gemini/) or [OpenRouter](https://openrouter.ai/). NotebookLM audio via [notebooklm-cli](https://github.com/jnsahaj/notebooklm-cli). UI designed with the Quantum Manuscript design system — Tailwind CSS v4, Motion, IM Fell English / Crimson Pro typography.
+Built with [FastAPI](https://fastapi.tiangolo.com/), [React 19](https://reactjs.org/), [Pydantic-AI](https://ai.pydantic.dev/), and [D3.js](https://d3js.org/). Powered by [Google Gemini](https://deepmind.google/technologies/gemini/), [OpenRouter](https://openrouter.ai/), Anthropic Claude, or OpenAI — or via [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) using your existing subscription. NotebookLM audio via [notebooklm-cli](https://github.com/jnsahaj/notebooklm-cli). UI designed with the Quantum Manuscript design system — Tailwind CSS v4, Motion, IM Fell English / Crimson Pro typography.
 
 ---
 

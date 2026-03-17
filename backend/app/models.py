@@ -91,6 +91,7 @@ class LLMProvider(str, Enum):
     OLLAMA = "ollama"
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    CLIPROXY = "cliproxy"
 
 
 class AgentType(str, Enum):
@@ -765,6 +766,7 @@ class AvailableModelsResponse(BaseModel):
     ollama: List[str] = Field(..., description="Available Ollama models")
     anthropic: List[str] = Field(..., description="Available Anthropic Claude models")
     openai: List[str] = Field(..., description="Available OpenAI models")
+    cliproxy: List[str] = Field(..., description="Available CLIProxyAPI models")
 
 
 class AgentLLMConfigRequest(BaseModel):

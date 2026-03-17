@@ -50,26 +50,41 @@ AVAILABLE_MODELS: Dict[str, List[str]] = {
         "moonshotai/kimi-k2-thinking",
         "aion-labs/aion-2.0",
         "moonshotai/kimi-k2.5",
-
+        "anthropic/claude-sonnet-4.6",
+        "anthropic/claude-opus-4.6",
+        "openrouter/healer-alpha",
+        "openrouter/hunter-alpha",
     ],
     "ollama": [
         "llama3.2:3b",
         "llama3.2:1b",
     ],
     "anthropic": [
-        "claude-opus-4-5",
+        "claude-sonet-4",
         "claude-sonnet-4-5",
         "claude-haiku-4-5",
-        "claude-opus-4",
-        "claude-sonnet-4",
+        "claude-sonnet-4-6",
     ],
     "openai": [
         "gpt-4o",
         "gpt-4o-mini",
         "gpt-4.1",
         "gpt-4.1-mini",
-        "o3",
-        "o4-mini",
+        "gpt-5.4",
+        "gpt-5",
+    ],
+    "cliproxy": [
+        "claude-sonnet-4-20250514",
+        "claude-sonnet-4-6",
+        "claude-opus-4-20250514",
+        "claude-opus-4-6",
+        "claude-haiku-4-5-20251001",
+        "gpt-4o",
+        "gpt-4o-mini",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "gpt-5.4",
+        "gpt-5",
     ],
 }
 
@@ -289,6 +304,16 @@ async def create_pydantic_ai_model(db: AsyncSession) -> Model:
                 provider=OpenAIProvider(api_key=api_key),
             )
 
+        elif config.provider == "cliproxy":
+            # CLIProxyAPI — OpenAI-compatible local proxy for Claude/OpenAI subscriptions
+            base_url = config.ollama_base_url or os.getenv("CLIPROXY_BASE_URL") or "http://localhost:8317/v1"
+
+            logger.info(f"Creating CLIProxy model: {config.model_name} at {base_url}")
+            return OpenAIChatModel(
+                model_name=config.model_name,
+                provider=OpenAIProvider(base_url=base_url, api_key="not-needed"),
+            )
+
         else:
             raise ConfigurationError(
                 f"Unknown LLM provider: {config.provider}",
@@ -322,6 +347,7 @@ def get_available_models() -> AvailableModelsResponse:
         ollama=AVAILABLE_MODELS["ollama"],
         anthropic=AVAILABLE_MODELS["anthropic"],
         openai=AVAILABLE_MODELS["openai"],
+        cliproxy=AVAILABLE_MODELS["cliproxy"],
     )
 
 
@@ -751,6 +777,21 @@ async def create_pydantic_ai_model_for_agent(
             return OpenAIChatModel(
                 model_name=config_to_use.model_name,
                 provider=OpenAIProvider(api_key=api_key),
+            )
+
+        elif config_to_use.provider == "cliproxy":
+            # CLIProxyAPI — OpenAI-compatible local proxy for Claude/OpenAI subscriptions
+            base_url = (
+                config_to_use.ollama_base_url or
+                global_config.ollama_base_url or
+                os.getenv("CLIPROXY_BASE_URL") or
+                "http://localhost:8317/v1"
+            )
+
+            logger.info(f"Creating CLIProxy model for {agent_type.value}: {config_to_use.model_name} at {base_url}")
+            return OpenAIChatModel(
+                model_name=config_to_use.model_name,
+                provider=OpenAIProvider(base_url=base_url, api_key="not-needed"),
             )
 
         else:

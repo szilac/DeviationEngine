@@ -7,7 +7,7 @@ historical timelines using LLM
 
 import os
 from typing import Any, Optional
-from pydantic_ai import Agent
+from pydantic_ai import Agent, ToolOutput
 from pydantic_ai.models import Model
 import logging
 
@@ -199,7 +199,7 @@ async def generate_timeline(
 
         # Run agent with structured output type (using await since we're in async context)
         logger.info("Calling LLM API to generate timeline...")
-        result = await agent.run(prompt, output_type=TimelineOutput)
+        result = await agent.run(prompt, output_type=ToolOutput(TimelineOutput))
 
         # Extract data from AgentRunResult - the actual output is in result.output
         output_data = result.output
@@ -435,7 +435,7 @@ async def extend_timeline(
 
         # Run agent with structured output
         logger.info("Calling LLM API to extend timeline...")
-        result = await agent.run(prompt, output_type=TimelineOutput)
+        result = await agent.run(prompt, output_type=ToolOutput(TimelineOutput))
 
         output_data = result.output
 
