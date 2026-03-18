@@ -118,6 +118,7 @@ async def _import_v2_timeline(
     # Create timeline record
     db_timeline = TimelineDB(
         id=str(new_timeline_id),
+        timeline_name=timeline_obj.get("timeline_name"),
         parent_timeline_id=branching.get("parent_timeline_id") if branching else None,
         branch_point_year=branching.get("branch_point_year") if branching else None,
         branch_deviation_description=branching.get("branch_deviation_description")
@@ -309,6 +310,7 @@ async def _import_v1_timeline_convert(
     # Create timeline record (no branching in v1.0.0)
     db_timeline = TimelineDB(
         id=str(new_timeline_id),
+        timeline_name=timeline_obj.get("timeline_name"),
         parent_timeline_id=None,
         branch_point_year=None,
         branch_deviation_description=None,

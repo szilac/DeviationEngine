@@ -9,6 +9,7 @@ import os
 from typing import Any, List, Optional
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent
+from pydantic_ai.messages import ModelMessage
 from pydantic_ai.models import Model
 import logging
 
@@ -116,7 +117,7 @@ async def generate_response(
     profile_chunks: List[dict],
     character_year_context: int,
     user_message: str,
-    conversation_history: Optional[str] = None,
+    message_history: Optional[List[ModelMessage]] = None,
     context_chunks: Optional[str] = None,
     model: Optional[Model] = None,
 ) -> str:
@@ -131,7 +132,7 @@ async def generate_response(
         profile_chunks: List of chunk dicts from CharacterChunkDB.
         character_year_context: Year the character speaks from.
         user_message: The user's message.
-        conversation_history: Previous messages formatted as text.
+        message_history: Prior conversation as typed ModelMessage list.
         context_chunks: RAG-retrieved timeline context.
         model: Optional Pydantic-AI model instance.
 
@@ -159,13 +160,16 @@ async def generate_response(
         prompt = render_prompt(
             "impersonator/user_message.jinja2",
             user_message=user_message,
-            conversation_history=conversation_history,
             context_chunks=context_chunks,
         )
 
         logger.debug(f"Impersonator prompt length: {len(prompt)} chars")
 
-        result = await agent.run(prompt, output_type=ImpersonatorOutput)
+        result = await agent.run(
+            prompt,
+            message_history=message_history or [],
+            output_type=ImpersonatorOutput,
+        )
         response_text = result.output.response
 
         logger.info(
