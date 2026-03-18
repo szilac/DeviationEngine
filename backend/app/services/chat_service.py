@@ -11,6 +11,8 @@ from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
 from uuid import uuid4
 
+from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, UserPromptPart, TextPart
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, delete
 from sqlalchemy.orm import selectinload
@@ -26,6 +28,8 @@ from app.db_models import (
 from app.exceptions import NotFoundError, AIGenerationError, ValidationError
 
 logger = logging.getLogger(__name__)
+
+TOKEN_BUDGET = 3000  # ~12,000 chars at 4 chars/token; leaves room for system prompt + RAG
 
 
 # ============================================================================
@@ -279,8 +283,8 @@ async def send_message(
     db.add(user_msg)
     await db.flush()
 
-    # Build conversation history from previous messages
-    conversation_history = await _build_conversation_history(session_id, db, limit=10)
+    # Build structured message history, excluding the just-flushed user message
+    message_history = await _build_message_history(session_id, db, exclude_id=user_msg.id)
 
     # Get RAG context from character chunks
     context_chunks = _format_character_chunks_for_context(
@@ -326,7 +330,7 @@ async def send_message(
         profile_chunks=chunk_dicts,
         character_year_context=session.character_year_context,
         user_message=user_message_text,
-        conversation_history=conversation_history,
+        message_history=message_history,
         context_chunks=context_chunks,
         model=model,
     )
@@ -486,39 +490,79 @@ async def regenerate_last_response(
 # ============================================================================
 
 
-async def _build_conversation_history(
+async def _build_message_history(
     session_id: str,
     db: AsyncSession,
-    limit: int = 10,
-) -> Optional[str]:
+    exclude_id: str,
+) -> List[ModelMessage]:
     """
-    Build formatted conversation history from recent messages.
+    Build structured message history for the impersonator agent.
+
+    Queries all messages for the session (excluding the current user message),
+    applies a TOKEN_BUDGET character cap (oldest dropped first), and repairs
+    strict ModelRequest → ModelResponse alternation before returning.
 
     Args:
         session_id: Session UUID.
         db: Database session.
-        limit: Max messages to include.
+        exclude_id: ID of the current user message to exclude.
 
     Returns:
-        Formatted conversation string or None if no history.
+        List of ModelMessage (empty list if no prior history).
     """
     result = await db.execute(
         select(ChatMessageDB)
-        .where(ChatMessageDB.session_id == session_id)
+        .where(
+            ChatMessageDB.session_id == session_id,
+            ChatMessageDB.id != exclude_id,
+        )
         .order_by(ChatMessageDB.created_at.desc())
-        .limit(limit)
     )
-    messages = list(reversed(result.scalars().all()))
+    # newest-first from DB → budget check → reverse to oldest-first
+    all_messages = list(result.scalars().all())
 
-    if not messages:
-        return None
+    # Apply token budget: accumulate from newest, stop when budget exceeded
+    char_count = 0
+    windowed: list[ChatMessageDB] = []
+    for msg in all_messages:
+        char_count += len(msg.content)
+        if char_count > TOKEN_BUDGET * 4:  # TOKEN_BUDGET tokens × ~4 chars/token ≈ 12,000 chars
+            break
+        windowed.append(msg)
 
-    parts = []
-    for msg in messages:
-        role_label = "User" if msg.role == "user" else "You"
-        parts.append(f"**{role_label}:** {msg.content}")
+    # Reverse to chronological order (oldest → newest)
+    windowed.reverse()
 
-    return "\n\n".join(parts)
+    # Map to typed messages
+    typed: list[ModelMessage] = []
+    for msg in windowed:
+        if msg.role == "user":
+            typed.append(ModelRequest(parts=[UserPromptPart(content=msg.content)]))
+        else:
+            typed.append(ModelResponse(parts=[TextPart(content=msg.content)]))
+
+    # Repair alternation: drop orphaned messages so list is strictly
+    # ModelRequest → ModelResponse → ModelRequest → ...
+    repaired: list[ModelMessage] = []
+    for msg in typed:
+        if not repaired:
+            if isinstance(msg, ModelRequest):
+                repaired.append(msg)
+            # Drop leading ModelResponse (no preceding user turn)
+        else:
+            last = repaired[-1]
+            if isinstance(last, ModelRequest) and isinstance(msg, ModelResponse):
+                repaired.append(msg)
+            elif isinstance(last, ModelResponse) and isinstance(msg, ModelRequest):
+                repaired.append(msg)
+            elif isinstance(last, ModelRequest) and isinstance(msg, ModelRequest):
+                # Consecutive user messages: replace previous with this one
+                repaired[-1] = msg
+            else:
+                # Consecutive character messages: keep previous, drop this one
+                pass
+
+    return repaired
 
 
 def _format_character_chunks_for_context(

@@ -1376,7 +1376,7 @@ class CharacterDB(Base):
     )
 
     # Relationships
-    timeline = relationship("TimelineDB", backref="characters")
+    timeline = relationship("TimelineDB", backref=backref("characters", passive_deletes=True))
     chat_sessions = relationship(
         "ChatSessionDB",
         back_populates="character",

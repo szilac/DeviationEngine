@@ -117,6 +117,7 @@ def _serialize_timeline(db_timeline) -> Dict[str, Any]:
 
     return {
         "id": db_timeline.id,
+        "timeline_name": db_timeline.timeline_name,
         "branching": branching,
         "root_deviation": root_deviation,
         "total_years_simulated": total_years,
