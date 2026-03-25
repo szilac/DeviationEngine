@@ -10,6 +10,7 @@ import ReportViewPage from './pages/ReportViewPage';
 import GroundTruthReportPage from './pages/GroundTruthReportPage';
 import AboutPage from './pages/AboutPage';
 import SettingsPage from './pages/SettingsPage';
+import AdvancedSettingsPage from './pages/AdvancedSettingsPage';
 import SkeletonWorkflowPage from './pages/SkeletonWorkflowPage';
 import RippleMapPage from './pages/RippleMapPage';
 import TemporalAtlasPage from './pages/TemporalAtlasPage';
@@ -34,6 +35,7 @@ function AppRoutes() {
         <Route path="/ground-truth/:reportId" element={<PageTransition><GroundTruthReportPage /></PageTransition>} />
         <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
         <Route path="/settings" element={<PageTransition><SettingsPage /></PageTransition>} />
+        <Route path="/settings/advanced" element={<PageTransition><AdvancedSettingsPage /></PageTransition>} />
       </Routes>
     </AnimatePresence>
   );
