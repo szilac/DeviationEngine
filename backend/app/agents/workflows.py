@@ -407,6 +407,9 @@ async def execute_timeline_generation(
     })
     if deviation_request.narrative_mode in [NarrativeMode.ADVANCED_OMNISCIENT, NarrativeMode.ADVANCED_CUSTOM_POV]:
         await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "started", "label": "Generating narrative prose"
+        })
+        await generation_progress.publish(progress_token, {
             "step": "storyteller", "status": "completed", "label": "Narrative complete"
         })
 
@@ -554,6 +557,9 @@ async def execute_timeline_extension(
         "step": "historian", "status": "completed", "label": "Historical analysis complete"
     })
     if extension_request.narrative_mode in [NarrativeMode.ADVANCED_OMNISCIENT, NarrativeMode.ADVANCED_CUSTOM_POV]:
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "started", "label": "Generating narrative prose"
+        })
         await generation_progress.publish(progress_token, {
             "step": "storyteller", "status": "completed", "label": "Narrative complete"
         })
@@ -976,6 +982,9 @@ async def execute_report_from_skeleton(
         "step": "historian", "status": "completed", "label": "Historical analysis complete"
     })
     if deviation_request.narrative_mode in [NarrativeMode.ADVANCED_OMNISCIENT, NarrativeMode.ADVANCED_CUSTOM_POV]:
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "started", "label": "Generating narrative prose"
+        })
         await generation_progress.publish(progress_token, {
             "step": "storyteller", "status": "completed", "label": "Narrative complete"
         })

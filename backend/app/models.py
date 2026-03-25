@@ -463,6 +463,10 @@ class TimelineExtensionRequest(BaseModel):
         default=None,
         description="Use AI Smart Search (RAG) for historical context. If None, uses global CONTEXT_RETRIEVAL_MODE setting"
     )
+    progress_token: Optional[str] = Field(
+        default=None,
+        description="Client-generated token for SSE progress subscription"
+    )
 
     @model_validator(mode='after')
     def set_default_use_rag(self):
