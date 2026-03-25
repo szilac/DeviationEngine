@@ -97,7 +97,7 @@ export default function TimelineHeader({
           <ActionBtn icon={<GitBranch size={11} />} label="Ripple Map" onClick={onRippleMap} />
           <ActionBtn icon={<Mic size={11} />} label="Audio" onClick={onAudioStudio} />
           <ActionBtn icon={<Users size={11} />} label="Characters" onClick={onCharacters} />
-          <ActionBtn icon={<BookOpen size={11} />} label="Novella" onClick={onNovella} />
+          <ActionBtn icon={<BookOpen size={11} />} label="Standalone Story" onClick={onNovella} />
 
           <div className="w-px h-5 bg-border mx-1.5" />
 
