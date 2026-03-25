@@ -11,7 +11,7 @@ import { NARRATIVE_MODE_CONFIG } from '../styles/wizard';
 import { InfoIcon } from './Tooltip';
 
 interface ExtensionFormProps {
-  onSubmit: (additionalYears: number, narrativeMode: NarrativeMode, customPov?: string, additionalContext?: string, useSkeletonWorkflow?: boolean, useRag?: boolean) => void;
+  onSubmit: (additionalYears: number, narrativeMode: NarrativeMode, customPov?: string, additionalContext?: string, useSkeletonWorkflow?: boolean) => void;
   isLoading: boolean;
   timeline: Timeline;
 }
@@ -22,12 +22,11 @@ const ExtensionForm = ({ onSubmit, isLoading, timeline }: ExtensionFormProps) =>
   const [narrativeCustomPov, setNarrativeCustomPov] = useState('');
   const [additionalContext, setAdditionalContext] = useState('');
   const [useSkeletonWorkflow, setUseSkeletonWorkflow] = useState(false);
-  const [useRag, setUseRag] = useState(true);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(additionalYears, narrativeMode, narrativeCustomPov, additionalContext, useSkeletonWorkflow, useRag);
+    onSubmit(additionalYears, narrativeMode, narrativeCustomPov, additionalContext, useSkeletonWorkflow);
   };
 
   const totalYearsSimulated = timeline.generations.length > 0
@@ -148,36 +147,6 @@ const ExtensionForm = ({ onSubmit, isLoading, timeline }: ExtensionFormProps) =>
         </button>
         {showAdvanced && (
           <div className="border-t border-border px-4 py-4 space-y-3">
-            <div className="flex items-center gap-2">
-              <p className="font-mono text-[10px] tracking-widest uppercase text-dim">Context Mode</p>
-              <InfoIcon content="Controls how historical background is retrieved and sent to the AI. RAG sends only relevant excerpts; Full Context sends all available timeline data." />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setUseRag(true)}
-                disabled={isLoading}
-                className={`text-left p-3 border transition-all disabled:opacity-50 ${
-                  useRag ? 'border-gold bg-surface/50' : 'border-border bg-surface/20 hover:border-gold-dim hover:bg-surface/40'
-                }`}
-                style={useRag ? { boxShadow: '0 0 12px rgba(212,160,23,0.15)' } : {}}
-              >
-                <div className="font-mono text-[10px] tracking-widest uppercase text-gold mb-1">Smart Search</div>
-                <p className="font-body text-xs text-dim leading-snug">Always includes the latest generation in full, plus semantically relevant chunks retrieved from all prior generations. Better consistency across long timelines.</p>
-              </button>
-              <button
-                type="button"
-                onClick={() => setUseRag(false)}
-                disabled={isLoading}
-                className={`text-left p-3 border transition-all disabled:opacity-50 ${
-                  !useRag ? 'border-gold bg-surface/50' : 'border-border bg-surface/20 hover:border-gold-dim hover:bg-surface/40'
-                }`}
-                style={!useRag ? { boxShadow: '0 0 12px rgba(212,160,23,0.15)' } : {}}
-              >
-                <div className="font-mono text-[10px] tracking-widest uppercase text-dim mb-1">Latest Only</div>
-                <p className="font-body text-xs text-dim leading-snug">Includes only the most recent generation in full. No retrieval from older generations. Sufficient for single-generation timelines.</p>
-              </button>
-            </div>
           </div>
         )}
       </div>

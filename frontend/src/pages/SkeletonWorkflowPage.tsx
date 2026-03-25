@@ -34,7 +34,6 @@ const SkeletonWorkflowPage = () => {
 
   const [isExtensionSkeleton, setIsExtensionSkeleton] = useState(false);
   const [parentTimelineId, setParentTimelineId] = useState<string | null>(null);
-  const [extensionUseRag, setExtensionUseRag] = useState<boolean | undefined>(undefined);
 
   const [narrativeMode, setNarrativeMode] = useState<NarrativeMode>(NarrativeModeEnum.BASIC);
   const [customPov, setCustomPov] = useState<string>('');
@@ -59,17 +58,14 @@ const SkeletonWorkflowPage = () => {
       setParentTimelineId(loadedSkeleton.parent_timeline_id);
       const extMode = sessionStorage.getItem('extensionNarrativeMode');
       const extPov = sessionStorage.getItem('extensionNarrativeCustomPov');
-      const extUseRag = sessionStorage.getItem('extensionUseRag');
       if (extMode) setNarrativeMode(extMode as NarrativeMode);
       if (extPov) setCustomPov(extPov);
-      if (extUseRag !== null) setExtensionUseRag(extUseRag !== 'false');
     } else {
       setIsExtensionSkeleton(false);
       setParentTimelineId(null);
       sessionStorage.removeItem('extensionParentTimelineId');
       sessionStorage.removeItem('extensionNarrativeMode');
       sessionStorage.removeItem('extensionNarrativeCustomPov');
-      sessionStorage.removeItem('extensionUseRag');
     }
 
     setIsLoading(false);
@@ -106,12 +102,11 @@ const SkeletonWorkflowPage = () => {
 
     try {
       if (isExtensionSkeleton && parentTimelineId) {
-        const response = await extendFromSkeleton(parentTimelineId, skeleton.id, narrativeMode, narrativeMode === NarrativeModeEnum.ADVANCED_CUSTOM_POV ? customPov : undefined, extensionUseRag);
+        const response = await extendFromSkeleton(parentTimelineId, skeleton.id, narrativeMode, narrativeMode === NarrativeModeEnum.ADVANCED_CUSTOM_POV ? customPov : undefined);
         if (response.error) { setError(response.error.message); setIsGenerating(false); return; }
         sessionStorage.removeItem('extensionParentTimelineId');
         sessionStorage.removeItem('extensionNarrativeMode');
         sessionStorage.removeItem('extensionNarrativeCustomPov');
-        sessionStorage.removeItem('extensionUseRag');
         navigate(`/reports/${parentTimelineId}`);
       } else {
         const request: GenerateFromSkeletonRequest = {
