@@ -22,8 +22,6 @@ const ExtensionForm = ({ onSubmit, isLoading, timeline }: ExtensionFormProps) =>
   const [narrativeCustomPov, setNarrativeCustomPov] = useState('');
   const [additionalContext, setAdditionalContext] = useState('');
   const [useSkeletonWorkflow, setUseSkeletonWorkflow] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(additionalYears, narrativeMode, narrativeCustomPov, additionalContext, useSkeletonWorkflow);
@@ -132,23 +130,6 @@ const ExtensionForm = ({ onSubmit, isLoading, timeline }: ExtensionFormProps) =>
             {currentEndYear} → {newEndYear}
           </p>
         </div>
-      </div>
-
-      {/* Advanced Options */}
-      <div className="border border-border">
-        <button
-          type="button"
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          disabled={isLoading}
-          className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-surface/40 transition-colors disabled:opacity-40 text-left"
-        >
-          <span className="font-mono text-[10px] tracking-widest uppercase text-dim">Advanced Options</span>
-          <span className="font-mono text-[10px] text-faint">{showAdvanced ? '▲' : '▼'}</span>
-        </button>
-        {showAdvanced && (
-          <div className="border-t border-border px-4 py-4 space-y-3">
-          </div>
-        )}
       </div>
 
       {/* Context + Narrative Mode */}

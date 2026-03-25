@@ -715,15 +715,13 @@ export async function getTimelineSkeletonSnapshot(
 export async function generateExtensionSkeleton(
   timelineId: string,
   additionalYears: number,
-  additionalContext?: string,
-  useRag?: boolean
+  additionalContext?: string
 ): Promise<ApiResponse<Skeleton>> {
   try {
     const response = await apiClient.post<Skeleton>('/api/generate-extension-skeleton', {
       timeline_id: timelineId,
       additional_years: additionalYears,
       additional_context: additionalContext || undefined,
-      use_rag: useRag,
     });
 
     return {
@@ -755,8 +753,7 @@ export async function extendFromSkeleton(
   timelineId: string,
   skeletonId: string,
   narrativeMode: string,
-  narrativeCustomPov?: string,
-  useRag?: boolean
+  narrativeCustomPov?: string
 ): Promise<ApiResponse<Timeline>> {
   try {
     const response = await apiClient.post<Timeline>('/api/extend-from-skeleton', {
@@ -764,7 +761,6 @@ export async function extendFromSkeleton(
       skeleton_id: skeletonId,
       narrative_mode: narrativeMode,
       narrative_custom_pov: narrativeCustomPov || undefined,
-      use_rag: useRag,
     });
 
     return {
