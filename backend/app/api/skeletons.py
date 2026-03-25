@@ -18,6 +18,7 @@ from sqlalchemy import select
 from datetime import date as date_type
 
 from app.database import get_db
+from app.services import generation_progress
 from app.models import (
     TimelineCreationRequest,
     SkeletonResponse,
@@ -305,7 +306,10 @@ async def generate_from_skeleton_endpoint(
 
         # Execute report from skeleton workflow
         result = await execute_report_from_skeleton(
-            skeleton=skeleton, deviation_request=deviation_request, db_session=db
+            skeleton=skeleton,
+            deviation_request=deviation_request,
+            db_session=db,
+            progress_token=request.progress_token,
         )
 
         structured_report = result["structured_report"]
@@ -437,6 +441,9 @@ async def generate_from_skeleton_endpoint(
         created_timeline = Timeline.model_validate(db_timeline_with_relations)
 
         logger.info(f"Timeline generated successfully from skeleton: {timeline_id}")
+        await generation_progress.publish(request.progress_token, {
+            "step": "done", "timeline_id": str(timeline_id)
+        })
         return created_timeline
 
     except HTTPException:

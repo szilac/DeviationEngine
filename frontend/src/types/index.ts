@@ -68,6 +68,9 @@ export interface TimelineCreationRequest {
   /** Use AI Smart Search (RAG) for historical context. Defaults to true. */
   use_rag?: boolean;
 
+  /** Client-generated token for SSE progress subscription. */
+  progress_token?: string;
+
   /** @deprecated Use narrative_mode instead. Kept for backwards compatibility. */
   include_narrative?: boolean;
 }
@@ -1118,6 +1121,9 @@ export interface GenerateFromSkeletonRequest {
 
   /** Use AI Smart Search (RAG) for historical context. Defaults to true. */
   use_rag?: boolean;
+
+  /** Client-generated token for SSE progress subscription. */
+  progress_token?: string;
 }
 
 /**

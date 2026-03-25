@@ -9,14 +9,18 @@ This module handles all timeline-related endpoints including:
 - Skeleton snapshot retrieval
 """
 
+import json
+import asyncio
 import logging
 from typing import List, Optional
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, text
 
 from app.database import get_db
+from app.services import generation_progress
 from app.models import (
     Timeline,
     TimelineListItem,
@@ -42,6 +46,33 @@ from app.exceptions import (
 
 router = APIRouter(prefix="/api", tags=["timelines"])
 logger = logging.getLogger(__name__)
+
+
+# ============================================================================
+# SSE Progress Stream
+# ============================================================================
+
+
+@router.get("/timelines/progress/{progress_token}")
+async def generation_progress_stream(progress_token: str):
+    """SSE endpoint for streaming generation step progress to the frontend."""
+    async def event_stream():
+        try:
+            async for event in generation_progress.subscribe(progress_token):
+                yield f"data: {json.dumps(event)}\n\n"
+                if event.get("step") == "done":
+                    break
+        except asyncio.CancelledError:
+            pass  # Client disconnected — clean up handled by subscribe()
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 # ============================================================================
@@ -79,6 +110,11 @@ async def generate_timeline_endpoint(
     )
 
     try:
+        # Publish context retrieval started
+        await generation_progress.publish(request.progress_token, {
+            "step": "context_retrieval", "status": "started", "label": "Retrieving historical context"
+        })
+
         # Get historical context from ground truth service (uses RAG if available)
         history_service = get_history_service()
         historical_context = await history_service.get_context_for_deviation(
@@ -99,6 +135,10 @@ async def generate_timeline_endpoint(
                 }
             )
 
+        await generation_progress.publish(request.progress_token, {
+            "step": "context_retrieval", "status": "completed", "label": "Historical context retrieved"
+        })
+
         # Generate timeline using orchestrator
         logger.info(
             "Generating timeline with orchestrator...",
@@ -109,7 +149,9 @@ async def generate_timeline_endpoint(
                 "narrative_mode": request.narrative_mode.value
             }
         )
-        workflow_result = await execute_timeline_generation(request, historical_context, db_session=db)
+        workflow_result = await execute_timeline_generation(
+            request, historical_context, db_session=db, progress_token=request.progress_token
+        )
 
         # Extract results
         structured_report = workflow_result["structured_report"]
@@ -233,6 +275,9 @@ async def generate_timeline_endpoint(
                 "narrative_mode": request.narrative_mode.value
             }
         )
+        await generation_progress.publish(request.progress_token, {
+            "step": "done", "timeline_id": str(timeline.id)
+        })
         return timeline
 
     except (HistoricalContextError, AIGenerationError, ValidationError):
@@ -646,6 +691,11 @@ async def extend_timeline_endpoint(
         # Convert to Pydantic model
         original_timeline = Timeline.model_validate(db_timeline)
 
+        # Publish context retrieval started
+        await generation_progress.publish(request.progress_token, {
+            "step": "context_retrieval", "status": "started", "label": "Retrieving historical context"
+        })
+
         # Get context from previous generations in this timeline using RAG
         history_service = get_history_service()
         original_end_year = (
@@ -688,11 +738,16 @@ async def extend_timeline_endpoint(
                 "narrative_mode": request.narrative_mode.value
             }
         )
+        await generation_progress.publish(request.progress_token, {
+            "step": "context_retrieval", "status": "completed", "label": "Historical context retrieved"
+        })
+
         workflow_result = await execute_timeline_extension(
             request,
             original_timeline,
             historical_context,
-            db_session=db
+            db_session=db,
+            progress_token=request.progress_token,
         )
 
         # Extract results
@@ -793,7 +848,9 @@ async def extend_timeline_endpoint(
                 "has_extension_narrative": extension_output.narrative_prose is not None
             }
         )
-
+        await generation_progress.publish(request.progress_token, {
+            "step": "done", "timeline_id": str(request.timeline_id)
+        })
         return extended_timeline
 
     except (TimelineNotFoundError, AIGenerationError, ValidationError):

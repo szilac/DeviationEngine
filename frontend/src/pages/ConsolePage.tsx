@@ -1,19 +1,25 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeviationConsole from '../components/DeviationConsole';
+import GenerationProgress from '../components/GenerationProgress';
+import { useGenerationProgress } from '../hooks/useGenerationProgress';
 import { generateTimeline, generateSkeleton } from '../services/api';
 import type { TimelineCreationRequest, SkeletonGenerationRequest, ErrorResponse } from '../types';
 
 function ConsolePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
+  const [progressToken, setProgressToken] = useState<string | null>(null);
+  const { steps } = useGenerationProgress(progressToken);
   const navigate = useNavigate();
 
   const handleSubmit = async (request: TimelineCreationRequest) => {
+    const token = crypto.randomUUID();
+    setProgressToken(token);
     setIsLoading(true);
     setError(null);
     try {
-      const response = await generateTimeline(request);
+      const response = await generateTimeline({ ...request, progress_token: token });
       if (response.error) {
         setError(response.error);
       } else if (response.data) {
@@ -23,6 +29,7 @@ function ConsolePage() {
       setError({ error: 'GenerationError', message: 'An unexpected error occurred during timeline generation. Please try again.' });
     } finally {
       setIsLoading(false);
+      setProgressToken(null);
     }
   };
 
@@ -52,6 +59,13 @@ function ConsolePage() {
           isLoading={isLoading}
           onBack={() => navigate('/')}
         />
+
+        {/* Generation Progress */}
+        {isLoading && progressToken && (
+          <div className="mt-8 max-w-4xl mx-auto">
+            <GenerationProgress steps={steps} />
+          </div>
+        )}
 
         {/* Error Toast */}
         {error && (

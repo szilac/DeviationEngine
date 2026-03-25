@@ -753,7 +753,8 @@ export async function extendFromSkeleton(
   timelineId: string,
   skeletonId: string,
   narrativeMode: string,
-  narrativeCustomPov?: string
+  narrativeCustomPov?: string,
+  progressToken?: string
 ): Promise<ApiResponse<Timeline>> {
   try {
     const response = await apiClient.post<Timeline>('/api/extend-from-skeleton', {
@@ -761,6 +762,7 @@ export async function extendFromSkeleton(
       skeleton_id: skeletonId,
       narrative_mode: narrativeMode,
       narrative_custom_pov: narrativeCustomPov || undefined,
+      progress_token: progressToken,
     });
 
     return {
