@@ -218,6 +218,9 @@ async def generate_timeline_endpoint(
             narrative_prose=narrative_prose
         )
 
+        await generation_progress.publish(request.progress_token, {
+            "step": "saving", "status": "started", "label": "Saving to library"
+        })
         # Store in database with model tracking information
         await timeline_service.create_timeline_with_initial_generation(
             db,
@@ -778,6 +781,9 @@ async def extend_timeline_endpoint(
             narrative_prose=narrative_prose
         )
 
+        await generation_progress.publish(request.progress_token, {
+            "step": "saving", "status": "started", "label": "Saving to library"
+        })
         # Add new generation to timeline in database with model tracking information
         new_generation = await timeline_service.extend_timeline_with_new_generation(
             db,

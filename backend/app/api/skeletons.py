@@ -371,6 +371,9 @@ async def generate_from_skeleton_endpoint(
             narrative_prose=narrative_prose,
         )
 
+        await generation_progress.publish(request.progress_token, {
+            "step": "saving", "status": "started", "label": "Saving to library"
+        })
         # Save timeline to database
         db_timeline = await timeline_service.create_timeline_with_initial_generation(
             db=db,

@@ -441,6 +441,9 @@ export interface TimelineExtensionRequest {
 
   /** @deprecated Use narrative_mode instead. Kept for backwards compatibility. */
   include_narrative?: boolean;
+
+  /** Client-generated token for SSE progress subscription */
+  progress_token?: string;
 }
 
 /**
