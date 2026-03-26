@@ -30,7 +30,7 @@ const StepperNavigation: React.FC<StepperNavigationProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center mt-6 pt-5 border-t border-border">
+    <div className="sticky bottom-0 z-10 bg-vellum flex justify-between items-center mt-6 pt-4 pb-4 border-t border-border">
       {canGoBack ? (
         <button
           onClick={onBack}

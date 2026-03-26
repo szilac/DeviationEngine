@@ -563,7 +563,7 @@ Configurable globally in **Settings → Advanced Configuration → § IV. Debug 
 
 | Mode | Token Usage | Quality | Best For |
 | --- | --- | --- | --- |
-| **RAG (Smart Search)** | Very low (~99% reduction) | Good — occasionally less consistent if retrieval misses relevant context | Default; cost-conscious use |
+| **RAG (Smart Search)** | Very low (~90% reduction) | Good — occasionally less consistent if retrieval misses relevant context | Default; cost-conscious use |
 | **Full Context** | High | Rich and consistent — may overwhelm models with small context windows | High-quality generations with capable, large-context models |
 
 Full Context sends the complete ground truth data for the deviation period and, for extensions, all previous generation reports. This produces richer and more coherent results but significantly increases token usage and cost.

@@ -1261,9 +1261,10 @@ const BranchingTimeline: React.FC<BranchingTimelineProps> = ({
               ? 'border-gold text-gold hover:bg-gold/10'
               : 'border-border text-dim hover:border-gold-dim hover:text-ink'
           }`}
-          title={enableAnimations ? "Disable animations" : "Enable animations"}
+          title={enableAnimations ? "Disable timeline animations" : "Enable timeline animations"}
+          aria-label={enableAnimations ? "Disable animations" : "Enable animations"}
         >
-          {enableAnimations ? '◉ Motion' : '○ Motion'}
+          {enableAnimations ? '◉ Animations On' : '○ Animations Off'}
         </button>
       </div>
 

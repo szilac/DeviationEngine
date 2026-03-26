@@ -1,4 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { MoreHorizontal, Trash2 } from 'lucide-react';
 import type { Timeline, Generation, SupportedLanguage } from '../types';
 import StructuredReportView from './StructuredReportView';
 import NarrativeView from './NarrativeView';
@@ -78,9 +80,31 @@ export function ContentView({
                 </Button>
               )}
               {onDeleteGeneration && (
-                <Button variant="rubric" size="sm" onClick={onDeleteGeneration}>
-                  Delete Generation
-                </Button>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger asChild>
+                    <button
+                      className="flex items-center px-2 py-1.5 text-dim hover:text-ink transition-colors duration-150 focus:outline-none cursor-pointer"
+                      aria-label="Generation options"
+                    >
+                      <MoreHorizontal size={14} />
+                    </button>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Portal>
+                    <DropdownMenu.Content
+                      className="bg-parchment border border-border shadow-[var(--shadow-panel)] z-50 min-w-[180px]"
+                      align="end"
+                      sideOffset={4}
+                    >
+                      <DropdownMenu.Item
+                        onClick={onDeleteGeneration}
+                        className="flex items-center gap-2 px-3 py-2 font-mono text-[10px] tracking-widest uppercase cursor-pointer focus:outline-none text-rubric-dim hover:text-rubric hover:bg-rubric/10 transition-colors duration-100"
+                      >
+                        <Trash2 size={11} />
+                        Delete Generation
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Portal>
+                </DropdownMenu.Root>
               )}
             </div>
           )}
@@ -99,7 +123,7 @@ export function ContentView({
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              className="max-w-4xl mx-auto px-8 py-8"
+              className="max-w-2xl mx-auto px-8 py-8"
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}

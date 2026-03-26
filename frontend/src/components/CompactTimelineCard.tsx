@@ -7,6 +7,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { TimelineListItem } from '../types';
 
+const SCENARIO_BADGE_COLORS: Record<string, string> = {
+  local_deviation:       'text-gold-dim border-gold-dim/40',
+  global_deviation:      'text-rubric-dim border-rubric-dim/40',
+  reality_fracture:      'text-quantum border-quantum/30',
+  geological_shift:      'text-success border-success/40',
+  external_intervention: 'text-wave border-wave/30',
+};
+
+const formatScenarioLabel = (type: string) =>
+  type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
 interface CompactTimelineCardProps {
   timeline: TimelineListItem;
   onClick: () => void;
@@ -45,9 +56,14 @@ export const CompactTimelineCard: React.FC<CompactTimelineCardProps> = ({
       {/* Header */}
       <div className="p-5 pb-3">
         <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="font-display text-base text-ink leading-snug flex-1 truncate">
-            {timeline.timeline_name || 'Unnamed Timeline'}
-          </h3>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-display text-base text-ink leading-snug truncate">
+              {timeline.timeline_name || 'Unnamed Timeline'}
+            </h3>
+            <span className={`inline-block font-mono text-[8px] tracking-widest uppercase border px-1.5 py-0.5 mt-1 ${SCENARIO_BADGE_COLORS[timeline.scenario_type] ?? 'text-dim border-border'}`}>
+              {formatScenarioLabel(timeline.scenario_type)}
+            </span>
+          </div>
 
           {/* Menu */}
           <div
@@ -104,7 +120,7 @@ export const CompactTimelineCard: React.FC<CompactTimelineCardProps> = ({
         <div className="flex items-center gap-3 font-mono text-[9px] tracking-wider text-faint">
           <span>{timeline.root_deviation_date}</span>
           <span className="text-border">|</span>
-          <span className="text-gold-dim">{timeline.generation_count} gen{timeline.generation_count !== 1 ? 's' : ''}</span>
+          <span className="text-gold-dim">{timeline.generation_count} {timeline.generation_count !== 1 ? 'chronicles' : 'chronicle'}</span>
           {timeline.audio_script_count > 0 && (
             <>
               <span className="text-border">|</span>

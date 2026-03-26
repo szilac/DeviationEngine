@@ -95,7 +95,7 @@ const WorkflowSelector: React.FC<WorkflowSelectorProps> = ({ value, onChange }) 
                 text-left p-5 border-2 transition-all duration-200 corner-brackets
                 ${isSelected
                   ? 'border-gold bg-surface/80'
-                  : 'border-border bg-surface/20 hover:border-gold-dim hover:bg-surface/40 opacity-60 hover:opacity-80'
+                  : 'border-border bg-surface/10 hover:border-gold-dim hover:bg-surface/30'
                 }
               `}
               style={isSelected ? { boxShadow: '0 0 32px rgba(212,160,23,0.22), inset 0 0 24px rgba(212,160,23,0.04)' } : {}}

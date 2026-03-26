@@ -49,6 +49,67 @@ const FeynmanDiagram = () => (
   </svg>
 );
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+const formatScenario = (type: string) =>
+  type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+// ── GettingStarted ────────────────────────────────────────────────────────────
+
+const GettingStarted = () => {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <div className="border border-border bg-surface/30">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-surface/50 transition-colors"
+      >
+        <span className="rubric-label">§ Getting Started</span>
+        <span className="font-mono text-[10px] text-faint">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div className="px-4 pb-4 space-y-3 border-t border-border">
+          {[
+            {
+              n: '1',
+              title: 'Configure your LLM',
+              desc: 'Go to Settings and choose a provider (Gemini Flash recommended — generous free tier).',
+              link: '/settings',
+              linkLabel: 'Open Settings →',
+            },
+            {
+              n: '2',
+              title: 'Create your first timeline',
+              desc: 'Click "Define the Deviation" below, pick a preset example, and hit Generate.',
+              link: '/console',
+              linkLabel: 'Open Console →',
+            },
+            {
+              n: '3',
+              title: 'Explore the Atlas',
+              desc: 'Once a timeline is generated, compare it against actual history in the Temporal Atlas.',
+              link: '/atlas',
+              linkLabel: 'Open Atlas →',
+            },
+          ].map(({ n, title, desc, link, linkLabel }) => (
+            <div key={n} className="flex gap-3 pt-3">
+              <span className="font-mono text-[10px] text-gold-dim shrink-0 mt-0.5 w-4">{n}.</span>
+              <div className="space-y-0.5">
+                <p className="font-body text-sm text-ink">{title}</p>
+                <p className="font-body text-xs text-dim leading-relaxed">{desc}</p>
+                <Link to={link} className="font-mono text-[9px] text-gold hover:text-gold-2 transition-colors tracking-wider">
+                  {linkLabel}
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ── HomePage ──────────────────────────────────────────────────────────────────
 
 const HomePage = () => {
@@ -73,32 +134,32 @@ const HomePage = () => {
 
   return (
     <div className="min-h-[calc(100vh-56px)] bg-vellum">
-      <div className="max-w-3xl mx-auto px-6 py-16">
+      <div className="max-w-3xl mx-auto px-6 py-8">
 
         {/* ── Hero ── */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <InkTitle
-            className="font-display text-gold leading-none mb-4"
-            style={{ fontSize: 'clamp(52px, 8vw, 88px)' }}
+            className="font-display text-gold leading-none mb-3"
+            style={{ fontSize: 'clamp(44px, 7vw, 80px)' }}
             delay={0.1}
           >
             Deviation Engine
           </InkTitle>
 
-          <p className="font-mono text-xs text-quantum tracking-widest mb-3">
+          <p className="font-mono text-xs text-quantum tracking-widest mb-2">
             |ψ⟩ quantum-class alternate history simulation
           </p>
 
-          <p className="font-caption text-lg text-dim italic max-w-xl mx-auto leading-relaxed">
+          <p className="font-caption text-base text-dim italic max-w-xl mx-auto leading-relaxed">
             Illuminate the paths not taken. Every deviation ripples through history.
           </p>
         </div>
 
         {/* ── Double-rule divider ── */}
-        <div className="double-rule mb-10" />
+        <div className="double-rule mb-8" />
 
         {/* ── Two-column body ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
 
           {/* Left — Illuminated intro */}
           <div className="flex gap-4">
@@ -134,9 +195,7 @@ const HomePage = () => {
             <p className="rubric-label mb-3">§ Recent Chronicles</p>
 
             {recentTimelines.length === 0 ? (
-              <p className="font-body text-sm text-faint italic">
-                No chronicles yet — create your first below.
-              </p>
+              <GettingStarted />
             ) : (
               <div className="space-y-0">
                 {recentTimelines.map((tl, i) => {
@@ -158,16 +217,23 @@ const HomePage = () => {
                           →
                         </span>
                       </div>
-                      <div className="ml-12 font-mono text-[8px] text-faint mt-0.5">
-                        {tl.generation_count} generation{tl.generation_count !== 1 ? 's' : ''}
+                      <div className="ml-12 flex items-center gap-2 mt-0.5">
+                        <span className="font-mono text-[8px] text-faint">
+                          {tl.generation_count} {tl.generation_count !== 1 ? 'chronicles' : 'chronicle'}
+                        </span>
+                        <span className="text-border font-mono text-[8px]">·</span>
+                        <span className="font-mono text-[8px] text-gold-dim">
+                          {formatScenario(tl.scenario_type)}
+                        </span>
+                        {i === 0 && (
+                          <>
+                            <span className="text-border font-mono text-[8px]">·</span>
+                            <span className="font-mono text-[8px] border border-gold-dim/50 text-gold-dim px-1.5 py-0.5">
+                              latest
+                            </span>
+                          </>
+                        )}
                       </div>
-                      {i === 0 && (
-                        <div className="ml-12 mt-0.5">
-                          <span className="font-mono text-[8px] border border-gold-dim/50 text-gold-dim px-1.5 py-0.5">
-                            latest
-                          </span>
-                        </div>
-                      )}
                     </Link>
                   );
                 })}

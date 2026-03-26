@@ -328,7 +328,7 @@ const TemporalAtlasPage = () => {
         />
 
         {/* Canvas */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden flex flex-col">
           {allTimelines.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center max-w-sm space-y-4">
@@ -353,7 +353,7 @@ const TemporalAtlasPage = () => {
             <BranchingTimeline
               selectedTimelines={visibleTimelines}
               onTimelineClick={handleTimelineClick}
-              className="h-full bg-vellum"
+              className="flex-1 bg-vellum"
             />
           )}
         </div>

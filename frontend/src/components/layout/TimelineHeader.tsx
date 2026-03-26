@@ -93,7 +93,7 @@ export default function TimelineHeader({
         </div>
 
         {/* Right: action buttons */}
-        <div className="flex items-center gap-0.5 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           <ActionBtn icon={<GitBranch size={11} />} label="Ripple Map" onClick={onRippleMap} />
           <ActionBtn icon={<Mic size={11} />} label="Audio" onClick={onAudioStudio} />
           <ActionBtn icon={<Users size={11} />} label="Characters" onClick={onCharacters} />
@@ -150,7 +150,7 @@ function ActionBtn({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1.5 px-2.5 py-1.5 font-mono text-[10px] tracking-widest uppercase text-dim hover:text-gold transition-colors duration-150 focus:outline-none cursor-pointer"
+      className="flex items-center gap-1.5 px-2.5 py-2 font-mono text-[10px] tracking-widest uppercase text-dim hover:text-gold transition-colors duration-150 focus:outline-none cursor-pointer"
     >
       {icon}
       <span>{label}</span>
