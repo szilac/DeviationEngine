@@ -73,7 +73,7 @@ export function ContentView({
           {selectedGeneration && (
             <div className="ml-auto flex items-center gap-2 py-2">
               {activeTab === 'images' && onGenerateImages && (
-                <Button variant="ghost" size="sm" onClick={onGenerateImages}>
+                <Button variant="primary" size="sm" onClick={onGenerateImages}>
                   + Generate Images
                 </Button>
               )}

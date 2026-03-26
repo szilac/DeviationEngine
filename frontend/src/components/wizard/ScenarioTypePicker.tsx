@@ -40,6 +40,11 @@ const ScenarioTypePicker: React.FC<ScenarioTypePickerProps> = ({ value, onChange
                     className="w-full h-full object-cover transition-transform group-hover:scale-105"
                   />
                 </div>
+                <div className={`px-1 py-1.5 text-center transition-colors ${isSelected ? 'bg-gold/15' : 'bg-black/30'}`}>
+                  <span className={`font-mono text-[9px] tracking-widest uppercase ${isSelected ? 'text-gold' : 'text-dim'}`}>
+                    {iconConfig.label}
+                  </span>
+                </div>
               </button>
             </Tooltip>
           );

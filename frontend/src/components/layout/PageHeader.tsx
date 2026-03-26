@@ -63,7 +63,7 @@ export default function PageHeader() {
             aria-label="About"
             className="ml-4 font-mono text-xs text-quantum hover:text-wave transition-colors duration-150"
           >
-            <span aria-hidden="true">|ψ⟩</span>
+            <span aria-hidden="true">|ψ⟩ About</span>
           </NavLink>
         </nav>
       </div>

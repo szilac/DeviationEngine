@@ -9,6 +9,7 @@ import logging
 from typing import Optional
 
 from app.agents.orchestrator import orchestrator, WorkflowContext
+from app.services import generation_progress
 from app.agents import historian_agent, storyteller_agent, skeleton_agent, skeleton_historian_agent
 from app.models import (
     TimelineCreationRequest,
@@ -317,6 +318,7 @@ async def execute_timeline_generation(
     deviation_request: TimelineCreationRequest,
     historical_context: str,
     db_session=None,
+    progress_token: Optional[str] = None,
 ) -> dict:
     """
     Execute the complete timeline generation workflow.
@@ -385,6 +387,10 @@ async def execute_timeline_generation(
         "model": historian_model,  # Keep for backward compatibility
     }
 
+    await generation_progress.publish(progress_token, {
+        "step": "historian", "status": "started", "label": "Analysing historical deviation"
+    })
+
     # Execute workflow
     result_context = await orchestrator.execute_workflow(
         workflow,
@@ -395,6 +401,17 @@ async def execute_timeline_generation(
             "narrative_mode": deviation_request.narrative_mode.value,
         }
     )
+
+    await generation_progress.publish(progress_token, {
+        "step": "historian", "status": "completed", "label": "Historical analysis complete"
+    })
+    if deviation_request.narrative_mode in [NarrativeMode.ADVANCED_OMNISCIENT, NarrativeMode.ADVANCED_CUSTOM_POV]:
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "started", "label": "Generating narrative prose"
+        })
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "completed", "label": "Narrative complete"
+        })
 
     # Extract final results
     structured_report = result_context.get_result("generate_structured_report")
@@ -433,6 +450,7 @@ async def execute_timeline_extension(
     timeline,  # Timeline model
     historical_context: str,
     db_session=None,
+    progress_token: Optional[str] = None,
 ) -> dict:
     """
     Execute the complete timeline extension workflow.
@@ -520,6 +538,10 @@ async def execute_timeline_extension(
         "deviation_request": deviation_request_for_narrative,
     }
 
+    await generation_progress.publish(progress_token, {
+        "step": "historian", "status": "started", "label": "Analysing historical deviation"
+    })
+
     # Execute workflow
     result_context = await orchestrator.execute_workflow(
         workflow,
@@ -530,6 +552,17 @@ async def execute_timeline_extension(
             "narrative_mode": extension_request.narrative_mode.value,
         }
     )
+
+    await generation_progress.publish(progress_token, {
+        "step": "historian", "status": "completed", "label": "Historical analysis complete"
+    })
+    if extension_request.narrative_mode in [NarrativeMode.ADVANCED_OMNISCIENT, NarrativeMode.ADVANCED_CUSTOM_POV]:
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "started", "label": "Generating narrative prose"
+        })
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "completed", "label": "Narrative complete"
+        })
 
     # Extract final results
     structured_report = result_context.get_result("extend_timeline_structured")
@@ -852,6 +885,7 @@ async def execute_report_from_skeleton(
     skeleton,  # SkeletonResponse
     deviation_request: TimelineCreationRequest,
     db_session=None,
+    progress_token: Optional[str] = None,
 ) -> dict:
     """
     Execute the complete report generation from skeleton workflow.
@@ -929,6 +963,10 @@ async def execute_report_from_skeleton(
         "db": db_session,  # Pass database session for ground truth retrieval
     }
 
+    await generation_progress.publish(progress_token, {
+        "step": "historian", "status": "started", "label": "Analysing historical deviation"
+    })
+
     # Execute workflow
     result_context = await orchestrator.execute_workflow(
         workflow,
@@ -939,6 +977,17 @@ async def execute_report_from_skeleton(
             "narrative_mode": deviation_request.narrative_mode.value,
         }
     )
+
+    await generation_progress.publish(progress_token, {
+        "step": "historian", "status": "completed", "label": "Historical analysis complete"
+    })
+    if deviation_request.narrative_mode in [NarrativeMode.ADVANCED_OMNISCIENT, NarrativeMode.ADVANCED_CUSTOM_POV]:
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "started", "label": "Generating narrative prose"
+        })
+        await generation_progress.publish(progress_token, {
+            "step": "storyteller", "status": "completed", "label": "Narrative complete"
+        })
 
     # Extract final results
     structured_report = result_context.get_result("generate_report_from_skeleton")

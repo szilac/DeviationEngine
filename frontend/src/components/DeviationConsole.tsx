@@ -20,7 +20,6 @@ import ScenarioExamplePicker from './wizard/ScenarioExamplePicker';
 import DeviationInputs from './wizard/DeviationInputs';
 import NarrativeModeSelector from './wizard/NarrativeModeSelector';
 import ReviewSummary from './wizard/ReviewSummary';
-import { AdvancedOptionsPanel } from './AdvancedOptionsPanel';
 
 interface DeviationConsoleProps {
   onSubmit: (request: TimelineCreationRequest) => void;
@@ -235,19 +234,14 @@ const DeviationConsole: React.FC<DeviationConsoleProps> = ({
       case 2:
         if (workflowType === 'skeleton') {
           return (
-            <>
-              <ReviewSummary
-                workflowType={workflowType}
-                scenarioType={formData.scenario_type}
-                deviationDate={formData.deviation_date}
-                deviationDescription={formData.deviation_description}
-                simulationYears={formData.simulation_years}
-                onEditStep={handleEditStep}
-              />
-              <div className="mt-6">
-                <AdvancedOptionsPanel useRag={formData.use_rag} onUseRagChange={(value) => setFormData({ ...formData, use_rag: value })} />
-              </div>
-            </>
+            <ReviewSummary
+              workflowType={workflowType}
+              scenarioType={formData.scenario_type}
+              deviationDate={formData.deviation_date}
+              deviationDescription={formData.deviation_description}
+              simulationYears={formData.simulation_years}
+              onEditStep={handleEditStep}
+            />
           );
         } else {
           return (
@@ -261,21 +255,16 @@ const DeviationConsole: React.FC<DeviationConsoleProps> = ({
         }
       case 3:
         return (
-          <>
-            <ReviewSummary
-              workflowType={workflowType}
-              scenarioType={formData.scenario_type}
-              deviationDate={formData.deviation_date}
-              deviationDescription={formData.deviation_description}
-              simulationYears={formData.simulation_years}
-              narrativeMode={formData.narrative_mode}
-              customPov={formData.narrative_custom_pov}
-              onEditStep={handleEditStep}
-            />
-            <div className="mt-6">
-              <AdvancedOptionsPanel useRag={formData.use_rag} onUseRagChange={(value) => setFormData({ ...formData, use_rag: value })} />
-            </div>
-          </>
+          <ReviewSummary
+            workflowType={workflowType}
+            scenarioType={formData.scenario_type}
+            deviationDate={formData.deviation_date}
+            deviationDescription={formData.deviation_description}
+            simulationYears={formData.simulation_years}
+            narrativeMode={formData.narrative_mode}
+            customPov={formData.narrative_custom_pov}
+            onEditStep={handleEditStep}
+          />
         );
       default:
         return null;

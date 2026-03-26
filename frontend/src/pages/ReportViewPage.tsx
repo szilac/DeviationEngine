@@ -117,8 +117,7 @@ function ReportViewPage() {
     narrativeMode: import('../types').NarrativeMode,
     customPov?: string,
     additionalContext?: string,
-    useSkeletonWorkflow?: boolean,
-    useRag?: boolean
+    useSkeletonWorkflow?: boolean
   ) => {
     if (!timelineId) return;
     setIsExtending(true);
@@ -126,14 +125,13 @@ function ReportViewPage() {
 
     try {
       if (useSkeletonWorkflow) {
-        const response = await generateExtensionSkeleton(timelineId, additionalYears, additionalContext, useRag);
+        const response = await generateExtensionSkeleton(timelineId, additionalYears, additionalContext);
         if (response.error) {
           setExtensionError(response.error);
         } else if (response.data) {
           sessionStorage.setItem('extensionNarrativeMode', narrativeMode);
           if (customPov) sessionStorage.setItem('extensionNarrativeCustomPov', customPov);
           sessionStorage.setItem('extensionParentTimelineId', timelineId);
-          sessionStorage.setItem('extensionUseRag', String(useRag !== false));
           navigate(`/skeleton-workflow?id=${response.data.id}`);
         }
       } else {
@@ -143,7 +141,6 @@ function ReportViewPage() {
           additional_context: additionalContext,
           narrative_mode: narrativeMode,
           narrative_custom_pov: customPov,
-          use_rag: useRag,
         };
         const response = await extendTimeline(request);
         if (response.error) setExtensionError(response.error);

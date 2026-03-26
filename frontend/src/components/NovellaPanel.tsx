@@ -128,7 +128,7 @@ export default function NovellaPanel({ timeline }: NovellaPanelProps) {
             onClick={() => { setMode('write-new'); setSelected(null); setContinueSource(null); setSelectedGenIds([]); setFocusInstructions(''); }}
             className="w-full flex items-center gap-2 px-3 py-2 text-sm font-body text-gold border border-gold/40 hover:bg-gold/5 transition-colors"
           >
-            <Plus size={14} /> Write New Novella
+            <Plus size={14} /> Write New Standalone Story
           </button>
         </div>
 
@@ -315,10 +315,10 @@ function NovellaGeneratorForm({
     <div className="max-w-2xl mx-auto px-8 py-12 space-y-8">
       <div>
         <p className="rubric-label text-xs mb-1">
-          {isContinuation ? `Part ${seriesOrder} — Continuation of "${continuationTitle}"` : '§ New Novella'}
+          {isContinuation ? `Part ${seriesOrder} — Continuation of "${continuationTitle}"` : '§ New Standalone Story'}
         </p>
         <h2 className="font-display text-2xl text-gold">
-          {isContinuation ? 'Continue the Story' : 'Write a Novella'}
+          {isContinuation ? 'Continue the Story' : 'Write a Standalone Story'}
         </h2>
       </div>
 
@@ -365,7 +365,7 @@ function NovellaGeneratorForm({
         disabled={isLoading || selectedGenIds.length === 0}
         className="px-6 py-2 bg-gold text-vellum font-body text-sm font-medium hover:bg-gold-2 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
       >
-        {isLoading ? 'Writing\u2026' : isContinuation ? 'Generate Continuation' : 'Generate Novella'}
+        {isLoading ? 'Writing\u2026' : isContinuation ? 'Generate Continuation' : 'Generate Standalone Story'}
       </button>
       {isLoading && (
         <p className="text-dim text-xs font-body">

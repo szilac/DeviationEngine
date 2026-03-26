@@ -107,9 +107,14 @@ const NarrativeView = ({
       )}
 
       {/* ── Rubric header ─────────────────────────────────────────── */}
-      <div className="flex items-baseline gap-3 mb-6 pb-4 border-b border-border">
-        <span className="rubric-label shrink-0">§</span>
-        <h3 className="font-display text-2xl text-gold">Chronicle Narrative</h3>
+      <div className="mb-6 pb-4 border-b border-border">
+        <div className="flex items-baseline gap-3">
+          <span className="rubric-label shrink-0">§</span>
+          <h3 className="font-display text-2xl text-gold">Chronicle Narrative</h3>
+        </div>
+        <p className="font-caption text-sm text-dim mt-1 ml-0">
+          Prose narrative — part of this generation's report
+        </p>
       </div>
 
       {/* ── Prose ─────────────────────────────────────────────────── */}

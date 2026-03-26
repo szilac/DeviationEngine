@@ -21,6 +21,8 @@ import { api, extendFromSkeleton } from '../services/api';
 import SkeletonEditor from '../components/SkeletonEditor';
 import NarrativeModeSelector from '../components/wizard/NarrativeModeSelector';
 import InkTitle from '../components/layout/InkTitle';
+import GenerationProgress from '../components/GenerationProgress';
+import { useGenerationProgress } from '../hooks/useGenerationProgress';
 
 const SkeletonWorkflowPage = () => {
   const navigate = useNavigate();
@@ -34,10 +36,11 @@ const SkeletonWorkflowPage = () => {
 
   const [isExtensionSkeleton, setIsExtensionSkeleton] = useState(false);
   const [parentTimelineId, setParentTimelineId] = useState<string | null>(null);
-  const [extensionUseRag, setExtensionUseRag] = useState<boolean | undefined>(undefined);
 
   const [narrativeMode, setNarrativeMode] = useState<NarrativeMode>(NarrativeModeEnum.BASIC);
   const [customPov, setCustomPov] = useState<string>('');
+  const [progressToken, setProgressToken] = useState<string | null>(null);
+  const { steps } = useGenerationProgress(progressToken);
 
   useEffect(() => {
     const skeletonId = searchParams.get('id');
@@ -59,17 +62,14 @@ const SkeletonWorkflowPage = () => {
       setParentTimelineId(loadedSkeleton.parent_timeline_id);
       const extMode = sessionStorage.getItem('extensionNarrativeMode');
       const extPov = sessionStorage.getItem('extensionNarrativeCustomPov');
-      const extUseRag = sessionStorage.getItem('extensionUseRag');
       if (extMode) setNarrativeMode(extMode as NarrativeMode);
       if (extPov) setCustomPov(extPov);
-      if (extUseRag !== null) setExtensionUseRag(extUseRag !== 'false');
     } else {
       setIsExtensionSkeleton(false);
       setParentTimelineId(null);
       sessionStorage.removeItem('extensionParentTimelineId');
       sessionStorage.removeItem('extensionNarrativeMode');
       sessionStorage.removeItem('extensionNarrativeCustomPov');
-      sessionStorage.removeItem('extensionUseRag');
     }
 
     setIsLoading(false);
@@ -101,23 +101,31 @@ const SkeletonWorkflowPage = () => {
       setError('Please provide custom perspective instructions for Advanced Custom POV mode');
       return;
     }
+    const token = crypto.randomUUID();
+    setProgressToken(token);
     setIsGenerating(true);
     setError(null);
 
     try {
       if (isExtensionSkeleton && parentTimelineId) {
-        const response = await extendFromSkeleton(parentTimelineId, skeleton.id, narrativeMode, narrativeMode === NarrativeModeEnum.ADVANCED_CUSTOM_POV ? customPov : undefined, extensionUseRag);
+        const response = await extendFromSkeleton(
+          parentTimelineId,
+          skeleton.id,
+          narrativeMode,
+          narrativeMode === NarrativeModeEnum.ADVANCED_CUSTOM_POV ? customPov : undefined,
+          token,
+        );
         if (response.error) { setError(response.error.message); setIsGenerating(false); return; }
         sessionStorage.removeItem('extensionParentTimelineId');
         sessionStorage.removeItem('extensionNarrativeMode');
         sessionStorage.removeItem('extensionNarrativeCustomPov');
-        sessionStorage.removeItem('extensionUseRag');
         navigate(`/reports/${parentTimelineId}`);
       } else {
         const request: GenerateFromSkeletonRequest = {
           skeleton_id: skeleton.id,
           narrative_mode: narrativeMode,
           narrative_custom_pov: narrativeMode === NarrativeModeEnum.ADVANCED_CUSTOM_POV ? customPov : undefined,
+          progress_token: token,
         };
         const response = await api.generateFromSkeleton(request);
         if (response.error) { setError(response.error.message); setIsGenerating(false); return; }
@@ -126,6 +134,8 @@ const SkeletonWorkflowPage = () => {
     } catch (_err) {
       setError('An unexpected error occurred during report generation');
       setIsGenerating(false);
+    } finally {
+      setProgressToken(null);
     }
   };
 
@@ -265,15 +275,9 @@ const SkeletonWorkflowPage = () => {
         </section>
 
         {/* Generation progress */}
-        {isGenerating && (
-          <div className="mt-5 flex items-center gap-3 p-4 border border-gold/30 bg-gold/5">
-            <div className="w-4 h-4 border border-gold border-t-transparent rounded-full animate-spin shrink-0" />
-            <div>
-              <p className="font-mono text-[10px] tracking-widest uppercase text-gold">Generating Full Report...</p>
-              <p className="font-body text-xs text-dim mt-0.5">
-                This may take 1–2 minutes while the AI analyzes your skeleton.
-              </p>
-            </div>
+        {isGenerating && progressToken && (
+          <div className="mt-5">
+            <GenerationProgress steps={steps} />
           </div>
         )}
       </div>
