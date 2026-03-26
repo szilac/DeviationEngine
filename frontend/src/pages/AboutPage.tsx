@@ -79,11 +79,11 @@ const AboutPage: React.FC = () => {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {[
-              { label: 'Local Deviation',       desc: 'Single historical change with strict realism',              examples: 'Assassination prevented, discovery delayed',   color: 'border-t-2 border-t-gold' },
-              { label: 'Global Deviation',      desc: 'Large-scale event affecting the entire world',              examples: 'Pandemic controlled, economic collapse',        color: 'border-t-2 border-t-quantum' },
-              { label: 'Reality Fracture',      desc: 'Fundamental break in laws of nature or physics',           examples: 'Magic becomes real, time anomalies',            color: 'border-t-2 border-t-dim' },
-              { label: 'Geological Shift',      desc: 'Physical environmental or geographic changes',              examples: 'Earthquakes, climate shifts, land formations',   color: 'border-t-2 border-t-warning' },
-              { label: 'External Intervention', desc: 'Time traveler, alien contact, or external actor intervenes', examples: 'Future technology, alien contact',              color: 'border-t-2 border-t-rubric-dim' },
+              { label: 'Local Deviation',       desc: 'Single historical change with strict realism',              examples: 'Assassination prevented, discovery delayed',   color: 'border-t-2 border-t-gold-dim' },
+              { label: 'Global Deviation',      desc: 'Large-scale event affecting the entire world',              examples: 'Pandemic controlled, economic collapse',        color: 'border-t-2 border-t-rubric-dim' },
+              { label: 'Reality Fracture',      desc: 'Fundamental break in laws of nature or physics',           examples: 'Magic becomes real, time anomalies',            color: 'border-t-2 border-t-quantum' },
+              { label: 'Geological Shift',      desc: 'Physical environmental or geographic changes',              examples: 'Earthquakes, climate shifts, land formations',   color: 'border-t-2 border-t-success' },
+              { label: 'External Intervention', desc: 'Time traveler, alien contact, or external actor intervenes', examples: 'Future technology, alien contact',              color: 'border-t-2 border-t-wave' },
             ].map(s => (
               <Card key={s.label} className={s.color}>
                 <div className="font-mono text-xs tracking-widest uppercase text-ink mb-1">{s.label}</div>
@@ -142,7 +142,6 @@ const AboutPage: React.FC = () => {
                       <Row key={item} marker="·">{item}</Row>
                     ))}
                   </div>
-                  <p className="font-mono text-[9px] text-faint mt-2">~60–120 seconds</p>
                 </Card>
                 <Card>
                   <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Method B — Skeleton Workflow (Recommended)</div>
@@ -299,7 +298,7 @@ const AboutPage: React.FC = () => {
               <Card>
                 <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">Smart Search — Recommended</div>
                 <div className="space-y-1 font-body text-base text-dim">
-                  <div>~99% fewer tokens vs Full Context</div>
+                  <div>~90% fewer tokens vs Full Context</div>
                   <div>ChromaDB + Gemini embeddings</div>
                   <div>Retrieves only relevant events</div>
                 </div>
@@ -392,7 +391,7 @@ const AboutPage: React.FC = () => {
                 <p className="font-body text-base text-dim leading-relaxed">
                   Gemini Flash models (2.5, 3.0) are the recommended default for all agents. They offer a generous
                   free-tier rate limit and up to 1 million token context window — well suited for the long prompts
-                  Deviation Engine generates.
+                  Deviation Engine generates. However, Claude models generally produce higher-quality results.
                 </p>
               </Card>
               <Card className="border-t-2 border-t-quantum">
@@ -422,7 +421,7 @@ const AboutPage: React.FC = () => {
               <Card>
                 <div className="font-mono text-xs tracking-widest uppercase text-gold mb-2">RAG — Smart Search</div>
                 <div className="space-y-1 font-body text-base text-dim">
-                  <div>~99% fewer tokens vs Full Context</div>
+                  <div>~90% fewer tokens vs Full Context</div>
                   <div>Good quality — occasionally less consistent if retrieval misses relevant context</div>
                   <div>Recommended default for most use cases</div>
                 </div>

@@ -10,7 +10,7 @@ const NAV_LINKS = [
 export default function PageHeader() {
   return (
     <header
-      className="relative z-10 bg-vellum border-b border-border"
+      className="sticky top-0 z-10 bg-vellum border-b border-border"
       style={{ borderTop: '2px solid #7A5C10' }}
     >
       {/* Skip to main content — visible on focus for keyboard users */}
@@ -61,7 +61,10 @@ export default function PageHeader() {
           <NavLink
             to="/about"
             aria-label="About"
-            className="ml-4 font-mono text-xs text-quantum hover:text-wave transition-colors duration-150"
+            className={({ isActive }) => [
+              'ml-4 font-mono text-xs transition-colors duration-150',
+              isActive ? 'text-gold border-b border-gold' : 'text-dim hover:text-ink',
+            ].join(' ')}
           >
             <span aria-hidden="true">|ψ⟩ About</span>
           </NavLink>

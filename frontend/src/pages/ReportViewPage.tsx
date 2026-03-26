@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getTimeline, extendTimeline, generateExtensionSkeleton, deleteTimeline, deleteGeneration, exportTimeline } from '../services/api';
 import type { Timeline, Generation, ErrorResponse, TimelineExtensionRequest, SupportedLanguage } from '../types';
 import { TimelineUtils } from '../types';
@@ -273,6 +273,20 @@ function ReportViewPage() {
         onDeleteTimeline={handleDeleteTimeline}
         onViewSkeleton={() => setShowSkeletonModal(true)}
       />
+
+      {/* Breadcrumb bar */}
+      <div className="shrink-0 flex items-center gap-1.5 px-4 py-1.5 border-b border-border/50 bg-parchment/40">
+        <Link
+          to="/library"
+          className="font-mono text-[9px] tracking-wider text-faint hover:text-gold-dim transition-colors"
+        >
+          Library
+        </Link>
+        <span className="font-mono text-[9px] text-faint/50">›</span>
+        <span className="font-mono text-[9px] text-dim truncate max-w-[300px]">
+          {timeline?.timeline_name || timeline?.root_deviation_description || '…'}
+        </span>
+      </div>
 
       {/* Two-zone layout */}
       <div className="flex flex-1 overflow-hidden">

@@ -164,124 +164,132 @@ export default function LLMConfigForm({
       </div>
 
       {/* Google API Key */}
-      <div>
-        <label htmlFor="apiKeyGoogle" className={fieldLabel}>
-          Google Gemini API Key
-        </label>
-        <div className="flex items-end gap-4">
-          <input
-            type={showGoogleKey ? 'text' : 'password'}
-            id="apiKeyGoogle"
-            value={apiKeyGoogle}
-            onChange={(e) => setApiKeyGoogle(e.target.value)}
-            placeholder={currentConfig?.api_key_google_set ? '••••••••••••••••' : 'enter API key…'}
-            autoComplete="off"
-            spellCheck={false}
-            className={`flex-1 ${bottomInput}`}
-            disabled={isLoading}
-          />
-          <button
-            type="button"
-            onClick={() => setShowGoogleKey(!showGoogleKey)}
-            aria-label={showGoogleKey ? 'Hide Google API key' : 'Show Google API key'}
-            className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
-            disabled={isLoading}
-          >
-            {showGoogleKey ? 'HIDE' : 'SHOW'}
-          </button>
+      {provider === 'google' && (
+        <div>
+          <label htmlFor="apiKeyGoogle" className={fieldLabel}>
+            Google Gemini API Key
+          </label>
+          <div className="flex items-end gap-4">
+            <input
+              type={showGoogleKey ? 'text' : 'password'}
+              id="apiKeyGoogle"
+              value={apiKeyGoogle}
+              onChange={(e) => setApiKeyGoogle(e.target.value)}
+              placeholder={currentConfig?.api_key_google_set ? '••••••••••••••••' : 'enter API key…'}
+              autoComplete="off"
+              spellCheck={false}
+              className={`flex-1 ${bottomInput}`}
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={() => setShowGoogleKey(!showGoogleKey)}
+              aria-label={showGoogleKey ? 'Hide Google API key' : 'Show Google API key'}
+              className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+              disabled={isLoading}
+            >
+              {showGoogleKey ? 'HIDE' : 'SHOW'}
+            </button>
+          </div>
+          <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
         </div>
-        <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
-      </div>
+      )}
 
       {/* OpenRouter API Key */}
-      <div>
-        <label htmlFor="apiKeyOpenRouter" className={fieldLabel}>
-          OpenRouter API Key
-        </label>
-        <div className="flex items-end gap-4">
-          <input
-            type={showOpenRouterKey ? 'text' : 'password'}
-            id="apiKeyOpenRouter"
-            value={apiKeyOpenRouter}
-            onChange={(e) => setApiKeyOpenRouter(e.target.value)}
-            placeholder={currentConfig?.api_key_openrouter_set ? '••••••••••••••••' : 'enter API key…'}
-            autoComplete="off"
-            spellCheck={false}
-            className={`flex-1 ${bottomInput}`}
-            disabled={isLoading}
-          />
-          <button
-            type="button"
-            onClick={() => setShowOpenRouterKey(!showOpenRouterKey)}
-            aria-label={showOpenRouterKey ? 'Hide OpenRouter API key' : 'Show OpenRouter API key'}
-            className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
-            disabled={isLoading}
-          >
-            {showOpenRouterKey ? 'HIDE' : 'SHOW'}
-          </button>
+      {provider === 'openrouter' && (
+        <div>
+          <label htmlFor="apiKeyOpenRouter" className={fieldLabel}>
+            OpenRouter API Key
+          </label>
+          <div className="flex items-end gap-4">
+            <input
+              type={showOpenRouterKey ? 'text' : 'password'}
+              id="apiKeyOpenRouter"
+              value={apiKeyOpenRouter}
+              onChange={(e) => setApiKeyOpenRouter(e.target.value)}
+              placeholder={currentConfig?.api_key_openrouter_set ? '••••••••••••••••' : 'enter API key…'}
+              autoComplete="off"
+              spellCheck={false}
+              className={`flex-1 ${bottomInput}`}
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={() => setShowOpenRouterKey(!showOpenRouterKey)}
+              aria-label={showOpenRouterKey ? 'Hide OpenRouter API key' : 'Show OpenRouter API key'}
+              className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+              disabled={isLoading}
+            >
+              {showOpenRouterKey ? 'HIDE' : 'SHOW'}
+            </button>
+          </div>
+          <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
         </div>
-        <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
-      </div>
+      )}
 
       {/* Anthropic API Key */}
-      <div>
-        <label htmlFor="apiKeyAnthropic" className={fieldLabel}>
-          Anthropic API Key
-        </label>
-        <div className="flex items-end gap-4">
-          <input
-            type={showAnthropicKey ? 'text' : 'password'}
-            id="apiKeyAnthropic"
-            value={apiKeyAnthropic}
-            onChange={(e) => setApiKeyAnthropic(e.target.value)}
-            placeholder={currentConfig?.api_key_anthropic_set ? '••••••••••••••••' : 'enter API key…'}
-            autoComplete="off"
-            spellCheck={false}
-            className={`flex-1 ${bottomInput}`}
-            disabled={isLoading}
-          />
-          <button
-            type="button"
-            onClick={() => setShowAnthropicKey(!showAnthropicKey)}
-            aria-label={showAnthropicKey ? 'Hide Anthropic API key' : 'Show Anthropic API key'}
-            className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
-            disabled={isLoading}
-          >
-            {showAnthropicKey ? 'HIDE' : 'SHOW'}
-          </button>
+      {provider === 'anthropic' && (
+        <div>
+          <label htmlFor="apiKeyAnthropic" className={fieldLabel}>
+            Anthropic API Key
+          </label>
+          <div className="flex items-end gap-4">
+            <input
+              type={showAnthropicKey ? 'text' : 'password'}
+              id="apiKeyAnthropic"
+              value={apiKeyAnthropic}
+              onChange={(e) => setApiKeyAnthropic(e.target.value)}
+              placeholder={currentConfig?.api_key_anthropic_set ? '••••••••••••••••' : 'enter API key…'}
+              autoComplete="off"
+              spellCheck={false}
+              className={`flex-1 ${bottomInput}`}
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={() => setShowAnthropicKey(!showAnthropicKey)}
+              aria-label={showAnthropicKey ? 'Hide Anthropic API key' : 'Show Anthropic API key'}
+              className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+              disabled={isLoading}
+            >
+              {showAnthropicKey ? 'HIDE' : 'SHOW'}
+            </button>
+          </div>
+          <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
         </div>
-        <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
-      </div>
+      )}
 
       {/* OpenAI API Key */}
-      <div>
-        <label htmlFor="apiKeyOpenAI" className={fieldLabel}>
-          OpenAI API Key
-        </label>
-        <div className="flex items-end gap-4">
-          <input
-            type={showOpenAIKey ? 'text' : 'password'}
-            id="apiKeyOpenAI"
-            value={apiKeyOpenAI}
-            onChange={(e) => setApiKeyOpenAI(e.target.value)}
-            placeholder={currentConfig?.api_key_openai_set ? '••••••••••••••••' : 'enter API key…'}
-            autoComplete="off"
-            spellCheck={false}
-            className={`flex-1 ${bottomInput}`}
-            disabled={isLoading}
-          />
-          <button
-            type="button"
-            onClick={() => setShowOpenAIKey(!showOpenAIKey)}
-            aria-label={showOpenAIKey ? 'Hide OpenAI API key' : 'Show OpenAI API key'}
-            className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
-            disabled={isLoading}
-          >
-            {showOpenAIKey ? 'HIDE' : 'SHOW'}
-          </button>
+      {provider === 'openai' && (
+        <div>
+          <label htmlFor="apiKeyOpenAI" className={fieldLabel}>
+            OpenAI API Key
+          </label>
+          <div className="flex items-end gap-4">
+            <input
+              type={showOpenAIKey ? 'text' : 'password'}
+              id="apiKeyOpenAI"
+              value={apiKeyOpenAI}
+              onChange={(e) => setApiKeyOpenAI(e.target.value)}
+              placeholder={currentConfig?.api_key_openai_set ? '••••••••••••••••' : 'enter API key…'}
+              autoComplete="off"
+              spellCheck={false}
+              className={`flex-1 ${bottomInput}`}
+              disabled={isLoading}
+            />
+            <button
+              type="button"
+              onClick={() => setShowOpenAIKey(!showOpenAIKey)}
+              aria-label={showOpenAIKey ? 'Hide OpenAI API key' : 'Show OpenAI API key'}
+              className="font-mono text-xs text-dim hover:text-gold transition-colors pb-2 whitespace-nowrap"
+              disabled={isLoading}
+            >
+              {showOpenAIKey ? 'HIDE' : 'SHOW'}
+            </button>
+          </div>
+          <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
         </div>
-        <p className="mt-1.5 font-caption text-xs text-faint">Leave empty to use environment variable</p>
-      </div>
+      )}
 
       {/* Ollama / CLIProxy Base URL */}
       {(provider === 'ollama' || provider === 'cliproxy') && (
@@ -330,7 +338,7 @@ export default function LLMConfigForm({
       )}
 
       {/* Actions */}
-      <div className="flex gap-3 pt-2">
+      <div className="sticky bottom-0 bg-parchment border-t border-border pt-3 pb-3 -mx-6 px-6 flex gap-3 mt-4">
         <button
           type="submit"
           disabled={isLoading || !modelName}
