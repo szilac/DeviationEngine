@@ -93,8 +93,8 @@ export default function SettingsPage() {
         {!isLoading && (
           <>
             {/* Section I — Language Model */}
-            <section className="border border-border bg-surface">
-              <div className="px-6 py-5">
+            <section className="border border-gold/40 bg-surface">
+              <div className="px-6 py-5 bg-gold/10">
                 <div className="rubric-label mb-1.5">§ I.&nbsp;&nbsp;LANGUAGE MODEL</div>
                 <p className="font-caption text-sm text-dim">
                   Global LLM provider, model selection, and API keys
@@ -115,7 +115,7 @@ export default function SettingsPage() {
             <div className="mt-4">
               <Link
                 to="/settings/advanced"
-                className="block border border-border bg-surface px-6 py-5 hover:bg-overlay transition-colors group"
+                className="block border border-gold/40 bg-surface px-6 py-5 hover:bg-overlay transition-colors group"
               >
                 <div className="flex items-center justify-between">
                   <div>

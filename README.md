@@ -225,8 +225,8 @@ nlm login --check
 
 ### Enabling in Deviation Engine
 
-1. Go to **Settings** → **Audio**
-2. Toggle **Enable NotebookLM Audio**
+1. Go to **Settings** → **Advanced Configuration** → **§ V. Integrations**
+2. Toggle **NotebookLM Podcast Generation**
 3. The **NotebookLM** tab appears in the Audio Studio panel on any timeline
 
 ### How It Works
@@ -288,10 +288,10 @@ Keep this running alongside Deviation Engine. The proxy listens on `http://local
 
 ### Enable in Deviation Engine
 
-1. Go to **Settings** → **§ V. Integrations**
+1. Go to **Settings** → **Advanced Configuration** → **§ V. Integrations**
 2. Toggle **CLIProxy — Subscription API Bridge**
 3. Read the inline setup steps and confirm the proxy is running
-4. Go to **§ I. Language Model** → select **CLIProxy (Subscription)**
+4. Go to **Settings** → **§ I. Language Model** → select **CLIProxy (Subscription)**
 5. Choose a model (e.g. `claude-sonnet-4-20250514`) and save
 
 You can override the default URL with the `CLIPROXY_BASE_URL` environment variable in `backend/.env`.
@@ -447,7 +447,7 @@ DEEPL_ENABLED=true
 
 **AI Translation**: No setup needed, uses your configured LLM.
 
-Configure via **Settings** → **Translation Settings**.
+Configure via **Settings** → **Advanced Configuration** → **§ III. Translation**.
 
 ### Vector Store / RAG Configuration
 
@@ -472,13 +472,13 @@ Smart Search reduces API costs by ~90% vs Full Context. Index ground truth data 
 python scripts/index_ground_truth.py
 ```
 
-Configure globally in **Settings** → **Debug** → **Default Context Mode**.
+Configure globally in **Settings** → **Advanced Configuration** → **§ IV. Debug & Vector Store** → **Default Context Mode**.
 
 ### Per-Agent Model Configuration
 
 Use different AI models for each agent to balance cost and quality:
 
-1. Go to **Settings** → **Per-Agent Model Settings**
+1. Go to **Settings** → **Advanced Configuration** → **§ II. Per-Agent Models**
 2. Configure any of the 9 agents: Historian, Storyteller, Skeleton, Skeleton Historian, Illustrator, Script Writer, Translator, Character Profiler, Impersonator
 3. Save configuration
 
@@ -536,7 +536,7 @@ The **Gemini Flash** family (2.5, 3.0) is the recommended starting point for all
 
 ### Handling Rate Limits
 
-If you hit the rate limit on one Gemini Flash version, switch to the other — **Gemini 2.5 Flash** and **Gemini 3.0 Flash** operate on separate quotas and produce nearly identical output quality. Simply update the affected agent's model in **Settings → Per-Agent Model Settings** and continue.
+If you hit the rate limit on one Gemini Flash version, switch to the other — **Gemini 2.5 Flash** and **Gemini 3.0 Flash** operate on separate quotas and produce nearly identical output quality. Simply update the affected agent's model in **Settings → Advanced Configuration → § II. Per-Agent Models** and continue.
 
 ### Transient Failures
 
@@ -544,7 +544,7 @@ LLM providers occasionally fail to respond during periods of high server load. I
 
 ### Per-Agent Model Recommendations
 
-Every agent can use a different LLM model. Configure them in **Settings → Per-Agent Model Settings**:
+Every agent can use a different LLM model. Configure them in **Settings → Advanced Configuration → § II. Per-Agent Models**:
 
 | Agent | Recommendation |
 | --- | --- |
@@ -559,7 +559,7 @@ OpenRouter requires a small credit balance rather than a subscription. Costs are
 
 ### Context Mode: RAG vs Full Context
 
-Configurable per-generation in the **Advanced Options** panel on the Deviation Console, and globally in **Settings → Debug → Default Context Mode**:
+Configurable globally in **Settings → Advanced Configuration → § IV. Debug & Vector Store → Default Context Mode**:
 
 | Mode | Token Usage | Quality | Best For |
 | --- | --- | --- | --- |
@@ -575,7 +575,7 @@ Full Context sends the complete ground truth data for the deviation period and, 
 
 ### Debug Settings
 
-Access via **Settings** → **Debug**:
+Access via **Settings** → **Advanced Configuration** → **§ IV. Debug & Vector Store**:
 
 - **Default Context Mode**: Set global RAG vs Legacy mode for new timelines
 - **RAG Debug Mode**: Log detailed retrieval information to backend terminal

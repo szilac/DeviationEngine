@@ -151,17 +151,17 @@ export default function AdvancedSettingsPage() {
         )}
 
         {!isLoading && (
-          <div className="space-y-0">
+          <div className="space-y-3">
             {ADVANCED_SECTIONS.map((section, idx) => {
               const isOpen = openSection === section.id;
               return (
                 <div key={section.id}>
                   {/* Section */}
-                  <section className="border border-border bg-surface">
+                  <section className="border border-gold/40 bg-surface">
                     {/* Section header button */}
                     <button
                       onClick={() => toggle(section.id)}
-                      className="w-full px-6 py-5 flex items-start justify-between text-left hover:bg-overlay transition-colors"
+                      className="w-full px-6 py-5 flex items-start justify-between text-left bg-gold/10 hover:bg-gold/15 transition-colors"
                       aria-expanded={isOpen}
                       aria-controls={`settings-panel-${section.id}`}
                     >
@@ -205,29 +205,68 @@ export default function AdvancedSettingsPage() {
                             </p>
 
                             {/* NotebookLM */}
-                            <div className="flex items-center justify-between border border-border rounded px-4 py-3 bg-surface">
-                              <div>
-                                <div className="font-body text-sm text-ink font-medium">NotebookLM Podcast Generation</div>
-                                <div className="font-caption text-xs text-dim mt-0.5">
-                                  Requires the <code className="font-mono text-gold">nlm</code> CLI tool and a Google account.
-                                  When enabled, a "NotebookLM Podcast" mode appears in the Audio Studio panel.
+                            <div className="border border-border rounded bg-surface">
+                              <div className="flex items-center justify-between px-4 py-3">
+                                <div>
+                                  <div className="font-body text-sm text-ink font-medium">NotebookLM Podcast Generation</div>
+                                  <div className="font-caption text-xs text-dim mt-0.5">
+                                    Generates AI podcast discussions about your timelines using Google's NotebookLM.
+                                    Requires the <code className="font-mono text-gold">nlm</code> CLI and a Google account.
+                                    When enabled, a "NotebookLM Podcast" mode appears in the Audio Studio panel.
+                                  </div>
                                 </div>
-                              </div>
-                              <button
-                                role="switch"
-                                aria-checked={nlmEnabled}
-                                aria-label="NotebookLM Podcast Generation"
-                                onClick={() => setNlmEnabled(!nlmEnabled)}
-                                className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-vellum ${
-                                  nlmEnabled ? 'bg-gold' : 'bg-border'
-                                }`}
-                              >
-                                <span
-                                  className={`inline-block h-4 w-4 transform rounded-full bg-surface shadow transition-transform ${
-                                    nlmEnabled ? 'translate-x-6' : 'translate-x-1'
+                                <button
+                                  role="switch"
+                                  aria-checked={nlmEnabled}
+                                  aria-label="NotebookLM Podcast Generation"
+                                  onClick={() => setNlmEnabled(!nlmEnabled)}
+                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-vellum ${
+                                    nlmEnabled ? 'bg-gold' : 'bg-border'
                                   }`}
-                                />
-                              </button>
+                                >
+                                  <span
+                                    className={`inline-block h-4 w-4 transform rounded-full bg-surface shadow transition-transform ${
+                                      nlmEnabled ? 'translate-x-6' : 'translate-x-1'
+                                    }`}
+                                  />
+                                </button>
+                              </div>
+
+                              {/* Installation instructions — shown when enabled */}
+                              {nlmEnabled && (
+                                <div className="border-t border-border px-4 py-4 space-y-3">
+                                  <p className="font-caption text-xs text-dim">
+                                    NotebookLM audio is generated externally by Google — no extra API key required.
+                                    Generation takes <strong className="text-ink">5–20 minutes</strong> after submission.
+                                    Your session is stored locally after the one-time login.
+                                  </p>
+                                  <div className="space-y-1.5">
+                                    <p className="font-mono text-xs text-dim tracking-widest uppercase">Installation</p>
+                                    <ol className="space-y-1 font-caption text-xs text-dim list-decimal list-inside">
+                                      <li>
+                                        Install:{' '}
+                                        <code className="font-mono text-gold">pip install notebooklm-cli</code>
+                                      </li>
+                                      <li>
+                                        Authenticate:{' '}
+                                        <code className="font-mono text-gold">nlm login</code>
+                                        {' '}(one-time, opens a browser — sign in with your Google account)
+                                      </li>
+                                      <li>
+                                        Verify:{' '}
+                                        <code className="font-mono text-gold">nlm login --check</code>
+                                        {' '}should print <em>Authentication valid!</em>
+                                      </li>
+                                      <li>
+                                        Use the <strong className="text-ink">Audio Studio</strong> on any timeline — the NotebookLM tab will appear.
+                                      </li>
+                                    </ol>
+                                  </div>
+                                  <p className="font-caption text-xs text-faint">
+                                    Source & docs: pypi.org/project/notebooklm-cli
+                                  </p>
+                                </div>
+                              )}
                             </div>
 
                             {/* CLIProxy */}

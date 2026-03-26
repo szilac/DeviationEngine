@@ -60,10 +60,10 @@ Before creating content:
 1. Open http://localhost:5173.
 2. Verify the home/landing page loads without errors.
 3. Open the Settings page:
-   - Confirm your LLM provider is configured (Gemini, OpenRouter, Anthropic, or OpenAI).
-   - (Optional) Configure DeepL for translations.
-   - (Optional) Toggle "Enable NotebookLM Audio" if you have `nlm` installed and authenticated.
-   - (Optional) Go to **§ V. Integrations** → enable **CLIProxy** if you want to use a Claude or OpenAI subscription instead of API keys (see inline instructions).
+   - Confirm your LLM provider is configured under **§ I. Language Model** (Gemini, OpenRouter, Anthropic, or OpenAI).
+   - (Optional) Go to **Advanced Configuration** → **§ III. Translation** to configure DeepL.
+   - (Optional) Go to **Advanced Configuration** → **§ V. Integrations** → toggle **NotebookLM Podcast Generation** if you have `nlm` installed and authenticated.
+   - (Optional) Go to **Advanced Configuration** → **§ V. Integrations** → enable **CLIProxy** if you want to use a Claude or OpenAI subscription instead of API keys (see inline instructions).
 4. Return to the console/home to start creating your first scenario.
 
 If any step fails, consult setup docs or backend logs.
@@ -231,7 +231,7 @@ Supported concepts:
 Typical usage:
 
 1. Configure translation:
-   - In Settings → Translation:
+   - In **Settings → Advanced Configuration → § III. Translation**:
      - Enable DeepL with an API key, or rely on LLM translation (where available).
 2. In a timeline view:
    - Select target language from the language selector.
@@ -292,7 +292,7 @@ Uses Google's NotebookLM to generate a natural-sounding AI podcast discussion ab
 
 Requires: `nlm` CLI installed and authenticated. See [NotebookLM Setup in README](../README.md#notebooklm-audio-setup) for instructions.
 
-Enable: Settings → Audio → toggle "Enable NotebookLM Audio".
+Enable: **Settings → Advanced Configuration → § V. Integrations** → toggle **NotebookLM Podcast Generation**.
 
 Steps:
 
@@ -459,13 +459,13 @@ If something doesn't work as expected:
   - Confirm DeepL or LLM translation is enabled.
   - Check error messages or backend logs.
 - NotebookLM Audio not appearing:
-  - Confirm the feature is enabled in Settings → Integrations.
+  - Confirm the feature is enabled in **Settings → Advanced Configuration → § V. Integrations**.
   - Run `nlm login --check` in your terminal to verify authentication.
   - Note: generation takes 5–20 minutes; check Past Generations after waiting.
 - CLIProxy generation fails:
   - Confirm `cliproxyapi` is running in a terminal on your machine.
   - If the session expired, re-authenticate: `cliproxyapi --browser-auth`.
-  - Verify CLIProxy is enabled in **Settings → § V. Integrations**.
+  - Verify CLIProxy is enabled in **Settings → Advanced Configuration → § V. Integrations**.
 - Historical Figure Chat not responding correctly:
   - Ensure the timeline has at least one generation with content.
   - Try regenerating the figure's profile.

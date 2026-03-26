@@ -180,7 +180,7 @@ python scripts/index_ground_truth.py --force
 
 ### Verify in the UI
 
-1. Open **Settings → Debug**.
+1. Open **Settings → Advanced Configuration → § IV. Debug & Vector Store**.
 2. Confirm **Default Context Mode** shows `rag`.
 3. Enable **RAG Debug Mode** temporarily to verify retrieval is working (optional).
 
@@ -213,8 +213,8 @@ nlm login --check
 
 ### Enable in the App
 
-1. Open **Settings → Audio** (or **Settings → Integrations**).
-2. Toggle **Enable NotebookLM Audio**.
+1. Open **Settings → Advanced Configuration → § V. Integrations**.
+2. Toggle **NotebookLM Podcast Generation**.
 3. The **NotebookLM** tab will appear in the Audio Studio on any timeline.
 
 ---
@@ -248,9 +248,9 @@ The proxy listens on `http://localhost:8317/v1`. Keep it running alongside Devia
 
 ### Configure in the App
 
-1. Open **Settings** → **§ V. Integrations**
+1. Open **Settings** → **Advanced Configuration** → **§ V. Integrations**
 2. Toggle **CLIProxy — Subscription API Bridge**
-3. Go to **§ I. Language Model** → select **CLIProxy (Subscription)**
+3. Go to **Settings** → **§ I. Language Model** → select **CLIProxy (Subscription)**
 4. Pick a model (`claude-sonnet-4-20250514`, `claude-opus-4-20250514`, or `gpt-4o` etc.) and save
 
 To use a non-default URL, set `CLIPROXY_BASE_URL` in `backend/.env`.
@@ -386,7 +386,7 @@ DEBUG_AGENT_PROMPTS=false   # true saves full agent prompts to backend/data/agen
 
 Each of the 9 AI agents can use a different LLM model, letting you balance cost and quality:
 
-1. Open **Settings → Per-Agent Model Settings**.
+1. Open **Settings → Advanced Configuration → § II. Per-Agent Models**.
 2. Configure any agents: Historian, Storyteller, Skeleton, Skeleton Historian, Illustrator, Script Writer, Translator, Character Profiler, Impersonator.
 3. Save configuration.
 
@@ -432,7 +432,7 @@ To also remove ground truth data (requires re-indexing afterwards):
 python scripts/purge_data.py --include-ground-truth --yes
 ```
 
-You can also trigger a purge from the UI: **Settings → Debug → Purge All Data**.
+You can also trigger a purge from the UI: **Settings → Advanced Configuration → § IV. Debug & Vector Store → Purge All Data**.
 
 ---
 
@@ -477,7 +477,7 @@ python -m spacy download en_core_web_sm
 
 - Verify your API key is correct in `.env` (no extra spaces or quotes).
 - Check whether the provider is rate-limited.
-- Try switching to a different provider in **Settings → LLM Configuration**.
+- Try switching to a different provider in **Settings** (Provider Setup).
 
 ### RAG not working / "vector store unavailable"
 
@@ -488,14 +488,14 @@ python -m spacy download en_core_web_sm
 ### NotebookLM Audio not generating
 
 - Run `nlm login --check` to verify authentication.
-- Confirm the feature is enabled in **Settings → Audio**.
+- Confirm the feature is enabled in **Settings → Advanced Configuration → § V. Integrations**.
 - Remember: generation takes 5–20 minutes (processed by Google externally).
 
 ### CLIProxy provider returns errors
 
 - Confirm `cliproxyapi` is running in a separate terminal.
 - Check that you authenticated: `cliproxyapi --browser-auth` (re-run if session expired).
-- Confirm the feature is enabled in **Settings → § V. Integrations → CLIProxy**.
+- Confirm the feature is enabled in **Settings → Advanced Configuration → § V. Integrations → CLIProxy**.
 - Verify the proxy URL matches — default is `http://localhost:8317/v1`. Set `CLIPROXY_BASE_URL` in `.env` if you changed the port.
 
 ### Port conflicts
