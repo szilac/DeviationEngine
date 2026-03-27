@@ -63,7 +63,7 @@ Before creating content:
    - Confirm your LLM provider is configured under **§ I. Language Model** (Gemini, OpenRouter, Anthropic, or OpenAI).
    - (Optional) Go to **Advanced Configuration** → **§ III. Translation** to configure DeepL.
    - (Optional) Go to **Advanced Configuration** → **§ V. Integrations** → toggle **NotebookLM Podcast Generation** if you have `nlm` installed and authenticated.
-   - (Optional) Go to **Advanced Configuration** → **§ V. Integrations** → enable **CLIProxy** if you want to use a Claude or OpenAI subscription instead of API keys (see inline instructions).
+   - (Optional) Go to **Advanced Configuration** → **§ V. Integrations** → enable **CLIProxy** if you want to use Antigravity (free, Gemini 3 Pro), a Claude subscription, or an OpenAI subscription instead of API keys (see inline instructions).
 4. Return to the console/home to start creating your first scenario.
 
 If any step fails, consult setup docs or backend logs.
@@ -463,8 +463,8 @@ If something doesn't work as expected:
   - Run `nlm login --check` in your terminal to verify authentication.
   - Note: generation takes 5–20 minutes; check Past Generations after waiting.
 - CLIProxy generation fails:
-  - Confirm `cliproxyapi` is running in a terminal on your machine.
-  - If the session expired, re-authenticate: `cliproxyapi --browser-auth`.
+  - Confirm `./cli-proxy-api` is running in a terminal (from the `cliproxyapi` folder).
+  - If the session has expired, re-authenticate with your provider: `./cli-proxy-api -antigravity-login`, `-claude-login`, or `-codex-login`.
   - Verify CLIProxy is enabled in **Settings → Advanced Configuration → § V. Integrations**.
 - Historical Figure Chat not responding correctly:
   - Ensure the timeline has at least one generation with content.

@@ -48,12 +48,9 @@ AVAILABLE_MODELS: Dict[str, List[str]] = {
         "x-ai/grok-4-fast",
         "x-ai/grok-4.1-fast",
         "moonshotai/kimi-k2-thinking",
-        "aion-labs/aion-2.0",
         "moonshotai/kimi-k2.5",
         "anthropic/claude-sonnet-4.6",
         "anthropic/claude-opus-4.6",
-        "openrouter/healer-alpha",
-        "openrouter/hunter-alpha",
     ],
     "ollama": [
         "llama3.2:3b",
@@ -85,6 +82,11 @@ AVAILABLE_MODELS: Dict[str, List[str]] = {
         "gpt-4.1-mini",
         "gpt-5.4",
         "gpt-5",
+        "gemini-3-pro-high",
+        "gemini-3-pro-low",
+        "gemini-3.1-pro-high",
+        "gemini-3.1-pro-low",
+        "gemini-3-flash",        
     ],
 }
 
