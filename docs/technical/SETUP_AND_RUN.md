@@ -221,27 +221,46 @@ nlm login --check
 
 ## 4.3 CLIProxy Setup (Optional)
 
-CLIProxyAPI is a local proxy that exposes your **Claude Pro/Max** or **OpenAI** subscription as an OpenAI-compatible API. Use this if you already pay for a subscription and want to avoid separate API token costs.
+CLIProxyAPI is a local proxy that exposes an OpenAI-compatible API at `http://localhost:8317/v1`. It supports multiple providers — including **Antigravity**, which is free and gives access to Gemini 3 Pro with better quality and higher rate limits than the standard free Gemini API.
 
-### Install
+| Provider | Cost | Login flag |
+|----------|------|------------|
+| **Antigravity** | **Free** | `-antigravity-login` |
+| Claude Pro/Max | Paid subscription | `-claude-login` |
+| OpenAI / Codex | Paid subscription | `-codex-login` |
+
+For more details, see [help.router-for.me](https://help.router-for.me/) or the [CLIProxyAPI GitHub page](https://github.com/router-for-me/CLIProxyAPI).
+
+### Install (Linux)
+
+Run the installer in a terminal:
 
 ```bash
-# Linux / macOS
-bash <(curl -fsSL https://github.com/router-for-me/CLIProxyAPI/releases/latest/download/install.sh)
+curl -fsSL https://raw.githubusercontent.com/brokechubb/cliproxyapi-installer/refs/heads/master/cliproxyapi-installer | bash
 ```
+
+### Configure
+
+Open `config.yaml` and **remove the example API keys on line 35**.
 
 ### Authenticate (one-time)
 
+Navigate to the `cliproxyapi` folder and log in with your chosen provider:
+
 ```bash
-cliproxyapi --browser-auth
+./cli-proxy-api -antigravity-login   # Free — Gemini 3 Pro
+./cli-proxy-api -claude-login        # Claude Pro/Max subscription
+./cli-proxy-api -codex-login         # OpenAI subscription
 ```
 
-Follow the browser prompt. Your session is stored locally.
+Your session is stored locally — you only need to do this once.
 
 ### Run the proxy
 
+From the `cliproxyapi` folder, start the server:
+
 ```bash
-cliproxyapi
+./cli-proxy-api
 ```
 
 The proxy listens on `http://localhost:8317/v1`. Keep it running alongside Deviation Engine.
@@ -251,11 +270,11 @@ The proxy listens on `http://localhost:8317/v1`. Keep it running alongside Devia
 1. Open **Settings** → **Advanced Configuration** → **§ V. Integrations**
 2. Toggle **CLIProxy — Subscription API Bridge**
 3. Go to **Settings** → **§ I. Language Model** → select **CLIProxy (Subscription)**
-4. Pick a model (`claude-sonnet-4-20250514`, `claude-opus-4-20250514`, or `gpt-4o` etc.) and save
+4. Pick a model and save
 
 To use a non-default URL, set `CLIPROXY_BASE_URL` in `backend/.env`.
 
-> **Note**: Designed for Claude Max. Claude Pro users will work but may hit rate limits under heavy load.
+> **Tip**: Antigravity is the easiest starting point — it's free and requires no paid subscription.
 
 ---
 
@@ -292,7 +311,7 @@ CLIPROXY_BASE_URL=http://localhost:8317/v1
 
 - `openai/gpt-4o-mini` — fast and cheap
 - `openai/gpt-4o` — high quality
-- `anthropic/claude-3.5-sonnet` — strong reasoning
+- `anthropic/claude-4-sonnet` — strong reasoning
 
 **Anthropic direct models:**
 
@@ -309,7 +328,8 @@ CLIPROXY_BASE_URL=http://localhost:8317/v1
 **CLIProxy models** (no API key — uses your subscription):
 
 - `claude-sonnet-4-20250514`, `claude-opus-4-20250514`, `claude-haiku-4-5-20251001`
-- `gpt-4o`, `gpt-4o-mini`, `gpt-4.1`
+- `gpt-4o`, `gpt-4o-mini`, `gpt-4.1`, `gemini-3-pro-high`, `gemini-3-pro-low`,
+  `gemini-3.1-pro-high`, `gemini-3.1-pro-low`, `gemini-3-flash`,
 
 See [Section 4.3](#43-cliproxy-setup-optional) for CLIProxy setup.
 
@@ -493,8 +513,8 @@ python -m spacy download en_core_web_sm
 
 ### CLIProxy provider returns errors
 
-- Confirm `cliproxyapi` is running in a separate terminal.
-- Check that you authenticated: `cliproxyapi --browser-auth` (re-run if session expired).
+- Confirm `./cli-proxy-api` is running in a separate terminal (from the `cliproxyapi` folder).
+- If your session has expired, re-authenticate: `./cli-proxy-api -claude-login`.
 - Confirm the feature is enabled in **Settings → Advanced Configuration → § V. Integrations → CLIProxy**.
 - Verify the proxy URL matches — default is `http://localhost:8317/v1`. Set `CLIPROXY_BASE_URL` in `.env` if you changed the port.
 
@@ -527,7 +547,7 @@ python -m spacy download en_core_web_sm
 pip install notebooklm-cli && nlm login
 
 # One-time: CLIProxy auth (if using subscription instead of API key)
-cliproxyapi --browser-auth
+cd cliproxyapi && ./cli-proxy-api -claude-login
 
 # Reset all data
 cd backend && python scripts/purge_data.py --yes

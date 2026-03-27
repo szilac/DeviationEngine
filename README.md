@@ -45,7 +45,7 @@ On subsequent runs, just double-click the launcher again — no setup needed.
 - **API Key**: [Google Gemini API](https://aistudio.google.com/) (free tier available) OR [OpenRouter](https://openrouter.ai/) OR Anthropic/OpenAI direct keys
 - **Optional**: [DeepL API Key](https://www.deepl.com/pro-api) for fast translations (500k chars/month free)
 - **Optional**: [notebooklm-cli](https://github.com/jnsahaj/notebooklm-cli) for NotebookLM AI audio
-- **Optional**: [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) to use a Claude Pro/Max or OpenAI subscription instead of paying per-token API costs
+- **Optional**: [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI) — use **Antigravity** (free, Gemini 2.5 Pro), a Claude Pro/Max subscription, or an OpenAI subscription instead of paying per-token API costs
 
 ### Installation
 
@@ -261,27 +261,46 @@ You can optionally guide the discussion, for example:
 
 ## CLIProxy Setup
 
-CLIProxyAPI is a local proxy server that wraps the Claude Code or OpenAI CLI and exposes an OpenAI-compatible API at `http://localhost:8317/v1`. If you already pay for a **Claude Pro/Max** or **OpenAI** subscription, you can use it with Deviation Engine at no extra token cost.
+CLIProxyAPI is a local proxy server that exposes an OpenAI-compatible API at `http://localhost:8317/v1`. It supports multiple subscription providers — pick the one that fits you:
 
-### Installation
+| Provider | Cost | Notes |
+|----------|------|-------|
+| **Antigravity** | **Free** | Access to Gemini 3 Pro — better quality and higher rate limits than the free Gemini API |
+| **Claude Pro/Max** | Paid subscription | Use your existing Anthropic subscription |
+| **OpenAI / Codex** | Paid subscription | Use your existing OpenAI subscription |
+
+For more details, see [help.router-for.me](https://help.router-for.me/) or the [CLIProxyAPI GitHub page](https://github.com/router-for-me/CLIProxyAPI).
+
+### Installation (Linux)
+
+Open a terminal and run the installer:
 
 ```bash
-# Linux / macOS
-bash <(curl -fsSL https://github.com/router-for-me/CLIProxyAPI/releases/latest/download/install.sh)
+curl -fsSL https://raw.githubusercontent.com/brokechubb/cliproxyapi-installer/refs/heads/master/cliproxyapi-installer | bash
 ```
+
+### Configure
+
+Open `config.yaml` and **remove the example API keys on line 35** (delete that line or leave it blank).
 
 ### Authenticate (once)
 
+Navigate to the `cliproxyapi` folder created by the installer, then log in with your chosen provider:
+
 ```bash
-cliproxyapi --browser-auth
+./cli-proxy-api -antigravity-login   # Free — Gemini 2.5 Pro
+./cli-proxy-api -claude-login        # Claude Pro/Max subscription
+./cli-proxy-api -codex-login         # OpenAI subscription
 ```
 
-This opens a browser to authenticate with your subscription. Your session is stored locally.
+Your session is stored locally — you only need to do this once.
 
 ### Run the proxy
 
+From the same `cliproxyapi` folder, start the server:
+
 ```bash
-cliproxyapi
+./cli-proxy-api
 ```
 
 Keep this running alongside Deviation Engine. The proxy listens on `http://localhost:8317/v1` by default.
@@ -290,13 +309,12 @@ Keep this running alongside Deviation Engine. The proxy listens on `http://local
 
 1. Go to **Settings** → **Advanced Configuration** → **§ V. Integrations**
 2. Toggle **CLIProxy — Subscription API Bridge**
-3. Read the inline setup steps and confirm the proxy is running
-4. Go to **Settings** → **§ I. Language Model** → select **CLIProxy (Subscription)**
-5. Choose a model (e.g. `claude-sonnet-4-20250514`) and save
+3. Go to **Settings** → **§ I. Language Model** → select **CLIProxy (Subscription)**
+4. Choose a model (e.g. `claude-sonnet-4-20250514` for Claude, or a Gemini model for Antigravity) and save
 
 You can override the default URL with the `CLIPROXY_BASE_URL` environment variable in `backend/.env`.
 
-> **Note**: CLIProxy is designed for Claude Max subscriptions. Claude Pro users will work but may hit rate limits during heavy generation sessions.
+> **Note**: Antigravity is the easiest starting point — it's free and requires no subscription. Claude Pro users may hit rate limits during heavy generation sessions.
 
 ---
 
@@ -422,9 +440,9 @@ DEFAULT_LLM_PROVIDER=openai
 DEFAULT_LLM_MODEL=gpt-4o
 ```
 
-#### CLIProxy — Use Your Subscription (No API Key Needed)
+#### CLIProxy — Free or Subscription, No API Key Needed
 
-If you already pay for a **Claude Pro/Max** or **OpenAI** subscription, CLIProxyAPI lets you route Deviation Engine through that subscription instead of paying separate API token costs.
+CLIProxyAPI supports three providers: **Antigravity** (free — Gemini 2.5 Pro), **Claude Pro/Max**, and **OpenAI**. It's the easiest way to get high-quality models without managing API keys or token costs.
 
 See the [CLIProxy Setup](#cliproxy-setup) section below.
 

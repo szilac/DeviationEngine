@@ -275,8 +275,9 @@ export default function AdvancedSettingsPage() {
                                 <div>
                                   <div className="font-body text-sm text-ink font-medium">CLIProxy — Subscription API Bridge</div>
                                   <div className="font-caption text-xs text-dim mt-0.5">
-                                    Use your existing <strong className="text-ink">Claude Pro/Max</strong> or <strong className="text-ink">OpenAI</strong> subscription
-                                    as an API — no extra token costs.
+                                    Use <strong className="text-ink">Antigravity</strong> (free — Gemini 3 Pro),
+                                    your <strong className="text-ink">Claude Pro/Max</strong> subscription,
+                                    or your <strong className="text-ink">OpenAI</strong> subscription as an API — no extra token costs.
                                     When enabled, "CLIProxy (Subscription)" appears as a provider option in § I.
                                   </div>
                                 </div>
@@ -301,28 +302,42 @@ export default function AdvancedSettingsPage() {
                               {clipProxyEnabled && (
                                 <div className="border-t border-border px-4 py-4 space-y-3">
                                   <p className="font-caption text-xs text-dim">
-                                    CLIProxyAPI wraps the Claude Code or OpenAI CLI and exposes a local OpenAI-compatible endpoint at{' '}
+                                    CLIProxyAPI runs locally and exposes an OpenAI-compatible endpoint at{' '}
                                     <code className="font-mono text-gold">http://localhost:8317/v1</code>.
-                                    No API key is required — it authenticates through your subscription.
+                                    Supports three providers — pick one:
                                   </p>
+                                  <ul className="space-y-0.5 font-caption text-xs text-dim list-none pl-0">
+                                    <li>
+                                      <strong className="text-ink">Antigravity</strong> — free, gives access to Gemini 3 Pro
+                                      {' '}(better quality &amp; rate limits than the free Gemini API)
+                                    </li>
+                                    <li><strong className="text-ink">Claude Pro/Max</strong> — use your Anthropic subscription</li>
+                                    <li><strong className="text-ink">OpenAI / Codex</strong> — use your OpenAI subscription</li>
+                                  </ul>
                                   <div className="space-y-1.5">
-                                    <p className="font-mono text-xs text-dim tracking-widest uppercase">Installation</p>
+                                    <p className="font-mono text-xs text-dim tracking-widest uppercase">Setup (Linux)</p>
                                     <ol className="space-y-1 font-caption text-xs text-dim list-decimal list-inside">
                                       <li>
-                                        Install:{' '}
+                                        Run the installer in a terminal:{' '}
                                         <code className="font-mono text-gold">
-                                          bash &lt;(curl -fsSL https://github.com/router-for-me/CLIProxyAPI/releases/latest/download/install.sh)
+                                          curl -fsSL https://raw.githubusercontent.com/brokechubb/cliproxyapi-installer/refs/heads/master/cliproxyapi-installer | bash
                                         </code>
                                       </li>
                                       <li>
-                                        Authenticate:{' '}
-                                        <code className="font-mono text-gold">cliproxyapi --browser-auth</code>
-                                        {' '}(one-time, opens a browser)
+                                        Open <code className="font-mono text-gold">config.yaml</code> and remove the example API keys on line 35.
+                                      </li>
+                                      <li>
+                                        Navigate to the <code className="font-mono text-gold">cliproxyapi</code> folder and log in (one-time) with your provider:{' '}
+                                        <code className="font-mono text-gold">./cli-proxy-api -antigravity-login</code>
+                                        {' '}·{' '}
+                                        <code className="font-mono text-gold">-claude-login</code>
+                                        {' '}·{' '}
+                                        <code className="font-mono text-gold">-codex-login</code>
                                       </li>
                                       <li>
                                         Start the proxy:{' '}
-                                        <code className="font-mono text-gold">cliproxyapi</code>
-                                        {' '}(keep it running while using Deviation Engine)
+                                        <code className="font-mono text-gold">./cli-proxy-api</code>
+                                        {' '}— keep it running alongside Deviation Engine.
                                       </li>
                                       <li>
                                         Go to § I. Language Model, select <strong className="text-ink">CLIProxy (Subscription)</strong>,
@@ -331,7 +346,7 @@ export default function AdvancedSettingsPage() {
                                     </ol>
                                   </div>
                                   <p className="font-caption text-xs text-faint">
-                                    Source & docs: github.com/router-for-me/CLIProxyAPI
+                                    Docs &amp; help: help.router-for.me · github.com/router-for-me/CLIProxyAPI
                                   </p>
                                 </div>
                               )}

@@ -9,6 +9,7 @@ This service manages ChromaDB collections for:
 Uses sentence-transformers for local embedding generation (fully offline).
 """
 
+import asyncio
 import os
 import logging
 import hashlib
@@ -1213,7 +1214,7 @@ class VectorStoreService:
                     except Exception as e:
                         logger.warning(f"Failed to delete old chunks: {e}")
 
-                # Index each chunk
+                # Index each chunk with a delay to avoid hitting the Gemini embedding rate limit
                 indexed_count = 0
                 for chunk in chunks:
                     success = await self.index_ground_truth_chunk(
@@ -1224,6 +1225,7 @@ class VectorStoreService:
                     )
                     if success:
                         indexed_count += 1
+                    await asyncio.sleep(3.0)
 
                 # Update index tracking in database
                 result = await db.execute(
