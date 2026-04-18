@@ -406,7 +406,7 @@ async def generate_images_endpoint(request: GenerateImagesRequest, db: AsyncSess
                     params.append(f"key={pollinations_api_key}")
                 params.append("width=1024")
                 params.append("height=1024")
-                params.append("model=imagen-4")
+                params.append("model=flux")
 
                 image_url += "?" + "&".join(params)
 

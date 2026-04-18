@@ -25,10 +25,32 @@ The AI analyzes historical context, generates detailed timelines, creates compre
 
 ## Quick Start
 
-1. Install [Python 3.9+](https://python.org) and [Node.js LTS](https://nodejs.org)
-2. Double-click `start.sh` (Mac/Linux) or `start.bat` (Windows)
-3. Enter your API key when prompted — get a free Gemini key at [Google AI Studio](https://aistudio.google.com/app/apikey)
-4. The app opens in your browser automatically
+**0. Install Git**
+
+Download and install Git from [git-scm.com](https://git-scm.com/downloads). On Windows, the default installer options are fine.
+
+**1. Clone the repository**
+
+```bash
+git clone https://github.com/szilac/DeviationEngine.git
+cd DeviationEngine
+```
+
+**2. Install prerequisites**
+
+- [Python 3.9+](https://python.org/downloads/)
+- **Node.js LTS** — install for your platform:
+  - **Windows**: Download the `.msi` installer from [nodejs.org](https://nodejs.org) (the LTS version). Run it and follow the wizard — npm is included automatically.
+  - **Mac/Linux**: Download from [nodejs.org](https://nodejs.org) or use your package manager (`brew install node` / `apt install nodejs npm`)
+
+**3. Launch**
+
+- **Windows**: double-click `start.bat`
+- **Mac/Linux**: double-click `start.sh` (or run `./start.sh` in a terminal)
+
+**4. Enter your API key** when prompted — get a free Gemini key at [Google AI Studio](https://aistudio.google.com/app/apikey)
+
+**5. The app opens in your browser automatically**
 
 On subsequent runs, just double-click the launcher again — no setup needed.
 

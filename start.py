@@ -40,7 +40,9 @@ else:
     VENV_PIP = VENV / "bin" / "pip"
 
 APP_URL = "http://localhost:8000"
+NODE = shutil.which("node") or "node"
 NPM = shutil.which("npm") or "npm"
+_WIN = sys.platform == "win32"
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -69,7 +71,7 @@ def error(text: str) -> None:
 
 
 def run(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, cwd=cwd, check=check)
+    return subprocess.run(cmd, cwd=cwd, check=check, shell=_WIN)
 
 
 # ---------------------------------------------------------------------------
@@ -88,13 +90,13 @@ def check_prerequisites() -> None:
     if not shutil.which("node"):
         error("Node.js not found. Install from https://nodejs.org (LTS version recommended)")
         sys.exit(1)
-    node_ver = subprocess.check_output(["node", "--version"], text=True).strip()
+    node_ver = subprocess.check_output([NODE, "--version"], text=True, shell=_WIN).strip()
     ok(f"Node.js {node_ver}")
 
     if not shutil.which("npm"):
         error("npm not found. It should come with Node.js. Reinstall from https://nodejs.org")
         sys.exit(1)
-    npm_ver = subprocess.check_output(["npm", "--version"], text=True).strip()
+    npm_ver = subprocess.check_output([NPM, "--version"], text=True, shell=_WIN).strip()
     ok(f"npm {npm_ver}")
 
 
