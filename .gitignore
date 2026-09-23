@@ -210,3 +210,9 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 .worktrees/
+
+# Local-only: plans, generated media/vectors, live database content
+docs/superpowers/
+backend/data/audio/
+backend/data/vector_store/
+backend/data/timelines.db
