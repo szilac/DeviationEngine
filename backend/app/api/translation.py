@@ -62,12 +62,14 @@ async def translate_generation(
     Raises:
         HTTPException: If generation not found or translation fails
     """
-    from app.services.translation_service import get_translation_service
+    from app.services.translation_service import get_translation_service, TranslationMethod
     from datetime import datetime, timezone
 
     try:
         # Get translation service
-        translation_service = await get_translation_service(db)
+        translation_service = await get_translation_service(
+            db, TranslationMethod.LLM if request.method == "llm" else TranslationMethod.DEEPL
+        )
 
         # Get generation to check if translation exists (for cached flag)
         result = await db.execute(
@@ -84,8 +86,6 @@ async def translate_generation(
             cached = request.target_language in generation.report_translations
 
         # Translate (will use cache if available)
-        from app.services.translation_service import TranslationMethod
-
         method = (
             TranslationMethod.LLM
             if request.method == "llm"
@@ -156,12 +156,14 @@ async def translate_narrative(
     Raises:
         HTTPException: If generation not found, has no narrative, or translation fails
     """
-    from app.services.translation_service import get_translation_service
+    from app.services.translation_service import get_translation_service, TranslationMethod
     from datetime import datetime, timezone
 
     try:
         # Get translation service
-        translation_service = await get_translation_service(db)
+        translation_service = await get_translation_service(
+            db, TranslationMethod.LLM if request.method == "llm" else TranslationMethod.DEEPL
+        )
 
         # Get generation to check cached status
         result = await db.execute(
@@ -178,7 +180,6 @@ async def translate_narrative(
             cached = request.target_language in generation.narrative_translations
 
         # Translate narrative
-        from app.services.translation_service import TranslationMethod
 
         method = (
             TranslationMethod.LLM

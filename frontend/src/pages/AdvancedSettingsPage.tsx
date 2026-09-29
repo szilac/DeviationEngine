@@ -88,12 +88,14 @@ export default function AdvancedSettingsPage() {
       const response = await setAgentLLMConfig(agentType, config);
       if (response.error) {
         setAgentError(response.error.message);
-      } else {
-        const allConfigsResponse = await getAllLLMConfigs();
-        if (allConfigsResponse.data) setAllLLMConfigs(allConfigsResponse.data);
+        return false;
       }
+      const allConfigsResponse = await getAllLLMConfigs();
+      if (allConfigsResponse.data) setAllLLMConfigs(allConfigsResponse.data);
+      return true;
     } catch {
       setAgentError('Failed to save agent configuration. Please try again.');
+      return false;
     } finally {
       setIsSaving(false);
     }

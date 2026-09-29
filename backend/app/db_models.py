@@ -777,11 +777,11 @@ class AgentLLMConfigDB(Base):
     # Table constraints
     __table_args__ = (
         CheckConstraint(
-            "agent_type IN ('historian', 'storyteller', 'skeleton', 'skeleton_historian', 'illustrator', 'script_writer', 'translator', 'character_profiler', 'impersonator', 'ripple_analyst')",
+            "agent_type IN ('historian', 'storyteller', 'skeleton', 'skeleton_historian', 'illustrator', 'script_writer', 'translator', 'character_profiler', 'impersonator', 'ripple_analyst', 'world_state_extractor')",
             name="valid_agent_type",
         ),
         CheckConstraint(
-            "provider IN ('google', 'openrouter', 'ollama', 'anthropic', 'openai')",
+            "provider IN ('google', 'openrouter', 'ollama', 'anthropic', 'openai', 'cliproxy')",
             name="valid_agent_provider",
         ),
         CheckConstraint("enabled IN (0, 1)", name="valid_enabled"),

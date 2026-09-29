@@ -173,7 +173,7 @@ async def download_audio(notebook_id: str, artifact_id: str) -> Path:
         "--id", artifact_id,
         "--output", str(output_path),
         "--no-progress",
-        timeout=120,
+        timeout=600,  # long Deep Dive files can take several minutes to download
     )
     if rc != 0:
         raise RuntimeError(f"nlm download audio failed (rc={rc}): {stderr}")

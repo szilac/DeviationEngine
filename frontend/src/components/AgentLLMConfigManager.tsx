@@ -18,7 +18,7 @@ import { useCLIProxyEnabled } from '../hooks/useCLIProxyEnabled';
 interface AgentLLMConfigManagerProps {
   allConfigs: AllLLMConfigs | null;
   availableModels: AvailableModels | null;
-  onSaveAgentConfig: (agentType: AgentType, config: AgentLLMConfigRequest) => Promise<void>;
+  onSaveAgentConfig: (agentType: AgentType, config: AgentLLMConfigRequest) => Promise<boolean>;
   onDeleteAgentConfig: (agentType: AgentType) => Promise<void>;
   isLoading: boolean;
   error: string | null;
@@ -152,7 +152,8 @@ export default function AgentLLMConfigManager({
       enabled: formState.enabled,
     };
 
-    await onSaveAgentConfig(agentType, config);
+    // Stay in edit mode on failure so the error message stays visible
+    if (!(await onSaveAgentConfig(agentType, config))) return;
 
     setSaveSuccess(agentType);
     setFormState((prev) => ({ ...prev, apiKeyGoogle: '', apiKeyOpenRouter: '', apiKeyAnthropic: '', apiKeyOpenAI: '' }));

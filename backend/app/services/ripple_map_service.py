@@ -143,10 +143,15 @@ def _extract_model_info(model) -> tuple[Optional[str], Optional[str]]:
     if "Google" in type(model).__name__ or "Gemini" in type(model).__name__:
         provider = "google"
     elif "OpenAI" in type(model).__name__:
-        # Could be openrouter or ollama
-        provider = getattr(model, "provider", "openrouter") or "openrouter"
-        if isinstance(provider, str) and "openrouter" not in provider.lower():
-            provider = "ollama"
+        # model.provider is a pydantic-ai Provider object (openai/openrouter); the
+        # plain "openai" provider also backs ollama and cliproxy, so tell them apart by URL
+        provider_obj = getattr(model, "provider", None)
+        provider = getattr(provider_obj, "name", None) or "openai"
+        base_url = str(getattr(provider_obj, "base_url", "") or "")
+        if provider == "openai" and "api.openai.com" not in base_url:
+            provider = "ollama" if "11434" in base_url else "cliproxy"
+    elif "Anthropic" in type(model).__name__:
+        provider = "anthropic"
     else:
         provider = "unknown"
 

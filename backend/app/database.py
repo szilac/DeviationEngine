@@ -86,6 +86,33 @@ async def _ensure_world_state_column(conn) -> None:
         await conn.exec_driver_sql("ALTER TABLE generations ADD COLUMN world_state_snapshot JSON")
 
 
+async def _rebuild_agent_llm_configs_if_stale(conn) -> None:
+    # SQLite can't alter CHECK constraints, so rebuild the table when its stored
+    # constraints predate the model's (e.g. a newly added provider or agent type).
+    # ponytail: hand-rolled migration; move to Alembic if schema changes keep coming
+    from sqlalchemy import CheckConstraint
+    from app.db_models import AgentLLMConfigDB
+
+    table = AgentLLMConfigDB.__table__
+    result = await conn.exec_driver_sql(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='agent_llm_configs'"
+    )
+    row = result.fetchone()
+    expected = [str(c.sqltext) for c in table.constraints if isinstance(c, CheckConstraint)]
+    if row is None or all(e in row[0] for e in expected):
+        return
+
+    columns = ", ".join(c.name for c in table.columns)
+    await conn.exec_driver_sql("ALTER TABLE agent_llm_configs RENAME TO agent_llm_configs_old")
+    await conn.exec_driver_sql("DROP INDEX IF EXISTS ix_agent_llm_configs_agent_type")
+    await conn.run_sync(table.create)
+    await conn.exec_driver_sql(
+        f"INSERT INTO agent_llm_configs ({columns}) SELECT {columns} FROM agent_llm_configs_old"
+    )
+    await conn.exec_driver_sql("DROP TABLE agent_llm_configs_old")
+    logger.info("Rebuilt agent_llm_configs table with updated constraints")
+
+
 async def init_db():
     """
     Initialize database by creating all tables.
@@ -100,6 +127,7 @@ async def init_db():
         # Create all tables
         await conn.run_sync(Base.metadata.create_all)
         await _ensure_world_state_column(conn)
+        await _rebuild_agent_llm_configs_if_stale(conn)
 
     logger.info("Database initialized with foreign key enforcement enabled")
 

@@ -117,7 +117,7 @@ def previous_snapshot(timeline) -> Optional[WorldStateSnapshot]:
         return None
 
 
-EXTRACTION_TIMEOUT_SECONDS = 120.0
+EXTRACTION_TIMEOUT_SECONDS = 180.0
 REPORT_SECTIONS = (
     'executive_summary', 'political_changes', 'conflicts_and_wars',
     'economic_impacts', 'social_developments', 'technological_shifts',

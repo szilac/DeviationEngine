@@ -479,19 +479,26 @@ class TranslationService:
         await db.commit()
 
 
-async def get_translation_service(db: AsyncSession) -> TranslationService:
+async def get_translation_service(
+    db: AsyncSession,
+    method: TranslationMethod = TranslationMethod.DEEPL
+) -> TranslationService:
     """
     Get configured translation service instance.
 
     Args:
         db: Database session
+        method: Translation method; only DeepL needs the DeepL config
 
     Returns:
         TranslationService instance
 
     Raises:
-        TranslationNotConfiguredError: If translation is not configured or disabled
+        TranslationNotConfiguredError: If DeepL is requested but not configured or disabled
     """
+    if method == TranslationMethod.LLM:
+        return TranslationService(deepl_client=None)
+
     # Get config from database
     result = await db.execute(
         select(TranslationConfigDB).where(TranslationConfigDB.id == 1)
