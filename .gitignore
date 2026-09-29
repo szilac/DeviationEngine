@@ -216,3 +216,4 @@ docs/superpowers/
 backend/data/audio/
 backend/data/vector_store/
 backend/data/timelines.db
+backend/data/agent_prompts/
