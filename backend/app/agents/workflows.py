@@ -6,9 +6,11 @@ multi-agent patterns in the Deviation Engine application.
 """
 
 import logging
+from datetime import date
 from typing import Optional
 
 from app.agents.orchestrator import orchestrator, WorkflowContext
+from app.agents.world_state_extractor_agent import previous_snapshot, render_world_state_constraints, try_extract_world_state
 from app.services import generation_progress
 from app.agents import historian_agent, storyteller_agent, skeleton_agent, skeleton_historian_agent
 from app.models import (
@@ -238,7 +240,8 @@ async def _extend_timeline_structured(context: WorkflowContext) -> StructuredRep
         timeline,
         extension_request,
         historical_context,
-        model=model
+        model=model,
+        previous_world_state=context.get("previous_world_state", ""),
     )
 
     # Extract structured report with proper period fields
@@ -433,7 +436,16 @@ async def execute_timeline_generation(
             narrative_provider = historian_provider
             narrative_model_name = historian_model_name
 
+    world_state_snapshot = await try_extract_world_state(
+        structured_report=structured_report,
+        scenario_type=deviation_request.scenario_type.value if hasattr(deviation_request.scenario_type, 'value') else deviation_request.scenario_type,
+        root_year=deviation_request.deviation_date.year,
+        prior=None,
+        db_session=db_session,
+    )
+
     return {
+        "world_state_snapshot": world_state_snapshot,
         "structured_report": structured_report,
         "narrative_prose": final_narrative,
         "timeline_name": timeline_name,  # Include timeline name from agent
@@ -527,7 +539,9 @@ async def execute_timeline_extension(
     )
 
     # Initialize context with agent-specific models
+    prior = previous_snapshot(timeline)
     initial_state = {
+        "previous_world_state": render_world_state_constraints(prior),
         "extension_request": extension_request,
         "timeline": timeline,
         "historical_context": historical_context,
@@ -584,7 +598,16 @@ async def execute_timeline_extension(
             narrative_provider = historian_provider
             narrative_model_name = historian_model_name
 
+    world_state_snapshot = await try_extract_world_state(
+        structured_report=structured_report,
+        scenario_type=timeline.scenario_type.value if hasattr(timeline.scenario_type, 'value') else timeline.scenario_type,
+        root_year=(date.fromisoformat(timeline.root_deviation_date) if isinstance(timeline.root_deviation_date, str) else timeline.root_deviation_date).year,
+        prior=prior,
+        db_session=db_session,
+    )
+
     return {
+        "world_state_snapshot": world_state_snapshot,
         "structured_report": structured_report,
         "narrative_prose": final_narrative,
         "timeline_name": timeline_name,  # Include timeline name from agent
@@ -1009,7 +1032,16 @@ async def execute_report_from_skeleton(
             narrative_provider = skeleton_historian_provider
             narrative_model_name = skeleton_historian_model_name
 
+    world_state_snapshot = await try_extract_world_state(
+        structured_report=structured_report,
+        scenario_type=deviation_request.scenario_type.value if hasattr(deviation_request.scenario_type, 'value') else deviation_request.scenario_type,
+        root_year=deviation_request.deviation_date.year,
+        prior=None,
+        db_session=db_session,
+    )
+
     return {
+        "world_state_snapshot": world_state_snapshot,
         "structured_report": structured_report,
         "narrative_prose": final_narrative,
         "timeline_name": timeline_name,  # Include timeline name from agent
@@ -1067,6 +1099,8 @@ Executive Summary:
 Long-term Implications:
 {last_generation.long_term_implications}
 """
+
+    last_report_context += "\n\n" + render_world_state_constraints(previous_snapshot(timeline))
 
     # Add user's additional context if provided
     if extension_request.additional_context:
@@ -1153,6 +1187,7 @@ async def _generate_extension_report_from_skeleton(context: WorkflowContext) -> 
 
     # Get last report context for extension
     last_report_context = context.get("last_report_context", "")
+    last_report_context += "\n\n" + render_world_state_constraints(previous_snapshot(timeline))
 
     # For extension skeletons, get deviation info from parent timeline
     from datetime import date as date_type
@@ -1467,7 +1502,16 @@ async def execute_extension_from_skeleton(
             narrative_provider = skeleton_historian_provider
             narrative_model_name = skeleton_historian_model_name
 
+    world_state_snapshot = await try_extract_world_state(
+        structured_report=structured_report,
+        scenario_type=timeline.scenario_type.value if hasattr(timeline.scenario_type, 'value') else timeline.scenario_type,
+        root_year=(date.fromisoformat(timeline.root_deviation_date) if isinstance(timeline.root_deviation_date, str) else timeline.root_deviation_date).year,
+        prior=previous_snapshot(timeline),
+        db_session=db_session,
+    )
+
     return {
+        "world_state_snapshot": world_state_snapshot,
         "structured_report": structured_report,
         "narrative_prose": final_narrative,
         "timeline_name": timeline_name,  # Include timeline name from agent

@@ -75,6 +75,27 @@ export interface TimelineCreationRequest {
   include_narrative?: boolean;
 }
 
+export interface WorldEntity {
+  name: string;
+  type: 'person' | 'nation' | 'organization' | 'conflict' | 'technology' | 'force';
+  status: string;
+  note?: string | null;
+}
+
+export interface WorldRelation {
+  source: string;
+  relation: string;
+  target: string;
+  active: boolean;
+}
+
+export interface WorldStateSnapshot {
+  as_of_year: number;
+  summary: string;
+  entities: WorldEntity[];
+  relations: WorldRelation[];
+}
+
 /**
  * Generation - unified content for a time period (replaces Report).
  *
@@ -82,6 +103,7 @@ export interface TimelineCreationRequest {
  * Matches backend Generation model.
  */
 export interface Generation {
+  world_state_snapshot?: WorldStateSnapshot | null;
   /** Unique generation identifier */
   id: string;
 
@@ -760,6 +782,7 @@ export const AgentType = {
   CHARACTER_PROFILER: 'character_profiler',
   IMPERSONATOR: 'impersonator',
   RIPPLE_ANALYST: 'ripple_analyst',
+  WORLD_STATE_EXTRACTOR: 'world_state_extractor',
 } as const;
 
 export type AgentType = typeof AgentType[keyof typeof AgentType];
@@ -889,6 +912,7 @@ export const AgentConfigUtils = {
    */
   getAgentDisplayName: (agentType: AgentType): string => {
     const names: Record<AgentType, string> = {
+      world_state_extractor: 'World State Extractor',
       historian: 'Historian',
       storyteller: 'Storyteller',
       skeleton: 'Skeleton Generator',
@@ -908,6 +932,7 @@ export const AgentConfigUtils = {
    */
   getAgentDescription: (agentType: AgentType): string => {
     const descriptions: Record<AgentType, string> = {
+      world_state_extractor: 'Extracts accumulated world facts after reports',
       historian: 'Generates structured timeline reports with analytical sections',
       storyteller: 'Creates advanced narrative prose for timeline reports',
       skeleton: 'Generates editable event outlines for timeline creation',

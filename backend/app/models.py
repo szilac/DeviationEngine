@@ -107,6 +107,7 @@ class AgentType(str, Enum):
     CHARACTER_PROFILER = "character_profiler"
     IMPERSONATOR = "impersonator"
     RIPPLE_ANALYST = "ripple_analyst"
+    WORLD_STATE_EXTRACTOR = "world_state_extractor"
 
 
 class ImagePromptSkeletonStatus(str, Enum):
@@ -166,6 +167,36 @@ class TimelineOutput(BaseModel):
 # ============================================================================
 
 
+class EntityType(str, Enum):
+    PERSON = "person"
+    NATION = "nation"
+    ORGANIZATION = "organization"
+    CONFLICT = "conflict"
+    TECHNOLOGY = "technology"
+    FORCE = "force"
+
+
+class WorldEntity(BaseModel):
+    name: str = Field(..., min_length=1)
+    type: EntityType
+    status: str = Field(..., min_length=1)
+    note: Optional[str] = None
+
+
+class WorldRelation(BaseModel):
+    source: str = Field(..., min_length=1)
+    relation: str = Field(..., min_length=1)
+    target: str = Field(..., min_length=1)
+    active: bool = True
+
+
+class WorldStateSnapshot(BaseModel):
+    as_of_year: int
+    summary: str = Field(..., min_length=1)
+    entities: List[WorldEntity] = Field(default_factory=list)
+    relations: List[WorldRelation] = Field(default_factory=list)
+
+
 class Generation(BaseModel):
     """
     Unified content for a time period within a timeline.
@@ -175,6 +206,8 @@ class Generation(BaseModel):
     """
 
     model_config = ConfigDict(from_attributes=True)
+
+    world_state_snapshot: Optional[WorldStateSnapshot] = None
 
     # Identity
     id: UUID = Field(default_factory=uuid4, description="Unique generation identifier")
@@ -852,7 +885,12 @@ class AllLLMConfigsResponse(BaseModel):
 
 
 class StructuredReport(BaseModel):
-    """Structured analytical report output from historian agent (8 sections only)."""
+    """Structured report sections with the completed workflow period."""
+
+    start_year: int
+    end_year: int
+    period_years: int
+    report_order: int
 
     executive_summary: str = Field(..., description="High-level overview")
     political_changes: str = Field(..., description="Government and diplomacy")

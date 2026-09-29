@@ -493,3 +493,30 @@ For persistent issues, consult:
   - Open timeline → Ripple Map → filter by domain or generation.
 
 This user guide is the primary reference for non-developer users of Deviation Engine and complements the technical docs under `docs/technical/`.
+
+### World-state continuity snapshots
+
+New direct and skeleton-based reports can save an advisory world-state snapshot.
+It accumulates entity statuses and directional relationships across reports: omitted
+facts remain, and explicitly ended relationships remain recorded as inactive.
+Extensions include the full structured record in direct report prompts, skeleton
+planning prompts, and skeleton report prompts. Approved skeleton events remain
+authoritative; explicit changes should explain the transition.
+
+Configure **World State Extractor** in the existing per-agent model settings. Without
+an override it uses the global model configuration, independently of the historian's
+override. Optional extraction has a 45-second budget, including model creation and
+retries. Extraction failure, invalid output, or timeout saves the valid report with
+no snapshot. Cancellation and database errors still propagate.
+
+Only the immediately preceding generation's valid snapshot is carried forward.
+A missing snapshot breaks the accumulation chain: the next report uses existing
+prose/RAG context and can start a new snapshot. There is no backfill of old reports,
+so older facts absent from that report cannot be recovered automatically. Facts are
+not pruned; prompt size grows with the timeline.
+
+This version preserves snapshots in `.devtl` export/import and accepts older files
+without them. Older app versions may discard the optional field. Snapshots are
+extracted from generated prose, not independently verified historical truth, and
+prompt constraints do not guarantee model consistency. Real-model extraction quality
+has not been verified by the deterministic implementation tests.

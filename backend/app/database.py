@@ -80,6 +80,12 @@ async def get_db() -> AsyncSession:
             await session.close()
 
 
+async def _ensure_world_state_column(conn) -> None:
+    result = await conn.exec_driver_sql("PRAGMA table_info(generations)")
+    if "world_state_snapshot" not in {row[1] for row in result.fetchall()}:
+        await conn.exec_driver_sql("ALTER TABLE generations ADD COLUMN world_state_snapshot JSON")
+
+
 async def init_db():
     """
     Initialize database by creating all tables.
@@ -93,6 +99,7 @@ async def init_db():
 
         # Create all tables
         await conn.run_sync(Base.metadata.create_all)
+        await _ensure_world_state_column(conn)
 
     logger.info("Database initialized with foreign key enforcement enabled")
 

@@ -1,0 +1,10 @@
+Scenario: {{ scenario_type }}
+Absolute report period: {{ start_year }} to {{ end_year }}
+Required as_of_year: {{ end_year }}
+Prior accumulated snapshot:
+{{ prior | tojson }}
+Completed report sections:
+{% for name, content in report_sections.items() %}
+## {{ name }}
+{{ content }}
+{% endfor %}

@@ -1,0 +1,10 @@
+Extract explicit world-state updates established by the completed report at its absolute calendar cutoff.
+Omission means unchanged. Reuse prior entity names and relationship phrases. Include new entities
+needed for every relationship endpoint. Entity types: person, nation, organization, conflict,
+technology, force. Record scenario-specific rules as force entities where applicable.
+End superseded relationships with active=false; include the new relationship when leadership or
+alliances change. Retain deceased, dissolved and removed entities. Explicit events can change prior
+status; never infer a transition from omission. Relationships are directional.
+Distinguish current/completed facts from forecasts: hypothetical future implications, including
+those in long_term_implications, are not established events at the cutoff. Set as_of_year exactly
+to the supplied absolute end year. Output an update set, not a replacement of accumulated facts.

@@ -183,6 +183,9 @@ def _serialize_generation(db_generation) -> Dict[str, Any]:
         },
     }
 
+    if db_generation.world_state_snapshot is not None:
+        generation_data["world_state_snapshot"] = db_generation.world_state_snapshot
+
     # Include media if present
     if db_generation.media:
         generation_data["media"] = [

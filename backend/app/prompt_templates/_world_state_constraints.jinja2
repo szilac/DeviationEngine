@@ -1,0 +1,12 @@
+### STRUCTURED WORLD STATE — as of {{ snapshot.as_of_year }}
+{{ snapshot.summary }}
+{% for e in snapshot.entities %}
+- {{ e.name }} [{{ e.type.value }}]: {{ e.status }}{% if e.note %}; {{ e.note }}{% endif %}
+{% endfor %}
+{% for r in snapshot.relations %}
+- {{ r.source }} — {{ r.relation }} → {{ r.target }} [{{ 'active' if r.active else 'inactive' }}]
+{% endfor %}
+These are recorded prior facts. Preserve them unless the new period explicitly
+changes them. Inactive relationships are not current relationships. Explicit
+user-approved events may change prior state; explain the transition rather than
+silently inventing one. Absence from this record is not evidence of nonexistence.

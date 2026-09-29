@@ -81,6 +81,7 @@ export default function AgentLLMConfigManager({
 
   const agents: AgentType[] = [
     AgentTypeEnum.HISTORIAN,
+    AgentTypeEnum.WORLD_STATE_EXTRACTOR,
     AgentTypeEnum.STORYTELLER,
     AgentTypeEnum.SKELETON,
     AgentTypeEnum.SKELETON_HISTORIAN,

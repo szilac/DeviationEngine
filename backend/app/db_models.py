@@ -196,6 +196,9 @@ class GenerationDB(Base):
     end_year = Column(Integer, nullable=False)
     period_years = Column(Integer, nullable=False)
 
+    # Accumulated world-state snapshot (optional)
+    world_state_snapshot = Column(JSON, nullable=True)
+
     # === STRUCTURED REPORT (8 sections) ===
     executive_summary = Column(Text, nullable=False)
     political_changes = Column(Text, nullable=False)

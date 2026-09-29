@@ -45,6 +45,7 @@ async def create_timeline_with_initial_generation(
     storyteller_provider: Optional[str] = None,
     storyteller_model_name: Optional[str] = None,
     source_skeleton_id: Optional[UUID] = None,
+    world_state_snapshot: Optional[dict] = None,
 ) -> TimelineDB:
     """
     Create a new timeline with its initial generation.
@@ -121,6 +122,7 @@ async def create_timeline_with_initial_generation(
     # Create initial generation (always starts at year 0 for root timelines)
     first_gen = timeline.generations[0]
     initial_generation = GenerationDB(
+        world_state_snapshot=world_state_snapshot,
         id=str(first_gen.id),
         timeline_id=str(timeline.id),
         generation_order=1,
@@ -175,6 +177,7 @@ async def extend_timeline_with_new_generation(
     storyteller_provider: Optional[str] = None,
     storyteller_model_name: Optional[str] = None,
     source_skeleton_id: Optional[UUID] = None,
+    world_state_snapshot: Optional[dict] = None,
 ) -> Optional[GenerationDB]:
     """
     Add a new generation to an existing timeline (extension).
@@ -252,6 +255,7 @@ async def extend_timeline_with_new_generation(
 
     # Create extension generation
     extension_generation = GenerationDB(
+        world_state_snapshot=world_state_snapshot,
         timeline_id=str(timeline_id),
         generation_order=next_order,
         generation_type=GenerationType.EXTENSION.value,
@@ -467,6 +471,7 @@ async def get_timeline_by_id(
     """
     result = await db.execute(
         select(TimelineDB)
+        .execution_options(populate_existing=True)
         .options(
             selectinload(TimelineDB.generations).selectinload(GenerationDB.media)
         )

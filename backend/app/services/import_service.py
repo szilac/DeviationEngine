@@ -15,7 +15,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db_models import TimelineDB, GenerationDB, MediaDB
 from app.exceptions import ValidationError
-from app.models import NarrativeMode, ScenarioType, GenerationType
+from app.models import NarrativeMode, ScenarioType, GenerationType, WorldStateSnapshot
+from app.agents.world_state_extractor_agent import reconcile_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -109,6 +110,24 @@ async def _import_v2_timeline(
     deviation_description = root_deviation.get("deviation_description")
     scenario_type = root_deviation.get("scenario_type")
 
+    # Validate every supplied snapshot before any timeline/generation is written.
+    generations_data = []
+    try:
+        for generation in timeline_obj.get("generations", []):
+            checked = dict(generation)
+            raw = generation.get("world_state_snapshot")
+            snapshot_json = None
+            if raw is not None:
+                parsed = WorldStateSnapshot.model_validate(raw)
+                expected_year = date.fromisoformat(deviation_date).year + generation["period"]["end_year"]
+                if parsed.as_of_year != expected_year:
+                    raise ValueError("Snapshot year does not match generation period")
+                snapshot_json = reconcile_snapshot(parsed, None).model_dump(mode="json")
+            checked["world_state_snapshot"] = snapshot_json
+            generations_data.append(checked)
+    except (ValueError, TypeError, KeyError) as exc:
+        raise InvalidFileFormatError(f"Invalid world-state snapshot: {exc}") from exc
+
     # Extract branching metadata (may be None for root timelines)
     branching = timeline_obj.get("branching")
 
@@ -140,7 +159,6 @@ async def _import_v2_timeline(
     )
 
     # Import all generations
-    generations_data = timeline_obj.get("generations", [])
     for generation_data in sorted(
         generations_data, key=lambda g: g.get("generation_order", 0)
     ):
@@ -186,6 +204,7 @@ async def _import_generation(
 
     # Create generation record
     db_generation = GenerationDB(
+        world_state_snapshot=generation_data.get("world_state_snapshot"),
         id=str(new_generation_id),
         timeline_id=str(timeline_id),
         generation_order=generation_data.get("generation_order", 1),

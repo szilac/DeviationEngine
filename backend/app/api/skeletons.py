@@ -330,6 +330,7 @@ async def generate_from_skeleton_endpoint(
 
         # Create initial generation from workflow results
         initial_generation = Generation(
+            world_state_snapshot=result.get("world_state_snapshot"),
             timeline_id=timeline.id,
             generation_order=1,
             generation_type=GenerationType.INITIAL,
@@ -383,6 +384,7 @@ async def generate_from_skeleton_endpoint(
             historian_model_name=historian_model_name,
             storyteller_provider=storyteller_provider,
             storyteller_model_name=storyteller_model_name,
+            world_state_snapshot=result.get("world_state_snapshot"),
         )
         timeline_id = UUID(db_timeline.id)  # Extract UUID from TimelineDB object
 
@@ -702,6 +704,7 @@ async def extend_from_skeleton_endpoint(
             storyteller_provider=storyteller_provider,
             storyteller_model_name=storyteller_model_name,
             source_skeleton_id=request.skeleton_id,  # Link generation to source skeleton
+            world_state_snapshot=result.get("world_state_snapshot"),
         )
 
         await db.commit()

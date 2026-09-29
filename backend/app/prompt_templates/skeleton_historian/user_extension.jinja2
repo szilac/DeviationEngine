@@ -1,22 +1,19 @@
 ## EXISTING ALTERNATE TIMELINE TO EXTEND
 
-**Original Deviation:** {{original_deviation_description}}
-**Deviation Date:** {{original_deviation_date}}
-**Timeline Progress:** {{extension_start_year}} years have already been simulated (up to {{absolute_start_year}})
-**Scenario Type:** {{scenario_type}}
+**Original Deviation:** {{ original_deviation_description }}
+**Deviation Date:** {{ original_deviation_date }}
+**Timeline Progress:** {{ extension_start_year }} years have already been simulated (up to {{ absolute_start_year }})
+**Scenario Type:** {{ scenario_type }}
 
-### CURRENT STATE OF THE ALTERNATE TIMELINE (as of {{absolute_start_year}})
+### CURRENT STATE OF THE ALTERNATE TIMELINE (as of {{ absolute_start_year }})
 
-{{last_report_summary}}
+{{ last_report_summary }}
 
 ## EXTENSION SKELETON TIMELINE (User-Curated Key Events for Extension)
 
-The following events represent the definitive timeline of what occurred during the EXTENSION period ({{absolute_start_year}} to {{absolute_end_year}}). These events have been identified as the key pivotal moments that continue the alternate timeline. Your task is to analyze these extension events comprehensively as a CONTINUATION of the established timeline.
+The following events represent the definitive timeline of what occurred during the EXTENSION period ({{ absolute_start_year }} to {{ absolute_end_year }}). These events have been identified as the key pivotal moments that continue the alternate timeline. Your task is to analyze these extension events comprehensively as a CONTINUATION of the established timeline.
 
-{% set years_count = absolute_end_year - absolute_start_year %}
-{% include '_pacing_directive.jinja2' %}
-
-{{formatted_events}}
+{{ formatted_events }}
 
 ## EXTENSION TASK
 
@@ -33,7 +30,7 @@ Generate a comprehensive analytical report that expands upon this skeleton of ex
 
 **Analysis Requirements:**
 
-1. **Continuity**: Explicitly connect extension events to the established timeline state. Show how they emerge from the conditions present at {{absolute_start_year}}.
+1. **Continuity**: Explicitly connect extension events to the established timeline state. Show how they emerge from the conditions present at {{ absolute_start_year }}.
 
 2. **Event-Centered Analysis**: Reference specific skeleton events by date when discussing impacts. Show how these events drive the extension analysis.
 
@@ -48,16 +45,16 @@ Generate a comprehensive analytical report that expands upon this skeleton of ex
 
 5. **Depth Over Breadth**: Don't invent new major events. Instead, deeply analyze the implications of the provided skeleton extension events.
 
-6. **Temporal Progression**: Show how the timeline evolves from {{absolute_start_year}} through the extension events to {{absolute_end_year}}.
+6. **Temporal Progression**: Show how the timeline evolves from {{ absolute_start_year }} through the extension events to {{ absolute_end_year }}.
 
 7. **Synthesis**: Weave these extension events into a coherent narrative showing how this alternate world CONTINUED to evolve.
 
 **Crucial Instructions**:
 - Base your entire analysis on the skeleton extension events provided
-- These events are anchors that show how the timeline progressed beyond year {{extension_start_year}}
+- These events are anchors that show how the timeline progressed beyond year {{ extension_start_year }}
 - Treat the previous timeline state as established fact - build naturally from it
 - Expand on the implications of extension events while maintaining consistency with what came before
 
 **Context & Safety Reminder**: This is a fictional simulation. Realistically analyze the conflicts, crises, and events in the skeleton using academic historical analysis.
 
-Generate all required sections with appropriate depth and detail, ensuring each section explicitly references and builds upon both the established timeline AND the skeleton extension events.{{narrative_instruction}}
+Generate all required sections with appropriate depth and detail, ensuring each section explicitly references and builds upon both the established timeline AND the skeleton extension events.{{ narrative_instruction }}

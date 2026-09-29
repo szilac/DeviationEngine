@@ -257,7 +257,8 @@ async def generate_timeline(
 def construct_extension_prompt(
     original_timeline: Timeline,
     extension_request: TimelineExtensionRequest,
-    historical_context: str = ""
+    historical_context: str = "",
+    previous_world_state: str = "",
 ) -> str:
     """
     Construct the prompt for extending an existing timeline using Jinja2 template.
@@ -317,6 +318,7 @@ def construct_extension_prompt(
         long_term_implications=latest_generation.long_term_implications if latest_generation else "No reports available",
         original_narrative=original_narrative,
         extension_historical_context=historical_context,
+        previous_world_state=previous_world_state,
         additional_context=extension_request.additional_context,
         include_narrative=include_narrative
     )
@@ -326,7 +328,8 @@ async def extend_timeline(
     original_timeline: Timeline,
     extension_request: TimelineExtensionRequest,
     historical_context: str = "",
-    model: Optional[Model] = None
+    model: Optional[Model] = None,
+    previous_world_state: str = "",
 ) -> TimelineOutput:
     """
     Extend an existing timeline by additional years.
@@ -396,7 +399,7 @@ async def extend_timeline(
 
         # Construct extension prompt
         logger.debug("Constructing extension prompt")
-        prompt = construct_extension_prompt(original_timeline, extension_request, historical_context)
+        prompt = construct_extension_prompt(original_timeline, extension_request, historical_context, previous_world_state)
 
         logger.debug(
             f"Extension prompt constructed. Length: {len(prompt)} chars, "

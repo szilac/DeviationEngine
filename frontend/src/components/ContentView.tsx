@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from 'motion/react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { MoreHorizontal, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Globe, MoreHorizontal, Trash2 } from 'lucide-react';
 import type { Timeline, Generation, SupportedLanguage } from '../types';
 import StructuredReportView from './StructuredReportView';
 import NarrativeView from './NarrativeView';
 import ImageGallery from './ImageGallery';
 import Button from './ui/Button';
+import WorldStateDialog from './WorldStateDialog';
 
 type ContentTab = 'structured' | 'narrative' | 'images';
 
@@ -44,6 +46,7 @@ export function ContentView({
   onGenerateImages,
   onDeleteGeneration,
 }: ContentViewProps) {
+  const [worldStateOpen, setWorldStateOpen] = useState(false);
 
   return (
     <div className="flex flex-col h-full bg-parchment">
@@ -79,8 +82,7 @@ export function ContentView({
                   + Generate Images
                 </Button>
               )}
-              {onDeleteGeneration && (
-                <DropdownMenu.Root>
+              <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild>
                     <button
                       className="flex items-center px-2 py-1.5 text-dim hover:text-ink transition-colors duration-150 focus:outline-none cursor-pointer"
@@ -96,16 +98,29 @@ export function ContentView({
                       sideOffset={4}
                     >
                       <DropdownMenu.Item
+                        onClick={() => setWorldStateOpen(true)}
+                        className="flex items-center gap-2 px-3 py-2 font-mono text-[10px] tracking-widest uppercase cursor-pointer focus:outline-none text-dim hover:text-ink hover:bg-gold/10 transition-colors duration-100"
+                      >
+                        <Globe size={11} />
+                        World State
+                      </DropdownMenu.Item>
+                      {onDeleteGeneration && (
+                      <DropdownMenu.Item
                         onClick={onDeleteGeneration}
                         className="flex items-center gap-2 px-3 py-2 font-mono text-[10px] tracking-widest uppercase cursor-pointer focus:outline-none text-rubric-dim hover:text-rubric hover:bg-rubric/10 transition-colors duration-100"
                       >
                         <Trash2 size={11} />
                         Delete Generation
                       </DropdownMenu.Item>
+                      )}
                     </DropdownMenu.Content>
                   </DropdownMenu.Portal>
                 </DropdownMenu.Root>
-              )}
+              <WorldStateDialog
+                open={worldStateOpen}
+                onOpenChange={setWorldStateOpen}
+                snapshot={selectedGeneration.world_state_snapshot}
+              />
             </div>
           )}
         </div>

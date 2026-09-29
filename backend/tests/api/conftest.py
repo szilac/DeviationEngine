@@ -7,7 +7,7 @@ Provides FastAPI TestClient and mock services for testing routers.
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -30,7 +30,7 @@ def override_get_db(db_session: AsyncSession):
 
 
 @pytest.fixture
-def test_client(override_get_db):
+def test_client(override_get_db, monkeypatch):
     """
     Create FastAPI TestClient with test database.
 
@@ -38,11 +38,13 @@ def test_client(override_get_db):
     """
     app.dependency_overrides[get_db] = override_get_db
 
-    with TestClient(app) as client:
-        yield client
-
-    # Clean up dependency overrides
-    app.dependency_overrides.clear()
+    monkeypatch.setattr(app.router, "on_startup", [])
+    monkeypatch.setattr(app.router, "on_shutdown", [])
+    try:
+        with TestClient(app) as client:
+            yield client
+    finally:
+        app.dependency_overrides.clear()
 
 
 @pytest_asyncio.fixture
@@ -54,11 +56,11 @@ async def async_test_client(override_get_db) -> AsyncGenerator[AsyncClient, None
     """
     app.dependency_overrides[get_db] = override_get_db
 
-    async with AsyncClient(app=app, base_url="http://test") as client:
-        yield client
-
-    # Clean up dependency overrides
-    app.dependency_overrides.clear()
+    try:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            yield client
+    finally:
+        app.dependency_overrides.clear()
 
 
 # ============================================================================

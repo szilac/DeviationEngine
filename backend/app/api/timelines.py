@@ -178,6 +178,7 @@ async def generate_timeline_endpoint(
 
         # Create initial generation from workflow results
         initial_generation = Generation(
+            world_state_snapshot=workflow_result.get("world_state_snapshot"),
             timeline_id=timeline.id,
             generation_order=1,
             generation_type=GenerationType.INITIAL,
@@ -229,7 +230,8 @@ async def generate_timeline_endpoint(
             historian_provider=historian_provider,
             historian_model_name=historian_model_name,
             storyteller_provider=storyteller_provider,
-            storyteller_model_name=storyteller_model_name
+            storyteller_model_name=storyteller_model_name,
+            world_state_snapshot=workflow_result.get("world_state_snapshot"),
         )
 
         # Index generated content in background for future RAG retrieval
@@ -793,7 +795,8 @@ async def extend_timeline_endpoint(
             historian_provider=historian_provider,
             historian_model_name=historian_model_name,
             storyteller_provider=storyteller_provider,
-            storyteller_model_name=storyteller_model_name
+            storyteller_model_name=storyteller_model_name,
+            world_state_snapshot=workflow_result.get("world_state_snapshot"),
         )
 
         # Index extension content in background for future RAG retrieval
