@@ -14,6 +14,11 @@ Tests:
 import pytest
 from fastapi.testclient import TestClient
 
+from app.services.llm_service import AVAILABLE_MODELS
+
+# Read from the live list so hand edits to AVAILABLE_MODELS don't break these tests
+GOOGLE_MODEL = AVAILABLE_MODELS["google"][0]
+
 
 # ============================================================================
 # GET /api/llm-config Tests
@@ -61,7 +66,7 @@ def test_update_llm_config_returns_200_or_400(test_client: TestClient):
     """Test that update LLM config endpoint returns 200 or 400."""
     request_data = {
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
         "gemini_api_key": "test-key-123",
     }
 
@@ -74,7 +79,7 @@ def test_update_llm_config_response_structure(test_client: TestClient):
     """Test that update LLM config response has correct structure when successful."""
     request_data = {
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
         "api_key_google": "test-key",
     }
 
@@ -205,7 +210,7 @@ def test_set_agent_config_returns_201(test_client: TestClient):
     request_data = {
         "agent_type": "historian",
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
 
     response = test_client.post("/api/llm/agents/historian", json=request_data)
@@ -217,7 +222,7 @@ def test_set_agent_config_response_structure(test_client: TestClient):
     request_data = {
         "agent_type": "storyteller",
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
 
     response = test_client.post("/api/llm/agents/storyteller", json=request_data)
@@ -233,7 +238,7 @@ def test_set_agent_config_invalid_agent_type_400(test_client: TestClient):
     request_data = {
         "agent_type": "invalid_agent",
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
 
     response = test_client.post("/api/llm/agents/invalid_agent", json=request_data)
@@ -245,7 +250,7 @@ def test_set_agent_config_mismatched_agent_type_400(test_client: TestClient):
     request_data = {
         "agent_type": "historian",
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
 
     # Path says storyteller but body says historian
@@ -264,7 +269,7 @@ def test_delete_agent_config_returns_204(test_client: TestClient):
     request_data = {
         "agent_type": "skeleton",
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
     test_client.post("/api/llm/agents/skeleton", json=request_data)
 
@@ -297,7 +302,7 @@ def test_get_agent_config_with_override_returns_200(test_client: TestClient):
     request_data = {
         "agent_type": "translator",
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
     test_client.post("/api/llm/agents/translator", json=request_data)
 
@@ -319,7 +324,7 @@ def test_get_agent_config_response_structure(test_client: TestClient):
     request_data = {
         "agent_type": "historian",
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
     test_client.post("/api/llm/agents/historian", json=request_data)
 
@@ -352,7 +357,7 @@ def test_agent_config_crud_workflow(test_client: TestClient):
     create_data = {
         "agent_type": agent_type,
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
     }
     create_response = test_client.post(f"/api/llm/agents/{agent_type}", json=create_data)
     assert create_response.status_code == 201
@@ -383,7 +388,7 @@ def test_update_global_config_affects_all_agents(test_client: TestClient):
     # Update global config (may fail with 400 if config not initialized in test DB)
     new_config = {
         "provider": "google",
-        "model_name": "gemini-2.5-flash",
+        "model_name": GOOGLE_MODEL,
         "gemini_api_key": "test-key",
     }
     update_response = test_client.put("/api/llm-config", json=new_config)
@@ -394,4 +399,4 @@ def test_update_global_config_affects_all_agents(test_client: TestClient):
         # Verify global config updated
         verify_response = test_client.get("/api/llm-config")
         verify_data = verify_response.json()
-        assert verify_data["model_name"] == "gemini-2.5-flash"
+        assert verify_data["model_name"] == GOOGLE_MODEL

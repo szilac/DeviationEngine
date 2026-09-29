@@ -54,6 +54,7 @@ def test_available_models_response_has_anthropic_and_openai():
         ollama=["llama3.2:3b"],
         anthropic=["claude-sonnet-4-5"],
         openai=["gpt-4o"],
+        cliproxy=["gpt-4o"],
     )
     assert "claude-sonnet-4-5" in resp.anthropic
     assert "gpt-4o" in resp.openai
@@ -105,14 +106,12 @@ def test_available_models_has_anthropic_models():
     from app.services.llm_service import AVAILABLE_MODELS
     assert "anthropic" in AVAILABLE_MODELS
     assert len(AVAILABLE_MODELS["anthropic"]) > 0
-    assert "claude-sonnet-4-5" in AVAILABLE_MODELS["anthropic"]
 
 
 def test_available_models_has_openai_models():
     from app.services.llm_service import AVAILABLE_MODELS
     assert "openai" in AVAILABLE_MODELS
     assert len(AVAILABLE_MODELS["openai"]) > 0
-    assert "gpt-4o" in AVAILABLE_MODELS["openai"]
 
 
 def test_available_models_openrouter_no_duplicates():
